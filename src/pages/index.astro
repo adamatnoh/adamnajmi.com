@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adam Najmi · Backend Engineer</title>
+    <link rel="icon" type="image/png" href="/file/icon.png" />
+    <style>
+      /* A tiny custom blink animation for the terminal cursor */
+      .cursor-blink {
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      /* Smooth fade-in for the page */
+      body {
+        background-color: #0a0a0a;
+        color: #e5e5e5;
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <style>
+    @import '../styles/global.css';
+  </style>
+  <body class="min-h-screen flex items-center justify-center p-6">
+    <!-- Main Container -->
+    <div class="max-w-4xl w-full space-y-16">
+      <!-- ========== HERO SECTION ========== -->
+      <section class="space-y-6">
+        <!-- The Terminal Intro -->
+        <div class="bg-black border border-white/10 rounded-lg p-6 shadow-2xl">
+          <div class="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="text-white/30 text-xs ml-2 font-mono">zsh — 80×24</span>
+          </div>
+
+          <div class="font-mono text-sm md:text-base space-y-2">
+            <p>
+              <span class="text-green-400">➜</span>
+              <span class="text-white/60">~</span>
+              <span class="text-white">whoami</span>
+            </p>
+            <p class="text-white font-bold text-xl md:text-3xl tracking-tight">Adam Najmi</p>
+            <p>
+              <span class="text-green-400">➜</span>
+              <span class="text-white/60">~</span>
+              <span class="text-white">cat /etc/profile</span>
+            </p>
+            <p class="text-white/80 text-lg md:text-2xl font-light">
+              Software Engineer · <span class="text-white font-medium">Backend & Fintech</span>
+            </p>
+            <p>
+              <span class="text-green-400">➜</span>
+              <span class="text-white/60">~</span>
+              <span class="text-cyan-400">./adam --location</span>
+            </p>
+            <p class="text-white/60">
+              Johor, Malaysia <span class="text-white/30">|</span> Open to Remote & On-site
+            </p>
+            <div class="pt-4 flex flex-wrap gap-4">
+              <span class="text-green-400">➜</span>
+              <a
+                href="/file/Adam_Najmi_Resume.pdf"
+                target="_blank"
+                class="text-white border border-white/20 px-4 py-1 rounded hover:bg-white hover:text-black transition text-sm"
+                >Download Resume</a
+              >
+              // store in env file
+              <a
+                href="https://www.linkedin.com/in/adamnajmi"
+                target="_blank"
+                class="text-white/60 hover:text-white transition text-sm"
+                >linkedin.com/in/adamnajmi</a
+              >
+              <a
+                href="https://github.com/adamatnoh"
+                target="_blank"
+                class="text-white/60 hover:text-white transition text-sm">github.com/adamatnoh</a
+              >
+            </div>
+            <p class="pt-2 text-white/30 text-xs">
+              <span class="cursor-blink inline-block w-2 h-4 bg-white align-middle"></span>
+              <!-- Blinking cursor -->
+            </p>
+          </div>
+        </div>
+        <!-- End Terminal -->
+      </section>
+
+      <!-- ========== TECH STACK ========== -->
+      <section>
+        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
+          <span class="text-green-400 font-mono text-sm">⚙️</span>
+          <h2 class="text-2xl font-mono font-bold text-white">tech_stack</h2>
+          <span class="text-white/30 text-sm font-mono">// Languages & Tools</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {
+            [
+              'TypeScript',
+              'JavaScript',
+              'Node.js',
+              'NestJS',
+              'Laravel',
+              'PHP',
+              'React Native',
+              'MySQL',
+              'Prisma',
+              'Power BI',
+              'Docker',
+              'Git',
+            ].map((tech) => (
+              <div class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-center text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-default">
+                {tech}
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ========== EXPERIENCE ========== -->
+      <section>
+        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
+          <span class="text-green-400 font-mono text-sm">📂</span>
+          <h2 class="text-2xl font-mono font-bold text-white">experience</h2>
+          <span class="text-white/30 text-sm font-mono">// Work History</span>
+        </div>
+
+        <!-- Rapidz -->
+        <div
+          class="bg-black border border-white/10 rounded-lg p-6 mb-6 hover:border-white/30 transition"
+        >
+          <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">Rapidz Inc.</h3>
+              <p class="text-cyan-400 font-mono text-sm">Software Engineer · 2+ Years</p>
+            </div>
+            <span
+              class="text-white/20 text-sm font-mono border border-white/10 px-3 py-1 rounded-full"
+              >Fintech · Crypto</span
+            >
+          </div>
+          <ul
+            class="space-y-2 text-white/70 text-sm md:text-base list-disc list-inside marker:text-green-400"
+          >
+            <li>
+              Implemented HMAC request signing &amp; JWT (RS256) authentication for secure APIs.
+            </li>
+            <li>Built a push notification queue (FCM) handling millions of daily events.</li>
+            <li>
+              Designed a Power BI reporting ecosystem (P&amp;L, yield, product performance) from
+              scratch.
+            </li>
+            <li>Led migration from Laravel/PHP to NestJS + React Native stack.</li>
+          </ul>
+        </div>
+
+        <!-- Intel -->
+        <div
+          class="bg-black border border-white/10 rounded-lg p-6 hover:border-white/30 transition"
+        >
+          <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">Intel Corporation</h3>
+              <p class="text-cyan-400 font-mono text-sm">Software Engineering Intern</p>
+            </div>
+            <span
+              class="text-white/20 text-sm font-mono border border-white/10 px-3 py-1 rounded-full"
+              >Semiconductor</span
+            >
+          </div>
+          <ul
+            class="space-y-2 text-white/70 text-sm md:text-base list-disc list-inside marker:text-green-400"
+          >
+            <li>Developed Python &amp; Perl scripts for GUI automation and verification.</li>
+            <li>Worked with Verilog &amp; SystemVerilog for hardware validation flows.</li>
+            <li>Collaborated across global teams (US, Malaysia) to deliver testing frameworks.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ========== FOOTER / CONTACT ========== -->
+      <footer class="border-t border-white/10 pt-8 text-center text-white/30 text-sm font-mono">
+        <p>
+          adamnajmi.com ·
+          <a href="mailto:adamnajminoh@gmail.com" class="text-white/50 hover:text-white"
+            >adamnajminoh@gmail.com</a
+          > ·
+          <span class="text-green-400">●</span> Open for opportunities
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
