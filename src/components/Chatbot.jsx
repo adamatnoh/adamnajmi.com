@@ -7,10 +7,21 @@ const Chatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen) {
+      // Small delay to ensure the input is rendered
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -39,7 +50,7 @@ const Chatbot = () => {
           ...prev,
           {
             role: "assistant",
-            content: "❌ Oops! Something went wrong. Please try again.",
+            content: "❌ Alamak! Something went wrong. Please try again.",
           },
         ]);
       }
@@ -53,6 +64,10 @@ const Chatbot = () => {
       ]);
     } finally {
       setIsLoading(false);
+      // Delay focus slightly so React finishes updating the DOM
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
     }
   };
 
@@ -115,7 +130,6 @@ const Chatbot = () => {
                   : "text-green-400/90"
               }`}
             >
-              {/* Message content with compact padding – handles markdown if installed */}
               <span className="inline [&_p]:m-0 [&_ul]:m-0 [&_li]:my-0.5 [&_ul]:pl-4 [&_br]:block [&_br]:content-[''] [&_br]:my-1 whitespace-pre-wrap">
                 {msg.role === "user" ? (
                   <div>
@@ -147,6 +161,7 @@ const Chatbot = () => {
       <div className="p-2 sm:p-3 border-t border-green-500/20 bg-black/80 flex items-center gap-2 flex-shrink-0">
         <span className="text-green-500 text-sm font-mono">$</span>
         <input
+          ref={inputRef}
           type="text"
           className="flex-1 bg-transparent border-none outline-none text-green-400 text-sm font-mono placeholder-green-400/30 min-w-0"
           placeholder="type your question..."
@@ -154,7 +169,6 @@ const Chatbot = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           disabled={isLoading}
-          autoFocus
         />
         <button
           onClick={sendMessage}
