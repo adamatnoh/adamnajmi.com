@@ -1,5 +1,5 @@
-// src/components/Chatbot.jsx
 import React, { useState, useRef, useEffect } from "react";
+import Markdown from "react-markdown";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +8,6 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -40,7 +39,7 @@ const Chatbot = () => {
           ...prev,
           {
             role: "assistant",
-            content: "Oops! Something went wrong. Please try again.",
+            content: "❌ Oops! Something went wrong. Please try again.",
           },
         ]);
       }
@@ -49,7 +48,7 @@ const Chatbot = () => {
         ...prev,
         {
           role: "assistant",
-          content: "Network error. Please check your connection.",
+          content: "❌ Network error. Please check your connection.",
         },
       ]);
     } finally {
@@ -62,57 +61,46 @@ const Chatbot = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-cyan-500 text-white p-4 rounded-full shadow-xl hover:bg-cyan-600 transition z-50"
+        className="fixed bottom-6 right-6 bg-[#0a0a0a] border border-green-500/30 text-green-400 p-4 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 z-50 font-mono text-sm"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-          />
-        </svg>
+        <span className="flex items-center gap-2">
+          <span className="text-green-500">$</span> ./ask_adam.sh
+        </span>
       </button>
     );
   }
 
   // Chat Window
   return (
-    <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden font-sans">
-      {/* Header */}
-      <div className="flex justify-between items-center p-4 border-b border-white/10 bg-[#0a0a0a]">
-        <span className="text-white font-mono text-sm">Ask Adam</span>
-        <button
-          onClick={() => setIsOpen(false)}
-          className="text-white/50 hover:text-white"
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
+    <div className="fixed bottom-6 right-6 w-[420px] h-[560px] bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl flex flex-col z-50 font-mono overflow-hidden">
+      {/* Terminal Header – Red dot now closes the window */}
+      <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1.5">
+            {/* Red dot = Close button */}
+            <div
+              onClick={() => setIsOpen(false)}
+              className="w-3 h-3 rounded-full bg-red-500/80 hover:brightness-225"
+              aria-label="Close"
             />
-          </svg>
-        </button>
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+            <div className="w-3 h-3 rounded-full bg-green-500/80" />
+          </div>
+          <span className="text-green-400/60 text-xs tracking-wider">
+            ┌─[adam@portfolio]─[~]
+          </span>
+        </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4">
+      {/* Messages Area */}
+      <div className="flex-1 p-4 overflow-y-auto space-y-2 bg-[#0a0a0a]">
         {messages.length === 0 && (
-          <div className="text-white/40 text-sm text-center mt-10 font-mono">
-            👋 Ask me about Adam's experience, skills, or background.
+          <div className="text-green-400/50 text-xs leading-relaxed">
+            <span className="text-green-500">$</span> echo "Ask me about Adam's
+            experience, skills, or background."
+            <br />
+            <span className="text-green-500">$</span>{" "}
+            <span className="animate-pulse">▊</span>
           </div>
         )}
         {messages.map((msg, idx) => (
@@ -121,43 +109,59 @@ const Chatbot = () => {
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[80%] p-3 rounded-lg text-sm ${
+              className={` px-3 py-1.5 rounded text-sm ${
                 msg.role === "user"
-                  ? "bg-cyan-500 text-black"
-                  : "bg-white/10 text-white/90 border border-white/5"
+                  ? "bg-green-500/10 text-green-300 border border-green-500/20"
+                  : "text-green-400/90"
               }`}
             >
-              {msg.content}
+              {/* Message content with compact padding – handles markdown if installed */}
+              <span className="inline [&_p]:m-0 [&_ul]:m-0 [&_li]:my-0.5 [&_ul]:pl-4 [&_br]:block [&_br]:content-[''] [&_br]:my-1 whitespace-pre-wrap">
+                {msg.role === "user" ? (
+                  <div>
+                    <span className="text-green-500/50">$ </span>
+                    {msg.content}
+                  </div>
+                ) : (
+                  <div>
+                    <span className="text-green-500/50">› </span>
+                    <Markdown>{msg.content}</Markdown>
+                  </div>
+                )}
+              </span>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white/10 text-white/90 p-3 rounded-lg text-sm border border-white/5">
-              <span className="animate-pulse">Typing...</span>
+            <div className="text-green-400/60 text-sm">
+              <span className="text-green-500">›</span>{" "}
+              <span className="animate-pulse">▊</span>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-4 border-t border-white/10 bg-[#0a0a0a] flex gap-2">
+      {/* Input Area – with terminal-style ⏎ button */}
+      <div className="p-3 border-t border-green-500/20 bg-black/80 flex items-center gap-2">
+        <span className="text-green-500 text-sm font-mono">$</span>
         <input
           type="text"
-          className="flex-1 bg-black/50 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500"
-          placeholder="Ask a question..."
+          className="flex-1 bg-transparent border-none outline-none text-green-400 text-sm font-mono placeholder-green-400/30"
+          placeholder="type your question..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           disabled={isLoading}
+          autoFocus
         />
         <button
           onClick={sendMessage}
           disabled={isLoading}
-          className="bg-cyan-500 text-black px-4 py-2 rounded text-sm font-medium hover:bg-cyan-400 disabled:opacity-50"
+          className="bg-green-500/30 text-green-400/60 hover:text-green-400 transition disabled:opacity-30 text-sm font-mono border border-green-500/20 px-2 py-0.5 rounded hover:border-green-400"
         >
-          Send
+          ⏎
         </button>
       </div>
     </div>

@@ -3,28 +3,11 @@ export const prerender = false;
 // src/pages/api/chat.ts
 import type { APIRoute } from "astro";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { RESUME_CONTEXT } from "../../data/resume";
+import { PERSONAL_CONTEXT } from "../../data/personal";
 
 // ==============================================
-// 1. YOUR "KNOWLEDGE BASE" (Resume Context)
-// ==============================================
-const RESUME_CONTEXT = `
-Adam Najmi is a Software Engineer based in Johor, Malaysia, with a First-Class Honours degree in Computer Science (Software Engineering) from UTM (CGPA 3.88).
-
-He has 2+ years of experience as a Software Engineer at Rapidz Inc., a fintech/crypto company.
-- Backend: Node.js, TypeScript, NestJS, Laravel, PHP.
-- Database: MySQL, Prisma.
-- Security: Implemented HMAC request signing and JWT (RS256) authentication.
-- Integrations: Built push notification queues (FCM) and integrated third-party vendors.
-- Reporting: Architected a Power BI reporting ecosystem (P&L, yield, product performance) from scratch.
-- Migration: Helped migrate the core system from Laravel/PHP to NestJS + React Native.
-
-He also interned at Intel, working with Python, Perl, Verilog, and SystemVerilog.
-
-He is currently open to remote, hybrid, or on-site roles in Johor or Singapore, specifically in backend, full-stack, or fintech engineering.
-`;
-
-// ==============================================
-// 2. THE API HANDLER
+// 1. THE API HANDLER
 // ==============================================
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -49,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     // Build the prompt
     const prompt = `
@@ -58,6 +41,7 @@ Your job is to answer questions about Adam based *only* on the context provided 
 If the user asks something outside of this context, politely say you don't have that information and suggest they email adamnajminoh@gmail.com.
 
 Context about Adam:
+${PERSONAL_CONTEXT}
 ${RESUME_CONTEXT}
 
 User's question: ${userMessage}
