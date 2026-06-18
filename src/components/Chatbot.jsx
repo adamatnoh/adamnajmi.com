@@ -70,30 +70,30 @@ const Chatbot = () => {
     );
   }
 
-  // Chat Window
+  // Chat Window – Fully Responsive
   return (
-    <div className="fixed bottom-6 right-6 w-[420px] h-[560px] bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl flex flex-col z-50 font-mono overflow-hidden">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100vw-2rem)] sm:w-[420px] max-w-[420px] h-[calc(100vh-8rem)] sm:h-[560px] max-h-[600px] min-h-[400px] bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl flex flex-col z-50 font-mono overflow-hidden">
       {/* Terminal Header – Red dot now closes the window */}
-      <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1.5">
+      <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20 flex-shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex gap-1.5 flex-shrink-0">
             {/* Red dot = Close button */}
             <div
               onClick={() => setIsOpen(false)}
-              className="w-3 h-3 rounded-full bg-red-500/80 hover:brightness-225"
+              className="w-3 h-3 rounded-full bg-red-500/80 hover:brightness-225 cursor-pointer"
               aria-label="Close"
             />
             <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
-          <span className="text-green-400/60 text-xs tracking-wider">
+          <span className="text-green-400/60 text-[10px] sm:text-xs tracking-wider truncate">
             ┌─[adam@portfolio]─[~]
           </span>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-2 bg-[#0a0a0a]">
+      <div className="flex-1 p-3 sm:p-4 overflow-y-auto space-y-2 bg-[#0a0a0a]">
         {messages.length === 0 && (
           <div className="text-green-400/50 text-xs leading-relaxed">
             <span className="text-green-500">$</span> echo "Ask me about Adam's
@@ -109,7 +109,7 @@ const Chatbot = () => {
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={` px-3 py-1.5 rounded text-sm ${
+              className={`max-w-[85%] px-3 py-1.5 rounded text-sm break-words ${
                 msg.role === "user"
                   ? "bg-green-500/10 text-green-300 border border-green-500/20"
                   : "text-green-400/90"
@@ -144,11 +144,11 @@ const Chatbot = () => {
       </div>
 
       {/* Input Area – with terminal-style ⏎ button */}
-      <div className="p-3 border-t border-green-500/20 bg-black/80 flex items-center gap-2">
+      <div className="p-2 sm:p-3 border-t border-green-500/20 bg-black/80 flex items-center gap-2 flex-shrink-0">
         <span className="text-green-500 text-sm font-mono">$</span>
         <input
           type="text"
-          className="flex-1 bg-transparent border-none outline-none text-green-400 text-sm font-mono placeholder-green-400/30"
+          className="flex-1 bg-transparent border-none outline-none text-green-400 text-sm font-mono placeholder-green-400/30 min-w-0"
           placeholder="type your question..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -159,7 +159,7 @@ const Chatbot = () => {
         <button
           onClick={sendMessage}
           disabled={isLoading}
-          className="bg-green-500/30 text-green-400/60 hover:text-green-400 transition disabled:opacity-30 text-sm font-mono border border-green-500/20 px-2 py-0.5 rounded hover:border-green-400"
+          className="bg-green-500/30 text-green-400/60 hover:text-green-400 transition disabled:opacity-30 text-sm font-mono border border-green-500/20 px-2 py-0.5 rounded hover:border-green-400 flex-shrink-0"
         >
           ⏎
         </button>
