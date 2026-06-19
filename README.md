@@ -1,46 +1,107 @@
-# Astro Starter Kit: Basics
+# adamnajmi.com — Personal Portfolio
 
-```sh
-npm create astro@latest -- --template basics
+This is my personal portfolio website, built as a terminal-inspired digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background.
+
+🔗 **Live Site:** [adamnajmi.com](https://adamnajmi.com)
+
+---
+
+## 📦 Tech Stack
+
+| Category          | Tools                                                            |
+| :---------------- | :--------------------------------------------------------------- |
+| **Framework**     | [Astro](https://astro.build) (Static Site Generator)             |
+| **Styling**       | [Tailwind CSS](https://tailwindcss.com)                          |
+| **UI Components** | [React](https://reactjs.org) (Islands architecture)              |
+| **Deployment**    | [Vercel](https://vercel.com) (Serverless Functions)              |
+| **Domain**        | [Cloudflare](https://cloudflare.com)                             |
+| **AI API**        | [Google Gemini](https://ai.google.dev) (`gemini-3.1-flash-lite`) |
+
+---
+
+## ✨ Features
+
+- **Terminal-Inspired UI** – Green-on-black color scheme with a custom terminal-style layout.
+- **AI Chatbot** – Ask questions about my experience, skills, or the portfolio itself. Powered by Google Gemini.
+- **Responsive** – Works on mobile, tablet, and desktop.
+- **Fast & Lightweight** – Built with Astro, ships minimal JavaScript by default.
+- **Serverless API** – Chat endpoint runs as a Vercel serverless function.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/adamatnoh/adam-portfolio.git
+cd adam-portfolio
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### 2. Install dependencies
 
-## 🚀 Project Structure
+```bash
+npm install
+```
 
-Inside of your Astro project, you'll see the following folders and files:
+### 3. Set up environment variables
+
+Create a .env file in the root directory:
+
+```env
+GEMINI_API_KEY=your-google-gemini-api-key
+```
+
+You can get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey).
+
+### 4. Run the development server
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:4321` to preview the site.
+
+## 📁 Project Structure
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+├── components/
+│   └── Chatbot.jsx        # Terminal-style AI chatbot
+├── data/
+│   ├── resume.ts          # Work experience, education, skills
+│   ├── personal.ts        # Name, contact, location
+│   └── portfolio.ts       # Website tech stack & design info
+├── layouts/
+├── pages/
+│   ├── index.astro        # Main portfolio page
+│   └── api/
+│       └── chat.ts        # Serverless API endpoint for the chatbot
+└── styles/
+    └── global.css         # Tailwind imports & custom styles
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🔧 Deployment
 
-## 🧞 Commands
+The project is configured to deploy on Vercel with serverless functions.
 
-All commands are run from the root of the project, from a terminal:
+1. Push the code to GitHub.
+2. Import the repository to Vercel.
+3. Add the `GEMINI_API_KEY` environment variable in the Vercel dashboard.
+4. Deploy.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 🧠 About the Chatbot
 
-## 👀 Want to learn more?
+The chatbot is powered by Google Gemini API and uses a retrieval-augmented approach. It pulls context from:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `src/data/resume.ts` – Professional experience and skills.
+- `src/data/personal.ts` – Contact details and personal info.
+- `src/data/portfolio.ts` – Website technology and design choices.
+
+The API route (src/pages/api/chat.ts) handles the request, constructs a prompt, and streams the response back to the React component.
+
+## 📬 Contact
+
+- Email: adamnajminoh@gmail.com
+- LinkedIn: [linkedin.com/in/adamnajmi](https://linkedin.com/in/adamnajmi)
+- GitHub: [github.com/adamatnoh](http://github.com/adamatnoh)
