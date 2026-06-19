@@ -1,5 +1,4 @@
-// src/data/portfolio.ts
-export const PORTFOLIO_INFO = `
+export const WEBSITE_INFO = `
 Portfolio Website (adamnajmi.com):
 - Built with Astro (static site generator) and Tailwind CSS.
 - Uses React for interactive components (the chatbot).

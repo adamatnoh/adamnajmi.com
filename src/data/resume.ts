@@ -3,6 +3,7 @@ Adam Najmi is a Full-Stack Software Engineer based in Johor, Malaysia, with 2+ y
 
 Professional Experience:
 1. Software Engineer (Backend / Full-Stack) at Rapidz Inc. @ Clarity Techworks Sdn Bhd (Oct 2023 - May 2026):
+   - About rapidz: rapidz app is a digital finance and cryptocurrency platform that allows you to buy, trade, spend, and manage digital assets, as well as traditional fiat currencies, in one place.It offers a variety of everyday financial tools, including:Crypto Wallet & Trading: Buy, swap, and stake a wide range of cryptocurrencies (like Bitcoin, Ethereum, and Solana) directly from the app.Rapidz Card: Convert your cryptocurrencies (such as USDT or USDC) into a spendable dollar balance to use globally at in-store and online merchants via contactless mobile pay.High Security: The platform protects your assets using top-tier security measures like 2FA, biometric login, and institutional-grade custody.You can download the application or learn more about their services directly on the Rapidz Official Website.
    - Hardened API Security by implementing server-to-server HMAC request signing with replay-attack protection for all internal service-to-service communication.
    - Engineered a JWT (RS256) access and refresh token system with automated revocation, improving reliability for 2FA, biometric, and OAuth flows.
    - Architected a Power BI and DAX reporting ecosystem from scratch, delivering real-time visibility into company P&L, yield margins, and product performance across multiple platforms.

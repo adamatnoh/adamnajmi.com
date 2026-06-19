@@ -5,7 +5,7 @@ import type { APIRoute } from "astro";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { RESUME_INFO } from "../../data/resume";
 import { PERSONAL_INFO } from "../../data/personal";
-import { PORTFOLIO_INFO } from "../../data/portfolio";
+import { WEBSITE_INFO } from "../../data/website";
 
 // ==============================================
 // 1. THE API HANDLER
@@ -44,7 +44,7 @@ If the user asks something outside of this context, politely say you don't have 
 Context about Adam:
 ${PERSONAL_INFO}
 ${RESUME_INFO}
-${PORTFOLIO_INFO}
+${WEBSITE_INFO}
 
 User's question: ${userMessage}
 `;
