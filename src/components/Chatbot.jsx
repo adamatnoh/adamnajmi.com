@@ -6,7 +6,8 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false); // Show immediately on mount
+  const [isMounted, setIsMounted] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -16,6 +17,8 @@ const Chatbot = () => {
 
   useEffect(() => {
     if (isOpen) {
+      setIsMounted(false);
+      setShowTooltip(false);
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
@@ -25,11 +28,15 @@ const Chatbot = () => {
   // Show after 3 seconds and hide it after 5 seconds
   useEffect(() => {
     const showTimer = setTimeout(() => {
-      setShowTooltip(true);
+      setIsMounted(true);
+      requestAnimationFrame(() => {
+        setShowTooltip(true);
+      });
     }, 3000);
 
     const hideTimer = setTimeout(() => {
       setShowTooltip(false);
+      setTimeout(() => setIsMounted(false), 700); // wait animation finish
     }, 10000);
 
     return () => {
@@ -90,18 +97,20 @@ const Chatbot = () => {
     return (
       <div className="fixed bottom-6 right-6 z-50">
         {/* Tooltip */}
-        <div
-          className={`
+        {isMounted && (
+          <div
+            className={`
             absolute bottom-full right-0 mb-3
             bg-[#0a0a0a] border border-green-500/30 text-green-400 
             text-xs font-mono px-3 py-1.5 rounded shadow-lg 
             whitespace-nowrap transition-all duration-700 ease-in-out
             ${showTooltip ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}
           `}
-        >
-          🤖 Ask me about my experience
-          <div className="absolute -bottom-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-b border-r border-green-500/30 rotate-45"></div>
-        </div>
+          >
+            🤖 Ask me about my experience
+            <div className="absolute -bottom-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-b border-r border-green-500/30 rotate-45"></div>
+          </div>
+        )}
 
         {/* Button */}
         <button
