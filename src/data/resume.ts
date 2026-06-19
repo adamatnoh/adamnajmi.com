@@ -1,4 +1,4 @@
-export const RESUME_CONTEXT = `
+export const RESUME_INFO = `
 Adam Najmi is a Full-Stack Software Engineer based in Johor, Malaysia, with 2+ years of experience delivering production systems for fintech and crypto products. He holds a Bachelor of Computer Science (Software Engineering) from Universiti Teknologi Malaysia (UTM) with a First-Class Honours CGPA of 3.88.
 
 Professional Experience:

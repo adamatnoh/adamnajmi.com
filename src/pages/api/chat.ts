@@ -3,8 +3,9 @@ export const prerender = false;
 // src/pages/api/chat.ts
 import type { APIRoute } from "astro";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { RESUME_CONTEXT } from "../../data/resume";
-import { PERSONAL_CONTEXT } from "../../data/personal";
+import { RESUME_INFO } from "../../data/resume";
+import { PERSONAL_INFO } from "../../data/personal";
+import { PORTFOLIO_INFO } from "../../data/portfolio";
 
 // ==============================================
 // 1. THE API HANDLER
@@ -41,8 +42,9 @@ Your job is to answer questions about Adam based *only* on the context provided 
 If the user asks something outside of this context, politely say you don't have that information and suggest they email adamnajminoh@gmail.com or dm him in linkedin.
 
 Context about Adam:
-${PERSONAL_CONTEXT}
-${RESUME_CONTEXT}
+${PERSONAL_INFO}
+${RESUME_INFO}
+${PORTFOLIO_INFO}
 
 User's question: ${userMessage}
 `;
