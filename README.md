@@ -1,4 +1,4 @@
-# adamnajmi.com — Personal Portfolio
+# [adamnajmi.com](https://adamnajmi.com/) — Personal Portfolio
 
 This is my personal portfolio website, built as a terminal-inspired digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background.
 
@@ -46,7 +46,7 @@ npm install
 
 ### 3. Set up environment variables
 
-Create a .env file in the root directory:
+Create a `.env` file in the root directory:
 
 ```env
 GEMINI_API_KEY=your-google-gemini-api-key
@@ -86,7 +86,7 @@ src/
 The project is configured to deploy on Vercel with serverless functions.
 
 1. Push the code to GitHub.
-2. Import the repository to Vercel.
+2. Import the repository to [Vercel](https://vercel.com/).
 3. Add the `GEMINI_API_KEY` environment variable in the Vercel dashboard.
 4. Deploy.
 
@@ -98,7 +98,11 @@ The chatbot is powered by Google Gemini API and uses a retrieval-augmented appro
 - `src/data/personal.ts` – Contact details and personal info.
 - `src/data/portfolio.ts` – Website technology and design choices.
 
-The API route (src/pages/api/chat.ts) handles the request, constructs a prompt, and streams the response back to the React component.
+The API route (`src/pages/api/chat.ts`) handles the request, constructs a prompt, and streams the response back to the React component.
+
+## 📄 License
+
+MIT © [Adam Najmi](https://adamnajmi.com)
 
 ## 📬 Contact
 
