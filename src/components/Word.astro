@@ -1,0 +1,9 @@
+---
+const { word } = Astro.props;
+---
+
+<span
+  data-word={word.toUpperCase()}
+  onclick="window.guessWord && window.guessWord(this.dataset.word)"
+  class="cursor-pointer hover:text-cyan-400 transition">{word}</span
+>

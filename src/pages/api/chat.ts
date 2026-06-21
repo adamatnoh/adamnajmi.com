@@ -7,8 +7,52 @@ import { RESUME_INFO } from "../../data/resume";
 import { PERSONAL_INFO } from "../../data/personal";
 import { WEBSITE_INFO } from "../../data/website";
 
+// ============================================
+// 1. WORDLE WORD POOL (Same as frontend)
+// ============================================
+const WORDS = [
+  "NAJMI",
+  "JOHOR",
+  "MYSQL",
+  "POWER",
+  "REACT",
+  "INTEL",
+  "RAPID",
+  "BUILT",
+  "QUEUE",
+  "DAILY",
+  "YIELD",
+  "REACT",
+  "INTEL",
+  "GRADE",
+  "USERS",
+  "STACK",
+  "STAKE",
+  "YIELD",
+  "RATES",
+  "SWAPS",
+  "CROSS",
+  "VAULT",
+  "LOWER",
+  "BANKS",
+  "FINAL",
+];
+
+const getDailySecret = () => {
+  const today = new Date().toISOString().slice(0, 10);
+  let hash = 0;
+  for (let i = 0; i < today.length; i++) {
+    hash = (hash << 5) - hash + today.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const index = Math.abs(hash) % WORDS.length;
+  return WORDS[index];
+};
+
+const DAILY_WORD = getDailySecret();
+
 // ==============================================
-// 1. THE API HANDLER
+// 2. THE API HANDLER
 // ==============================================
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -40,6 +84,12 @@ export const POST: APIRoute = async ({ request }) => {
 You are a friendly, professional AI assistant for Adam Najmi's portfolio website.
 Your job is to answer questions about Adam based *only* on the context provided below.
 If the user asks something outside of this context, politely say you don't have that information and suggest they email adamnajminoh@gmail.com or dm him in linkedin.
+
+**Important: Wordle Game**
+There is a Wordle-style game on the portfolio called "Word of the Day". The secret word for today is "${DAILY_WORD}".
+- If a user asks for the word of the day, you can give them a **hint** (e.g., "It's a name of the developer of this portfolio", if the word is NAJMI or "It's where we put our money", if the word is BANKS).
+- Only if they insist after several attempts, you may reveal the word to them.
+- Encourage them to explore the portfolio and click on technical words to find it!
 
 Context about Adam:
 ${PERSONAL_INFO}

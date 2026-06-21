@@ -1,5 +1,7 @@
 ---
 import Chatbot from '../components/Chatbot';
+import DailyCipher from '../components/DailyCipher';
+import Word from '../components/Word.astro';
 ---
 
 <html lang="en">
@@ -55,7 +57,9 @@ import Chatbot from '../components/Chatbot';
             <!-- Avatar + Name -->
             <div class="flex items-center gap-3">
               <div class="relative group inline-block cursor-pointer">
-                <p class="text-white font-bold text-xl md:text-3xl tracking-tight">Adam Najmi</p>
+                <p class="text-white font-bold text-xl md:text-3xl tracking-tight">
+                  Adam <Word word="Najmi" />
+                </p>
                 <!-- Preview on hover -->
                 <div
                   class="absolute left-0 top-full mt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-10"
@@ -84,7 +88,7 @@ import Chatbot from '../components/Chatbot';
               <span class="text-cyan-400">./adam --location</span>
             </p>
             <p class="text-white/60">
-              Johor, Malaysia <span class="text-white/30">|</span> Open to Remote & On-site
+              <Word word="Johor" />, Malaysia <span class="text-white/30">|</span> Open to Remote & On-site
             </p>
             <div class="pt-1 flex flex-wrap gap-4 items-center">
               <span class="text-green-400">➜</span>
@@ -139,7 +143,11 @@ import Chatbot from '../components/Chatbot';
               'Docker',
               'Git',
             ].map((tech) => (
-              <div class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-center text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-default">
+              <div
+                data-word={tech}
+                onclick="window.guessWord && window.guessWord(this.dataset.word)"
+                class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-center text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-pointer"
+              >
                 {tech}
               </div>
             ))
@@ -161,7 +169,7 @@ import Chatbot from '../components/Chatbot';
         >
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
             <div>
-              <h3 class="text-xl font-bold text-white">Rapidz Inc.</h3>
+              <h3>Rapidz Inc.</h3>
               <p class="text-cyan-400 font-mono text-sm">Web Developer · 2+ Years</p>
             </div>
             <span
@@ -175,12 +183,20 @@ import Chatbot from '../components/Chatbot';
             <li>
               Implemented HMAC request signing &amp; JWT (RS256) authentication for secure APIs.
             </li>
-            <li>Built a push notification queue (FCM) handling millions of daily events.</li>
             <li>
-              Designed a Power BI reporting ecosystem (P&amp;L, yield, product performance) from
-              scratch.
+              <Word word="Built" /> a push notification <Word word="queue" /> (FCM) handling millions
+              of
+              <Word word="daily" /> events.
             </li>
-            <li>Championed on migration from Laravel/PHP to NestJS + React Native stack.</li>
+            <li>
+              Designed a Power BI reporting ecosystem (P&amp;L, <Word word="yield" />, product
+              performance) from scratch.
+            </li>
+            <li>
+              Championed on migration from Laravel/PHP to NestJS + <Word word="React" /> Native <Word
+                word="stack"
+              />.
+            </li>
           </ul>
         </div>
 
@@ -190,7 +206,9 @@ import Chatbot from '../components/Chatbot';
         >
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
             <div>
-              <h3 class="text-xl font-bold text-white">Intel Corporation</h3>
+              <h3 class="text-xl font-bold text-white">
+                <Word word="Intel" /> Corporation
+              </h3>
               <p class="text-cyan-400 font-mono text-sm">Software Engineering Intern</p>
             </div>
             <span
@@ -237,15 +255,21 @@ import Chatbot from '../components/Chatbot';
               >
             </div>
             <p class="text-white/50 text-xs font-mono mb-2">
-              Production-grade wallet serving thousands of users globally.
+              Production-<Word word="grade" /> wallet serving thousands of <Word word="users" /> globally.
             </p>
             <div class="space-y-1 text-white/60 text-xs font-mono flex-1">
               <p><span class="text-green-400/50">></span> Deposit / Withdraw crypto</p>
               <p>
                 <span class="text-green-400/50">></span> Hold & receive digital collectibles (NFT)
               </p>
-              <p><span class="text-green-400/50">></span> Stake & earn real yield rates</p>
-              <p><span class="text-green-400/50">></span> Instant swaps (20+ cryptos)</p>
+              <p>
+                <span class="text-green-400/50">></span>
+                <Word word="Stake" /> &amp; earn real <Word word="yield" />
+                <Word word="rates" />
+              </p>
+              <p>
+                <span class="text-green-400/50">></span> Instant <Word word="swaps" /> (20+ cryptos)
+              </p>
               <p><span class="text-green-400/50">></span> Rapidz Card spending integration</p>
             </div>
           </div>
@@ -256,7 +280,7 @@ import Chatbot from '../components/Chatbot';
           >
             <div class="flex items-center gap-2 mb-1">
               <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">verrefin</h3>
+              <h3>verrefin</h3>
             </div>
             <div class="flex flex-wrap gap-2 mb-2">
               <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
@@ -273,10 +297,20 @@ import Chatbot from '../components/Chatbot';
               Neo crypto bank unifying traditional and decentralized finance.
             </p>
             <div class="space-y-1 text-white/60 text-xs font-mono flex-1">
-              <p><span class="text-green-400/50">></span> Fiat wallet & cross-border payments</p>
-              <p><span class="text-green-400/50">></span> Earn yields through ecosystem vaults</p>
+              <p>
+                <span class="text-green-400/50">></span> Fiat wallet & <Word word="cross" />-border
+                payments
+              </p>
+              <p>
+                <span class="text-green-400/50">></span> Earn yields through ecosystem <Word
+                  word="vault"
+                />
+              </p>
+              <p>
+                <span class="text-green-400/50">></span> 70% <Word word="lower" /> fees than traditional
+                <Word word="banks" />
+              </p>
               <p><span class="text-green-400/50">></span> Co-branded card program</p>
-              <p><span class="text-green-400/50">></span> 70% lower fees than traditional banks</p>
             </div>
           </div>
 
@@ -300,17 +334,17 @@ import Chatbot from '../components/Chatbot';
               >
             </div>
             <p class="text-white/50 text-xs font-mono mb-2">
-              Final Year Project – Hospital scheduling system streamlining appointments and resource
-              management.
+              <Word word="Final" /> Year Project – Hospital scheduling system streamlining appointments
+              and resource management.
             </p>
             <div
               class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-white/60 text-xs font-mono flex-1"
             >
-              <div>
+              <div class="space-y-1">
                 <p><span class="text-green-400/50">></span> Real-time availability booking</p>
                 <p><span class="text-green-400/50">></span> Doctor schedule management</p>
               </div>
-              <div>
+              <div class="space-y-1">
                 <p><span class="text-green-400/50">></span> Automated reminders & notifications</p>
                 <p><span class="text-green-400/50">></span> Administrative oversight dashboard</p>
               </div>
@@ -320,7 +354,7 @@ import Chatbot from '../components/Chatbot';
       </section>
 
       <!-- ========== FOOTER / CONTACT ========== -->
-      <footer class="border-t border-white/10 pt-8 text-center text-white/30 text-sm font-mono">
+      <footer class="border-t border-white/10 pt-8 text-center text-white/30 text-xs font-mono">
         <p>
           adamnajmi.com ·
           <a href="mailto:adamnajminoh@gmail.com" class="text-white/50 hover:text-white"
@@ -331,5 +365,6 @@ import Chatbot from '../components/Chatbot';
       </footer>
     </div>
     <Chatbot client:load />
+    <DailyCipher client:load />
   </body>
 </html>
