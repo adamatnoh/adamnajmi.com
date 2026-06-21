@@ -52,7 +52,24 @@ import Chatbot from '../components/Chatbot';
               <span class="text-white/60">~</span>
               <span class="text-white">whoami</span>
             </p>
-            <p class="text-white font-bold text-xl md:text-3xl tracking-tight">Adam Najmi</p>
+            <!-- Avatar + Name -->
+            <div class="flex items-center gap-3">
+              <div class="relative group inline-block cursor-pointer">
+                <p class="text-white font-bold text-xl md:text-3xl tracking-tight">Adam Najmi</p>
+                <!-- Preview on hover -->
+                <div
+                  class="absolute left-0 top-full mt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-10"
+                >
+                  <div class="bg-black border border-white/10 rounded-lg shadow-2xl p-1">
+                    <img
+                      src="/file/adam.png"
+                      alt="Adam Najmi"
+                      class="min-w-32 h-32 object-cover rounded-md"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
             <p>
               <span class="text-green-400">➜</span>
               <span class="text-white/60">~</span>
@@ -133,7 +150,7 @@ import Chatbot from '../components/Chatbot';
       <!-- ========== EXPERIENCE ========== -->
       <section>
         <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
-          <span class="text-green-400 font-mono text-sm">📂</span>
+          <span class="text-green-400 font-mono text-sm">💻</span>
           <h2 class="text-2xl font-mono font-bold text-white">experience</h2>
           <span class="text-white/30 text-sm font-mono">// Work History</span>
         </div>
@@ -188,6 +205,117 @@ import Chatbot from '../components/Chatbot';
             <li>Worked with Verilog &amp; SystemVerilog for hardware validation flows.</li>
             <li>Collaborated across global teams (US, Malaysia) to deliver testing frameworks.</li>
           </ul>
+        </div>
+      </section>
+
+      <!-- ========== PROJECTS ========== -->
+      <section>
+        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
+          <span class="text-green-400 font-mono text-sm">🖥️</span>
+          <h2 class="text-2xl font-mono font-bold text-white">projects</h2>
+          <span class="text-white/30 text-sm font-mono">// Project Builds</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Rapidz -->
+          <div
+            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
+          >
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-green-400 font-mono text-sm">$</span>
+              <h3 class="text-white font-mono font-bold text-base">rapidz-wallet</h3>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#crypto</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#mobile</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#api</span
+              >
+            </div>
+            <p class="text-white/50 text-xs font-mono mb-2">
+              Production-grade wallet serving thousands of users globally.
+            </p>
+            <div class="space-y-1 text-white/60 text-xs font-mono flex-1">
+              <p><span class="text-green-400/50">></span> Deposit / Withdraw crypto</p>
+              <p>
+                <span class="text-green-400/50">></span> Hold & receive digital collectibles (NFT)
+              </p>
+              <p><span class="text-green-400/50">></span> Stake & earn real yield rates</p>
+              <p><span class="text-green-400/50">></span> Instant swaps (20+ cryptos)</p>
+              <p><span class="text-green-400/50">></span> Rapidz Card spending integration</p>
+            </div>
+          </div>
+
+          <!-- Verrefin -->
+          <div
+            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
+          >
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-green-400 font-mono text-sm">$</span>
+              <h3 class="text-white font-mono font-bold text-base">verrefin</h3>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#defi</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#banking</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#infrastructure</span
+              >
+            </div>
+            <p class="text-white/50 text-xs font-mono mb-2">
+              Neo crypto bank unifying traditional and decentralized finance.
+            </p>
+            <div class="space-y-1 text-white/60 text-xs font-mono flex-1">
+              <p><span class="text-green-400/50">></span> Fiat wallet & cross-border payments</p>
+              <p><span class="text-green-400/50">></span> Earn yields through ecosystem vaults</p>
+              <p><span class="text-green-400/50">></span> Co-branded card program</p>
+              <p><span class="text-green-400/50">></span> 70% lower fees than traditional banks</p>
+            </div>
+          </div>
+
+          <!-- HSS (Final Year Project) -->
+          <div
+            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col md:col-span-2"
+          >
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-green-400 font-mono text-sm">$</span>
+              <h3 class="text-white font-mono font-bold text-base">hospital-scheduling-system</h3>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#healthcare</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#webapp</span
+              >
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
+                >#fyp</span
+              >
+            </div>
+            <p class="text-white/50 text-xs font-mono mb-2">
+              Final Year Project – Hospital scheduling system streamlining appointments and resource
+              management.
+            </p>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-white/60 text-xs font-mono flex-1"
+            >
+              <div>
+                <p><span class="text-green-400/50">></span> Real-time availability booking</p>
+                <p><span class="text-green-400/50">></span> Doctor schedule management</p>
+              </div>
+              <div>
+                <p><span class="text-green-400/50">></span> Automated reminders & notifications</p>
+                <p><span class="text-green-400/50">></span> Administrative oversight dashboard</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -107,7 +107,7 @@ const Chatbot = () => {
             ${showTooltip ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}
           `}
           >
-            🤖 Ask me about my experience
+            🤖 Ask about my experience here
             <div className="absolute -bottom-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-b border-r border-green-500/30 rotate-45"></div>
           </div>
         )}
