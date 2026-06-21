@@ -115,7 +115,7 @@ const Chatbot = () => {
         {/* Button */}
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-[#0a0a0a] border border-green-500/30 text-green-400 p-4 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
+          className="bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
         >
           <span className="flex items-center gap-2">
             <span className="text-green-500">$</span> ./ask_adam.sh
@@ -141,7 +141,7 @@ const Chatbot = () => {
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <span className="text-green-400/60 text-[10px] sm:text-xs tracking-wider truncate">
-            ┌─[adam@portfolio]─[~]
+            ┌─[adam@portfolio]─[~/chatbot]
           </span>
         </div>
       </div>
