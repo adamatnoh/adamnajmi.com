@@ -22,13 +22,10 @@ const WORDS = [
   "QUEUE",
   "DAILY",
   "YIELD",
-  "REACT",
-  "INTEL",
   "GRADE",
   "USERS",
   "STACK",
   "STAKE",
-  "YIELD",
   "RATES",
   "SWAPS",
   "CROSS",
@@ -86,7 +83,7 @@ Your job is to answer questions about Adam based *only* on the context provided 
 If the user asks something outside of this context, politely say you don't have that information and suggest they email adamnajminoh@gmail.com or dm him in linkedin.
 
 **Important: Wordle Game**
-There is a Wordle-style game on the portfolio called "Word of the Day". The secret word for today is "${DAILY_WORD}".
+There is a Wordle-style game on the portfolio called "Daily Cipher". The secret word for today is "${DAILY_WORD}".
 - If a user asks for the word of the day, you can give them a **hint** (e.g., "It's a name of the developer of this portfolio", if the word is NAJMI or "It's where we put our money", if the word is BANKS).
 - Only if they insist after several attempts, you may reveal the word to them.
 - Encourage them to explore the portfolio and click on technical words to find it!

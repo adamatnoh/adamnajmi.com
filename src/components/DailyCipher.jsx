@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // ============================================
-// 1. EXPANDED WORD POOL
+// 1. WORD POOL
 // ============================================
 const WORDS = [
   "NAJMI",
@@ -15,13 +15,10 @@ const WORDS = [
   "QUEUE",
   "DAILY",
   "YIELD",
-  "REACT",
-  "INTEL",
   "GRADE",
   "USERS",
   "STACK",
   "STAKE",
-  "YIELD",
   "RATES",
   "SWAPS",
   "CROSS",
@@ -32,7 +29,27 @@ const WORDS = [
 ];
 
 // ============================================
-// 2. DAILY SECRET WORD (Deterministic)
+// 2. REWARD IMAGE POOLS
+// ============================================
+const COMMON_IMAGES = [
+  "common-grey.jpeg",
+  "common-oyen.jpeg",
+  "common-siam.jpeg",
+  "common-tabby.jpeg",
+  "common-calico.jpeg",
+  "common-brown.jpeg",
+];
+
+const RARE_IMAGES = [
+  "rare-rayyan.jpeg",
+  "rare-bengal.jpeg",
+  "rare-sphynx.jpeg",
+];
+
+const SUPER_RARE_IMAGES = ["super-rare-oyo.jpeg"];
+
+// ============================================
+// 3. DAILY SECRET WORD (Deterministic)
 // ============================================
 const getDailySecret = () => {
   const today = new Date().toISOString().slice(0, 10);
@@ -46,13 +63,11 @@ const getDailySecret = () => {
 };
 
 // ============================================
-// 3. WORDLE LOGIC
+// 4. WORDLE LOGIC
 // ============================================
 const getLetterStatus = (guess, secret) => {
-  const result = [];
   const secretArr = secret.split("");
   const guessArr = guess.split("");
-
   const secretCopy = [...secretArr];
   const statuses = guessArr.map((letter, i) => {
     if (letter === secretArr[i]) {
@@ -61,7 +76,6 @@ const getLetterStatus = (guess, secret) => {
     }
     return null;
   });
-
   for (let i = 0; i < guessArr.length; i++) {
     if (statuses[i] === "correct") continue;
     const letter = guessArr[i];
@@ -77,7 +91,7 @@ const getLetterStatus = (guess, secret) => {
 };
 
 // ============================================
-// 4. THE REACT COMPONENT
+// 5. REACT COMPONENT
 // ============================================
 const WordHunt = () => {
   const SECRET = getDailySecret();
@@ -100,19 +114,32 @@ const WordHunt = () => {
       if (upperWord === SECRET) {
         setWon(true);
         setGameOver(true);
+
+        // Determine rarity and pick a random image
         const roll = Math.random() * 100;
-        let rarity, label;
+        let rarity, label, image;
+
         if (roll < 1) {
+          // Super Rare (1%)
           rarity = "super-rare";
           label = "🌟 Super Rare (1%)";
+          const idx = Math.floor(Math.random() * SUPER_RARE_IMAGES.length);
+          image = `/file/daily-cipher/${SUPER_RARE_IMAGES[idx]}`;
         } else if (roll < 11) {
+          // Rare (10%)
           rarity = "rare";
           label = "✨ Rare (10%)";
+          const idx = Math.floor(Math.random() * RARE_IMAGES.length);
+          image = `/file/daily-cipher/${RARE_IMAGES[idx]}`;
         } else {
+          // Common (89%)
           rarity = "common";
           label = "🐱 Common";
+          const idx = Math.floor(Math.random() * COMMON_IMAGES.length);
+          image = `/file/daily-cipher/${COMMON_IMAGES[idx]}`;
         }
-        setReward({ rarity, label, image: `/file/cat-${rarity}.png` });
+
+        setReward({ rarity, label, image });
       } else if (newAttempts.length >= 6) {
         setGameOver(true);
       }
@@ -156,7 +183,6 @@ const WordHunt = () => {
           bg = "bg-white/10 border-white/20";
           text = "text-white";
         }
-
         rowCells.push(
           <div
             key={j}
@@ -176,13 +202,13 @@ const WordHunt = () => {
   };
 
   // ============================================
-  // 5. UI: TOGGLE BUTTON (Top Right)
+  // 6. UI: TOGGLE BUTTON (Top Right)
   // ============================================
   if (!isOpen) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-40 bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-xs"
+        className="fixed top-4 right-4 z-40 bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
       >
         <span className="flex items-center gap-2">
           <span className="text-green-500">$</span> ./daily_cipher.sh
@@ -192,12 +218,12 @@ const WordHunt = () => {
   }
 
   // ============================================
-  // 6. UI: GAME WIDGET (Top Right, dropdown)
+  // 7. UI: GAME WIDGET (Top Right)
   // ============================================
   return (
     <div className="fixed top-4 right-4 z-40 w-72">
       <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl overflow-hidden">
-        {/* Terminal Header – matches Chatbot style */}
+        {/* Terminal Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex gap-1.5 flex-shrink-0">
@@ -210,7 +236,7 @@ const WordHunt = () => {
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
             </div>
             <span className="text-green-400/60 text-[10px] sm:text-xs tracking-wider truncate">
-              ┌─[adam@portfolio]─[~/daily_cipher]
+              ┌─[adam@portfolio]─[~/cipher]
             </span>
           </div>
         </div>
@@ -236,11 +262,11 @@ const WordHunt = () => {
             </div>
           )}
 
-          {/* Reset (hidden for production, kept for testing) */}
+          {/* Reset */}
           {gameOver && (
             <button
               onClick={resetGame}
-              className="mt-2 text-white/20 hover:text-white/60 text-[10px] font-mono w-full text-center border-t border-white/5 pt-2"
+              className="mt-2 bg-transparent text-red-400/60 hover:text-red-400/80 text-[10px] font-mono w-full text-center border border-red-400/40 hover:border-red-400/80 py-2"
             >
               $ reset
             </button>
@@ -261,9 +287,11 @@ const WordHunt = () => {
               You cracked the code!
             </h3>
             <p className="text-white/60 text-sm mb-2">
-              You found the word of the day!
+              The word of the day is{" "}
+              <span className="font-extrabold italic">{SECRET}</span>! Here is
+              your reward
             </p>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-4">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 m-4 flex items-center">
               <img
                 src={reward.image}
                 alt="Reward cat"
@@ -281,6 +309,7 @@ const WordHunt = () => {
               onClick={() => {
                 setReward(null);
                 resetGame();
+                setIsOpen(false);
               }}
               className="bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded hover:bg-green-500/30 transition font-mono text-sm"
             >
