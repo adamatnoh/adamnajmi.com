@@ -100,6 +100,7 @@ const WordHunt = () => {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [reward, setReward] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Expose guess function to window
   useEffect(() => {
@@ -223,7 +224,7 @@ const WordHunt = () => {
   return (
     <div className="fixed top-4 right-4 z-40 w-72">
       <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl overflow-hidden">
-        {/* Terminal Header */}
+        {/* Terminal Header with Circle Help Button */}
         <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex gap-1.5 flex-shrink-0">
@@ -235,11 +236,37 @@ const WordHunt = () => {
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
             </div>
-            <span className="text-green-400/60 text-[10px] sm:text-xs tracking-wider truncate">
+            <span className="text-green-400/60 text-[10px] text-xs tracking-wider truncate">
               ┌─[adam@portfolio]─[~/cipher]
             </span>
           </div>
+          {/* Circle help button */}
+          <button
+            onClick={() => setShowHelp(!showHelp)}
+            className="w-5 h-5 rounded-full border border-green-500/50 bg-black/60 text-green-400/60 hover:text-green-400 hover:border-green-400 text-[10px] font-mono flex items-center justify-center transition flex-shrink-0"
+          >
+            ?
+          </button>
         </div>
+
+        {/* Help Content – styled for better visibility */}
+        {showHelp && (
+          <div className="p-3 bg-black/60 border-b border-green-500/20 text-green-400/90 text-[10px] font-mono space-y-0.5">
+            <p>
+              <span className="text-green-500">$</span> Click 5-letter words on
+              the page.
+            </p>
+            <p>
+              <span className="text-green-500">$</span> 🟩 Correct spot, 🟨
+              Wrong spot, ⬜ Not in word.
+            </p>
+            <p>
+              <span className="text-green-500">$</span> 6 attempts. Win a random
+              🐱!
+            </p>
+            <p className="text-white/30 text-[9px] mt-1">— refreshes daily —</p>
+          </div>
+        )}
 
         {/* Game Content */}
         <div className="p-3">
