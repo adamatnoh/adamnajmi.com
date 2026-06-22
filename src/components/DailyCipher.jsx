@@ -11,6 +11,8 @@ const WORDS = [
   'POWER',
   'REACT',
   'INTEL',
+  'FLOWS',
+  'TEAMS',
   'BUILT',
   'QUEUE',
   'DAILY',
@@ -460,7 +462,7 @@ const DailyCipher = () => {
                   🔥 streak!
                 </p>
                 <p className="font-bold italic">
-                  <span className="text-green-500">></span> Remember: Only 5-LETTERS words can be
+                  <span className="text-green-500">&gt;</span> Remember: Only 5-LETTERS words can be
                   clicked.
                 </p>
               </div>

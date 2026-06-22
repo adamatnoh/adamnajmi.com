@@ -1,44 +1,46 @@
 export const prerender = false;
 
 // src/pages/api/chat.ts
-import type { APIRoute } from "astro";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { RESUME_INFO } from "../../data/resume";
-import { PERSONAL_INFO } from "../../data/personal";
-import { WEBSITE_INFO } from "../../data/website";
+import type { APIRoute } from 'astro';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { RESUME_INFO } from '../../data/resume';
+import { PERSONAL_INFO } from '../../data/personal';
+import { WEBSITE_INFO } from '../../data/website';
 
 // ============================================
 // 1. WORDLE WORD POOL (Same as frontend)
 // ============================================
 const WORDS = [
-  "NAJMI",
-  "JOHOR",
-  "TOOLS",
-  "MYSQL",
-  "POWER",
-  "REACT",
-  "INTEL",
-  "BUILT",
-  "QUEUE",
-  "DAILY",
-  "YIELD",
-  "GRADE",
-  "USERS",
-  "STACK",
-  "STAKE",
-  "RATES",
-  "SWAPS",
-  "CROSS",
-  "VAULT",
-  "LOWER",
-  "BANKS",
-  "ADMIN",
-  "FUNDS",
-  "EMAIL",
-  "STAFF",
-  "TOKEN",
-  "AGENT",
-  "FINAL",
+  'NAJMI',
+  'JOHOR',
+  'TOOLS',
+  'MYSQL',
+  'POWER',
+  'REACT',
+  'INTEL',
+  'FLOWS',
+  'TEAMS',
+  'BUILT',
+  'QUEUE',
+  'DAILY',
+  'YIELD',
+  'GRADE',
+  'USERS',
+  'STACK',
+  'STAKE',
+  'RATES',
+  'SWAPS',
+  'CROSS',
+  'VAULT',
+  'LOWER',
+  'BANKS',
+  'ADMIN',
+  'FUNDS',
+  'EMAIL',
+  'STAFF',
+  'TOKEN',
+  'AGENT',
+  'FINAL',
 ];
 
 const getDailySecret = () => {
@@ -64,7 +66,7 @@ export const POST: APIRoute = async ({ request }) => {
     const userMessage = body.message;
 
     if (!userMessage) {
-      return new Response(JSON.stringify({ error: "Message is required" }), {
+      return new Response(JSON.stringify({ error: 'Message is required' }), {
         status: 400,
       });
     }
@@ -72,15 +74,12 @@ export const POST: APIRoute = async ({ request }) => {
     // Initialize Gemini
     const apiKey = import.meta.env.GEMINI_API_KEY;
     if (!apiKey) {
-      console.error("Missing GEMINI_API_KEY environment variable");
-      return new Response(
-        JSON.stringify({ error: "Server configuration error" }),
-        { status: 500 },
-      );
+      console.error('Missing GEMINI_API_KEY environment variable');
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
     // Build the prompt
     const prompt = `
@@ -109,15 +108,15 @@ User's question: ${userMessage}
 
     return new Response(JSON.stringify({ reply }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Chat API Error:", error);
+    console.error('Chat API Error:', error);
     // Correct way: pass status as part of the options object
     return new Response(
       JSON.stringify({
-        error: "Internal Server Error",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Internal Server Error',
+        details: error instanceof Error ? error.message : 'Unknown error',
       }),
       { status: 500 },
     );
