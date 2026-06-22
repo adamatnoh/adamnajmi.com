@@ -13,11 +13,11 @@ import { WEBSITE_INFO } from "../../data/website";
 const WORDS = [
   "NAJMI",
   "JOHOR",
+  "TOOLS",
   "MYSQL",
   "POWER",
   "REACT",
   "INTEL",
-  "RAPID",
   "BUILT",
   "QUEUE",
   "DAILY",

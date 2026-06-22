@@ -6,11 +6,11 @@ import { useState, useEffect } from "react";
 const WORDS = [
   "NAJMI",
   "JOHOR",
+  "TOOLS",
   "MYSQL",
   "POWER",
   "REACT",
   "INTEL",
-  "RAPID",
   "BUILT",
   "QUEUE",
   "DAILY",
