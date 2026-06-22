@@ -459,6 +459,10 @@ const DailyCipher = () => {
                   <span className="text-green-500">$</span> Win to earn cat rewards &amp; build your
                   🔥 streak!
                 </p>
+                <p className="font-bold italic">
+                  <span className="text-green-500">></span> Remember: Only 5-LETTERS words can be
+                  clicked.
+                </p>
               </div>
 
               <div className="flex items-center gap-3 mb-4">
