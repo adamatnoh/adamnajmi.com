@@ -20,6 +20,8 @@ Professional Experience:
 
 Portfolio Projects:
 1. rapidz-wallet (Crypto Wallet & Hub)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: NestJS, React Native, TypeScript, MySQL
    A production-grade cross-platform crypto wallet built with React Native, serving thousands of users globally.
    Features:
    - Deposit / Withdraw crypto assets with secure wallet infrastructure.
@@ -28,6 +30,8 @@ Portfolio Projects:
    - Instant crypto swaps across 20+ currencies.
    - Rapidz Card integration for spending crypto as fiat at merchants worldwide.
 2. verrefin (Neo Crypto Bank)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: NestJS, React Native, Laravel, PHP, MySQL
    A neo crypto bank unifying traditional and decentralized finance, built as a tech infrastructure platform.
    Features:
    - Fiat wallet with seamless deposit and withdrawal capabilities.
@@ -35,7 +39,45 @@ Portfolio Projects:
    - Co-branded card program generating transaction fee revenue.
    - Instant cross-border payments with fees up to 70% lower than traditional banking.
    - Loyalty program with points for transactions, referrals, and staking.
-3. HSS (Hospital Scheduling System) – Final Year Project
+3. admin-portal (Admin Management Portal)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: Laravel, PHP, MySQL, Tailwind CSS
+   An internal management portal built for Rapidz administrators to oversee platform operations.
+   Features:
+   - Deposit and withdrawal management for admin-controlled funds.
+   - User account management and transaction oversight.
+   - Bulk email distribution to users for announcements and updates.
+   - Real-time monitoring of platform activity.
+4. merchant-portal (Merchant Management Portal)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: Laravel, PHP, MySQL, Tailwind CSS
+   A client-facing portal for Rapidz merchants to manage their business operations.
+   Features:
+   - Staff account and role-based access management.
+   - Virtual card issuance and distribution to customers.
+   - Token and NFT airdrop campaign management.
+   - OTC (Over-the-Counter) crypto and fiat buying/selling services.
+5. telegram-bot (Trading Bot)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: Node.js, NestJS, TypeScript, Telegram Bot API
+   A Telegram-based trading bot enabling crypto and fiat exchange with custom pricing.
+   Features:
+   - Buy and sell crypto with integrated real-time rates.
+   - Client-specific custom rates for tailored pricing.
+   - Agent-assisted transactions on behalf of clients.
+   - Automatic calculation of final prices with dynamic rate adjustments.
+6. power-bi-analytics (Power BI Reporting Ecosystem)
+   Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
+   Tech Stack: Power BI, DAX, MySQL
+   An executive reporting ecosystem built with Power BI and DAX for real-time business intelligence.
+   Features:
+   - Real-time P&L (Profit & Loss) and yield tracking dashboards.
+   - Product performance monitoring across multiple platforms.
+   - Data-driven insights for executive decision-making.
+   - Automated reporting for revenue, margins, and campaign performance.
+7. HSS (Hospital Scheduling System) – Final Year Project
+   Timeline: Final Year Project (2022 – 2023) at Universiti Teknologi Malaysia (UTM)
+   Tech Stack: Laravel, PHP, MySQL, HTML, CSS
    A web-based hospital scheduling system designed to streamline appointment booking and resource management.
    Features:
    - Patient appointment booking with real-time availability checking.
