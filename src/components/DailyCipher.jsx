@@ -258,7 +258,7 @@ const WordHunt = () => {
               className="text-green-400 text-xs font-mono text-center border border-green-500/20 p-1 rounded cursor-pointer"
               onClick={() => setReward({ ...reward, show: true })}
             >
-              ✅ Click to claim your reward!
+              ✅ Claim your reward!
             </div>
           )}
 
