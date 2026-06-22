@@ -18,6 +18,31 @@ Professional Experience:
    - Gained hands-on experience in chipset design verification using Verilog, SystemVerilog, and Unix/Linux environments.
    - Collaborated with cross-geo teams (USA, India) through design meetings and knowledge-sharing sessions.
 
+Portfolio Projects:
+1. rapidz-wallet (Crypto Wallet & Hub)
+   A production-grade cross-platform crypto wallet built with React Native, serving thousands of users globally.
+   Features:
+   - Deposit / Withdraw crypto assets with secure wallet infrastructure.
+   - Hold and manage digital collectibles (NFTs).
+   - Stake digital assets and earn real market yield rates.
+   - Instant crypto swaps across 20+ currencies.
+   - Rapidz Card integration for spending crypto as fiat at merchants worldwide.
+2. verrefin (Neo Crypto Bank)
+   A neo crypto bank unifying traditional and decentralized finance, built as a tech infrastructure platform.
+   Features:
+   - Fiat wallet with seamless deposit and withdrawal capabilities.
+   - Earn yields through ecosystem vaults and staking incentives.
+   - Co-branded card program generating transaction fee revenue.
+   - Instant cross-border payments with fees up to 70% lower than traditional banking.
+   - Loyalty program with points for transactions, referrals, and staking.
+3. HSS (Hospital Scheduling System) – Final Year Project
+   A web-based hospital scheduling system designed to streamline appointment booking and resource management.
+   Features:
+   - Patient appointment booking with real-time availability checking.
+   - Doctor schedule management and resource allocation.
+   - Automated reminders and notifications for patients and staff.
+   - Administrative dashboard for hospital operations oversight.
+
 Education:
 - Universiti Teknologi Malaysia — Bachelor of Computer Science (Software Engineering)
 2019 - 2023 | CGPA: 3.88
