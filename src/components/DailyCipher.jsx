@@ -249,7 +249,7 @@ const WordHunt = () => {
           {/* Game Status */}
           {gameOver && !won && (
             <div className="text-red-400/80 text-xs font-mono text-center border border-red-500/20 p-1 rounded">
-              ❌ Game Over. The word was{" "}
+              Game Over. The word was{" "}
               <span className="text-white font-bold">{SECRET}</span>
             </div>
           )}
@@ -258,7 +258,7 @@ const WordHunt = () => {
               className="text-green-400 text-xs font-mono text-center border border-green-500/20 p-1 rounded cursor-pointer"
               onClick={() => setReward({ ...reward, show: true })}
             >
-              ✅ Claim your reward!
+              Claim your reward
             </div>
           )}
 
