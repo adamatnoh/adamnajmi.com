@@ -32,6 +32,12 @@ const WORDS = [
   "VAULT",
   "LOWER",
   "BANKS",
+  "ADMIN",
+  "FUNDS",
+  "EMAIL",
+  "STAFF",
+  "TOKEN",
+  "AGENT",
   "FINAL",
 ];
 
