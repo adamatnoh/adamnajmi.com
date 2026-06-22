@@ -102,6 +102,39 @@ const WordHunt = () => {
   const [reward, setReward] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
 
+  // ============================================
+  // 5a. TOOLTIP STATE & TIMERS
+  // ============================================
+  const [isCipherMounted, setIsCipherMounted] = useState(false);
+  const [showCipherTooltip, setShowCipherTooltip] = useState(false);
+
+  // Show cipher tooltip after 15s, hide after 25s
+  useEffect(() => {
+    const showTimer = setTimeout(() => {
+      setIsCipherMounted(true);
+      requestAnimationFrame(() => {
+        setShowCipherTooltip(true);
+      });
+    }, 10000);
+
+    const hideTimer = setTimeout(() => {
+      setShowCipherTooltip(false);
+      setTimeout(() => setIsCipherMounted(false), 700);
+    }, 20000);
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsCipherMounted(false);
+      setShowCipherTooltip(false);
+    }
+  }, [isOpen]);
+
   // Expose guess function to window
   useEffect(() => {
     window.guessWord = (word) => {
@@ -203,18 +236,32 @@ const WordHunt = () => {
   };
 
   // ============================================
-  // 6. UI: TOGGLE BUTTON (Top Right)
+  // 6. UI: TOGGLE BUTTON WITH TOOLTIP (Top Right)
   // ============================================
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-40 bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
-      >
-        <span className="flex items-center gap-2">
-          <span className="text-green-500">$</span> ./daily_cipher.sh
-        </span>
-      </button>
+      <div className="fixed top-4 right-4 z-40">
+        {/* Tooltip – now positioned BELOW the button */}
+        {isCipherMounted && (
+          <div
+            className={`absolute top-full right-0 mt-3 bg-[#0a0a0a] border border-green-500/30 text-green-400 text-xs font-mono px-3 py-1.5 rounded shadow-lg whitespace-nowrap transition-all duration-700 ease-in-out ${showCipherTooltip ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+          >
+            🔍 Crack the daily cipher!
+            {/* Arrow pointing UP towards the button */}
+            <div className="absolute -top-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-t border-l border-green-500/30 rotate-45"></div>
+          </div>
+        )}
+
+        {/* Button */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
+        >
+          <span className="flex items-center gap-2">
+            <span className="text-green-500">$</span> ./daily_cipher.sh
+          </span>
+        </button>
+      </div>
     );
   }
 
@@ -224,7 +271,7 @@ const WordHunt = () => {
   return (
     <div className="fixed top-4 right-4 z-40 w-72">
       <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl overflow-hidden">
-        {/* Terminal Header with Circle Help Button */}
+        {/* Terminal Header with Help Button */}
         <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex gap-1.5 flex-shrink-0">
@@ -236,7 +283,7 @@ const WordHunt = () => {
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
             </div>
-            <span className="text-green-400/60 text-[10px] text-xs tracking-wider truncate">
+            <span className="text-green-400/60 text-[10px] sm:text-xs tracking-wider truncate">
               ┌─[adam@portfolio]─[~/cipher]
             </span>
           </div>
@@ -249,7 +296,7 @@ const WordHunt = () => {
           </button>
         </div>
 
-        {/* Help Content – styled for better visibility */}
+        {/* Help Content */}
         {showHelp && (
           <div className="p-3 bg-black/60 border-b border-green-500/20 text-green-400/90 text-[10px] font-mono space-y-0.5">
             <p>
