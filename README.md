@@ -83,7 +83,7 @@ src/
 ├── pages/
 │   ├── index.astro
 │   └── api/
-│   └── chat.ts
+│       └── chat.ts
 └── styles/
     └── global.css
 ```
