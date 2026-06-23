@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
-import Markdown from "react-markdown";
+import React, { useState, useRef, useEffect } from 'react';
+import Markdown from 'react-markdown';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -13,7 +13,7 @@ const Chatbot = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
@@ -51,51 +51,45 @@ const Chatbot = () => {
     if (!isOpen) return;
 
     const handleClickOutside = (event) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isOpen]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
-    const userMessage = { role: "user", content: input };
+    const userMessage = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    setInput('');
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage.content }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: data.reply },
-        ]);
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
       } else {
         setMessages((prev) => [
           ...prev,
           {
-            role: "assistant",
-            content: "❌ Alamak! Something went wrong. Please try again.",
+            role: 'assistant',
+            content: '❌ Alamak! Something went wrong. Please try again.',
           },
         ]);
       }
@@ -103,8 +97,8 @@ const Chatbot = () => {
       setMessages((prev) => [
         ...prev,
         {
-          role: "assistant",
-          content: "❌ Network error. Please check your connection.",
+          role: 'assistant',
+          content: '❌ Network error. Please check your connection.',
         },
       ]);
     } finally {
@@ -118,7 +112,7 @@ const Chatbot = () => {
   // Floating Toggle Button + Tooltip
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-6 z-50">
         {/* Tooltip */}
         {isMounted && (
           <div
@@ -127,7 +121,7 @@ const Chatbot = () => {
             bg-[#0a0a0a] border border-green-500/30 text-green-400 
             text-xs font-mono px-3 py-1.5 rounded shadow-lg 
             whitespace-nowrap transition-all duration-700 ease-in-out
-            ${showTooltip ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}
+            ${showTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}
           `}
           >
             🤖 Ask about my experience here
@@ -176,27 +170,26 @@ const Chatbot = () => {
       <div className="flex-1 p-3 sm:p-4 overflow-y-auto space-y-2 bg-[#0a0a0a]">
         {messages.length === 0 && (
           <div className="text-green-400/50 text-xs leading-relaxed">
-            <span className="text-green-500">$</span> echo "Ask me about Adam's
-            experience, skills, or background."
+            <span className="text-green-500">$</span> echo "Ask me about Adam's experience, skills,
+            or background."
             <br />
-            <span className="text-green-500">$</span>{" "}
-            <span className="animate-pulse">▊</span>
+            <span className="text-green-500">$</span> <span className="animate-pulse">▊</span>
           </div>
         )}
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
               className={`max-w-[85%] px-3 py-1.5 rounded text-sm break-words ${
-                msg.role === "user"
-                  ? "bg-green-500/10 text-green-300 border border-green-500/20"
-                  : "text-green-400/90"
+                msg.role === 'user'
+                  ? 'bg-green-500/10 text-green-300 border border-green-500/20'
+                  : 'text-green-400/90'
               }`}
             >
               <span className="inline [&_p]:m-0 [&_ul]:m-0 [&_li]:my-0.5 [&_ul]:pl-4 [&_br]:block [&_br]:content-[''] [&_br]:my-1 whitespace-pre-wrap">
-                {msg.role === "user" ? (
+                {msg.role === 'user' ? (
                   <div>
                     <span className="text-green-500/50">$ </span>
                     {msg.content}
@@ -214,8 +207,7 @@ const Chatbot = () => {
         {isLoading && (
           <div className="flex justify-start">
             <div className="text-green-400/60 text-sm">
-              <span className="text-green-500">›</span>{" "}
-              <span className="animate-pulse">▊</span>
+              <span className="text-green-500">›</span> <span className="animate-pulse">▊</span>
             </div>
           </div>
         )}
@@ -232,7 +224,7 @@ const Chatbot = () => {
           placeholder="type your question..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
           disabled={isLoading}
         />
         <button

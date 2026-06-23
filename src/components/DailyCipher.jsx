@@ -283,12 +283,12 @@ const DailyCipher = () => {
 
         if (roll < superRareThreshold) {
           rarity = 'super-rare';
-          label = `🌟 Super Rare (${superRareThreshold >= 100 ? '100%' : superRareThreshold + '%'})`;
+          label = `👑 Super Rare (${superRareThreshold >= 100 ? '100%' : superRareThreshold + '%'})`;
           const idx = Math.floor(Math.random() * SUPER_RARE_IMAGES.length);
           image = `/file/daily-cipher/${SUPER_RARE_IMAGES[idx]}`;
         } else if (roll < superRareThreshold + 10) {
           rarity = 'rare';
-          label = '✨ Rare (10%)';
+          label = '🌟 Rare (10%)';
           const idx = Math.floor(Math.random() * RARE_IMAGES.length);
           image = `/file/daily-cipher/${RARE_IMAGES[idx]}`;
         } else {
@@ -391,7 +391,7 @@ const DailyCipher = () => {
   if (!isOpen) {
     return (
       <>
-        <div className="fixed top-4 right-4 z-40">
+        <div className="fixed top-4 right-6 z-40">
           {isCipherMounted && (
             <div
               className={`absolute top-full right-0 mt-3 bg-[#0a0a0a] border border-green-500/30 text-green-400 text-xs font-mono px-3 py-1.5 rounded shadow-lg whitespace-nowrap transition-all duration-700 ease-in-out ${showCipherTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
@@ -580,13 +580,25 @@ const DailyCipher = () => {
       {/* Reward Modal – only shown when showRewardModal is true */}
       {reward && showRewardModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80">
-          <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg p-8 max-w-sm w-full text-center font-mono shadow-2xl">
+          <div
+            className={`${
+              reward.rarity === 'super-rare' ? 'border-yellow-500/30' : 'border-green-500/30'
+            } bg-[#0a0a0a] border rounded-lg p-8 max-w-sm w-full text-center font-mono shadow-2xl`}
+          >
             <div className="text-6xl mb-4">
-              {reward.rarity === 'super-rare' && '🌟'}
-              {reward.rarity === 'rare' && '✨'}
+              {reward.rarity === 'super-rare' && '👑'}
+              {reward.rarity === 'rare' && '🌟'}
               {reward.rarity === 'common' && '🐱'}
             </div>
-            <h3 className="text-green-400 text-xl font-bold mb-2">You cracked the code!</h3>
+            <h3
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'text-green-400'
+              } text-xl font-bold mb-2`}
+            >
+              You cracked the code!
+            </h3>
             <p className="text-white/60 text-sm mb-2">
               The word of the day is <span className="font-extrabold italic">{SECRET}</span>! Here
               is your reward
@@ -605,13 +617,25 @@ const DailyCipher = () => {
                 }}
               />
             </div>
-            <p className="text-cyan-400 text-xs font-mono mb-4">{reward.label}</p>
+            <p
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'text-cyan-400'
+              } text-xs font-mono mb-4`}
+            >
+              {reward.label}
+            </p>
             <button
               onClick={() => {
                 setShowRewardModal(false);
                 setIsOpen(false);
               }}
-              className="bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded hover:bg-green-500/30 transition font-mono text-sm"
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30'
+              } px-4 py-2 rounded transition font-mono text-sm`}
             >
               $ continue_browsing
             </button>
