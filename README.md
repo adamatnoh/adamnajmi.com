@@ -1,6 +1,6 @@
 # [adamnajmi.com](https://adamnajmi.com/) — Personal Portfolio
 
-This is my personal portfolio website, built as a terminal-inspired digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background.
+This is my personal portfolio website, built as a terminal-inspired digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background. It also features a daily word-hunt minigame with streak-based rewards to keep things interactive.
 
 🔗 **Live Site:** [adamnajmi.com](https://adamnajmi.com)
 
@@ -17,17 +17,23 @@ This is my personal portfolio website, built as a terminal-inspired digital resu
 | **Domain**        | [Cloudflare](https://cloudflare.com)                             |
 | **AI API**        | [Google Gemini](https://ai.google.dev) (`gemini-3.1-flash-lite`) |
 
----
-
 ## ✨ Features
 
 - **Terminal-Inspired UI** – Green-on-black color scheme with a custom terminal-style layout.
-- **AI Chatbot** – Ask questions about my experience, skills, or the portfolio itself. Powered by Google Gemini.
-- **Responsive** – Works on mobile, tablet, and desktop.
-- **Fast & Lightweight** – Built with Astro, ships minimal JavaScript by default.
-- **Serverless API** – Chat endpoint runs as a Vercel serverless function.
 
----
+- **AI Chatbot** – Ask questions about my experience, skills, or the portfolio itself. Powered by Google Gemini.
+
+- **Daily Cipher (Word-Hunt Game)** – A Wordle-style minigame where the word changes daily via deterministic hashing (no database required).
+
+- **Streak-Based Rewards** – Guess the word and win a random cat picture. The longer your streak, the higher your chance of landing a Super Rare cat (1% base → up to 30% bonus, with a guaranteed drop at 100 days).
+
+- **State Persistence** – Game state (attempts, wins, losses, streak) is stored in localStorage, so users can close and reopen the game without losing progress.
+
+- **Responsive** – Works on mobile, tablet, and desktop.
+
+- **Fast & Lightweight** – Built with Astro, ships minimal JavaScript by default.
+
+- **Serverless API** – Chat endpoint runs as a Vercel serverless function.
 
 ## 🚀 Getting Started
 
@@ -67,18 +73,19 @@ Open `http://localhost:4321` to preview the site.
 ```text
 src/
 ├── components/
-│   └── Chatbot.jsx        # Terminal-style AI chatbot
+│ ├── Chatbot.jsx
+│ ├── DailyCipher.jsx
+| └── Word.astro
 ├── data/
-│   ├── resume.ts          # Work experience, education, skills
-│   ├── personal.ts        # Name, contact, location
-│   └── portfolio.ts       # Website tech stack & design info
-├── layouts/
+│ ├── personal.ts
+│ ├── resume.ts
+│ └── website.ts
 ├── pages/
-│   ├── index.astro        # Main portfolio page
-│   └── api/
-│       └── chat.ts        # Serverless API endpoint for the chatbot
+│ ├── index.astro
+│ └── api/
+│ └── chat.ts
 └── styles/
-    └── global.css         # Tailwind imports & custom styles
+└── global.css
 ```
 
 ## 🔧 Deployment
@@ -96,9 +103,24 @@ The chatbot is powered by Google Gemini API and uses a retrieval-augmented appro
 
 - `src/data/resume.ts` – Professional experience and skills.
 - `src/data/personal.ts` – Contact details and personal info.
-- `src/data/portfolio.ts` – Website technology and design choices.
+- `src/data/website.ts` – Website technology and design choices.
 
 The API route (`src/pages/api/chat.ts`) handles the request, constructs a prompt, and streams the response back to the React component.
+
+## 🎮 About the Daily Cipher Game
+
+The Daily Cipher is a Wordle-style game designed to make the portfolio interactive and encourage visitors to explore the content.
+
+- Word Selection: The word of the day is chosen using a deterministic hashing function based on the current date (UTC). This ensures all visitors see the same word on the same day without requiring a database or cron job.
+
+- Gameplay: Visitors click on any 5-letter word visible on the portfolio page to make a guess. The grid provides colour-coded feedback: 🟩 correct spot, 🟨 wrong spot, ⬜ not in the word.
+
+- State Persistence: Game progress (attempts, wins/losses, reward status) is saved in the browser's localStorage, so users can close and reopen the game without losing their place.
+
+- Streak System: Winning on consecutive days builds a streak. The streak:
+  - Increases by 1 for each consecutive daily win.
+  - Resets to 0 if the user loses or misses a day.
+  - Boosts the drop rate for the Super Rare cat (1% base + up to 30% bonus, with a 100% guarantee at a 100-day streak).
 
 ## 📄 License
 
