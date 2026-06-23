@@ -2,7 +2,7 @@
 import Chatbot from '../components/Chatbot';
 import DailyCipher from '../components/DailyCipher';
 import Word from '../components/Word.astro';
-import { Analytics } from '@vercel/analytics/react';
+import Analytics from '@vercel/analytics/astro';
 ---
 
 <html lang="en">
@@ -31,10 +31,12 @@ import { Analytics } from '@vercel/analytics/react';
         font-family: 'Inter', sans-serif;
       }
     </style>
+    <style>
+      @import '../styles/global.css';
+    </style>
+    <Analytics />
   </head>
-  <style>
-    @import '../styles/global.css';
-  </style>
+
   <body class="min-h-screen flex items-center justify-center p-6">
     <!-- Main Container -->
     <div class="max-w-4xl w-full space-y-16">
@@ -562,6 +564,5 @@ import { Analytics } from '@vercel/analytics/react';
     </div>
     <Chatbot client:load />
     <DailyCipher client:load />
-    <Analytics />
   </body>
 </html>
