@@ -57,10 +57,10 @@ Portfolio Projects:
    - Virtual card issuance and distribution to customers.
    - Token and NFT airdrop campaign management.
    - OTC (Over-the-Counter) crypto and fiat buying/selling services.
-5. telegram-bot (Trading Bot)
+5. otc-telegram-bot (Trading Bot)
    Timeline: Oct 2023 – May 2026 (Rapidz Inc.)
    Tech Stack: Node.js, NestJS, TypeScript, Telegram Bot API
-   A Telegram-based trading bot enabling crypto and fiat exchange with custom pricing.
+   A OTC Telegram-based trading bot enabling crypto and fiat exchange with custom pricing.
    Features:
    - Buy and sell crypto with integrated real-time rates.
    - Client-specific custom rates for tailored pricing.
