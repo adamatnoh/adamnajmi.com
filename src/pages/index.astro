@@ -2,6 +2,7 @@
 import Chatbot from '../components/Chatbot';
 import DailyCipher from '../components/DailyCipher';
 import Word from '../components/Word.astro';
+import { Analytics } from '@vercel/analytics/react';
 ---
 
 <html lang="en">
@@ -561,5 +562,6 @@ import Word from '../components/Word.astro';
     </div>
     <Chatbot client:load />
     <DailyCipher client:load />
+    <Analytics />
   </body>
 </html>

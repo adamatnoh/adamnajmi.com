@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { track } from '@vercel/analytics';
 
 // ============================================
 // 1. WORD POOL
@@ -268,6 +269,7 @@ const DailyCipher = () => {
         setWon(true);
         setGameOver(true);
         setShowRewardModal(true);
+        track('cipher_won');
 
         const newStreak = updateStreakOnWin();
         setStreak(newStreak);
@@ -286,16 +288,19 @@ const DailyCipher = () => {
           label = `👑 Super Rare (${superRareThreshold >= 100 ? '100%' : superRareThreshold + '%'})`;
           const idx = Math.floor(Math.random() * SUPER_RARE_IMAGES.length);
           image = `/file/daily-cipher/${SUPER_RARE_IMAGES[idx]}`;
+          track('super_rare_cat');
         } else if (roll < superRareThreshold + 10) {
           rarity = 'rare';
           label = '🌟 Rare (10%)';
           const idx = Math.floor(Math.random() * RARE_IMAGES.length);
           image = `/file/daily-cipher/${RARE_IMAGES[idx]}`;
+          track('rare_cat');
         } else {
           rarity = 'common';
           label = '🐱 Common';
           const idx = Math.floor(Math.random() * COMMON_IMAGES.length);
           image = `/file/daily-cipher/${COMMON_IMAGES[idx]}`;
+          track('common_cat');
         }
 
         const newReward = { rarity, label, image };
@@ -317,6 +322,7 @@ const DailyCipher = () => {
         setGameOver(true);
         resetStreak();
         setStreak(0);
+        track('cipher_lost');
 
         // Save game state after loss
         saveGameState({
@@ -494,6 +500,8 @@ const DailyCipher = () => {
                   }
                   setShowTutorial(false);
                   setIsOpen(true);
+                  // vercel tracking analytic
+                  track('cipher_open');
                 }}
                 className="bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded hover:bg-green-500/30 transition font-mono text-sm w-full"
               >

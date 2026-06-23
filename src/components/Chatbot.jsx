@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Markdown from 'react-markdown';
+import { track } from '@vercel/analytics';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,6 +67,7 @@ const Chatbot = () => {
   }, [isOpen]);
 
   const sendMessage = async () => {
+    track('chat_sent');
     if (!input.trim() || isLoading) return;
 
     const userMessage = { role: 'user', content: input };
@@ -131,7 +133,10 @@ const Chatbot = () => {
 
         {/* Button */}
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            track('chat_open');
+          }}
           className="bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
         >
           <span className="flex items-center gap-2">
