@@ -183,6 +183,7 @@ const DailyCipher = () => {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [reward, setReward] = useState(null);
+  const [showRewardModal, setShowRewardModal] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [streak, setStreak] = useState(0);
 
@@ -205,6 +206,7 @@ const DailyCipher = () => {
       setGameOver(saved.gameOver || false);
       setWon(saved.won || false);
       setReward(saved.reward || null);
+      setShowRewardModal(false);
       setStreak(getStreak());
     } else {
       // No saved state for today – reset
@@ -212,6 +214,7 @@ const DailyCipher = () => {
       setGameOver(false);
       setWon(false);
       setReward(null);
+      setShowRewardModal(false);
       clearGameState();
     }
   }, [isOpen]);
@@ -264,6 +267,7 @@ const DailyCipher = () => {
       if (upperWord === SECRET) {
         setWon(true);
         setGameOver(true);
+        setShowRewardModal(true);
 
         const newStreak = updateStreakOnWin();
         setStreak(newStreak);
@@ -563,16 +567,18 @@ const DailyCipher = () => {
           {won && (
             <div
               className="text-green-400 text-xs font-mono text-center border border-green-500/20 p-1 rounded cursor-pointer"
-              onClick={() => setReward({ ...reward, show: true })}
+              onClick={() => {
+                setShowRewardModal(true);
+              }}
             >
-              Claim your reward
+              Claim your reward!
             </div>
           )}
         </div>
       </div>
 
-      {/* Reward Modal */}
-      {reward && (
+      {/* Reward Modal – only shown when showRewardModal is true */}
+      {reward && showRewardModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80">
           <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg p-8 max-w-sm w-full text-center font-mono shadow-2xl">
             <div className="text-6xl mb-4">
@@ -602,7 +608,7 @@ const DailyCipher = () => {
             <p className="text-cyan-400 text-xs font-mono mb-4">{reward.label}</p>
             <button
               onClick={() => {
-                setReward(null);
+                setShowRewardModal(false);
                 setIsOpen(false);
               }}
               className="bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded hover:bg-green-500/30 transition font-mono text-sm"
