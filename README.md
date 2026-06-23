@@ -73,19 +73,19 @@ Open `http://localhost:4321` to preview the site.
 ```text
 src/
 ├── components/
-│ ├── Chatbot.jsx
-│ ├── DailyCipher.jsx
-| └── Word.astro
+│   ├── Chatbot.jsx
+│   ├── DailyCipher.jsx
+|   └── Word.astro
 ├── data/
-│ ├── personal.ts
-│ ├── resume.ts
-│ └── website.ts
+│   ├── personal.ts
+│   ├── resume.ts
+│   └── website.ts
 ├── pages/
-│ ├── index.astro
-│ └── api/
-│ └── chat.ts
+│   ├── index.astro
+│   └── api/
+│   └── chat.ts
 └── styles/
-└── global.css
+    └── global.css
 ```
 
 ## 🔧 Deployment
