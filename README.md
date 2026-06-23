@@ -107,9 +107,9 @@ The chatbot is powered by Google Gemini API and uses a retrieval-augmented appro
 
 The API route (`src/pages/api/chat.ts`) handles the request, constructs a prompt, and streams the response back to the React component.
 
-## 🎮 About the Daily Cipher Game
+## 🎮 About the Daily Cipher Minigame
 
-The Daily Cipher is a Wordle-style game designed to make the portfolio interactive and encourage visitors to explore the content.
+The Daily Cipher is a word-hunt game designed to make the portfolio interactive and encourage visitors to explore the content.
 
 - Word Selection: The word of the day is chosen using a deterministic hashing function based on the current date (UTC). This ensures all visitors see the same word on the same day without requiring a database or cron job.
 
