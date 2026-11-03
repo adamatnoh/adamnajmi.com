@@ -1,0 +1,104 @@
+---
+interface Props {
+  links?: { href: string; label: string }[];
+}
+const {
+  links = [
+    { href: '/#stack', label: 'stack' },
+    { href: '/#experience', label: 'experience' },
+    { href: '/#projects', label: 'projects' },
+    { href: '/#education', label: 'education' },
+  ],
+} = Astro.props;
+---
+
+<header class="relative z-30 mx-auto w-full max-w-4xl px-5 sm:px-6 pt-5 pb-10">
+  <!-- Leave room on the right for the fixed ./daily_cipher.sh button. -->
+  <div class="flex items-center gap-3 pr-52 sm:pr-48 2xl:pr-0">
+    <a
+      href="/"
+      class="font-mono text-sm font-bold text-white hover:text-green-400 transition shrink-0"
+      aria-label="adamnajmi.com home"
+    >
+      <span class="text-green-400">~/</span>adamnajmi
+    </a>
+    <button
+      type="button"
+      id="theme-toggle"
+      class="ml-auto md:ml-0 order-last inline-flex items-center justify-center w-8 h-8 rounded-md border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition"
+      aria-label="Switch to light theme"
+      title="Toggle theme"
+    >
+      <svg
+        class="icon-sun w-4 h-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+        ><circle cx="12" cy="12" r="4"></circle><path
+          d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+        ></path></svg
+      >
+      <svg
+        class="icon-moon w-4 h-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg
+      >
+    </button>
+    <nav aria-label="Primary" class="hidden md:block ml-auto">
+      <ul class="flex items-center gap-1 font-mono text-sm">
+        {
+          links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="px-2.5 py-1.5 rounded text-white/60 hover:text-white hover:bg-white/5 transition"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+  <nav aria-label="Primary (mobile)" class="md:hidden mt-4 -mx-1 overflow-x-auto no-scrollbar">
+    <ul class="flex items-center gap-1 font-mono text-sm whitespace-nowrap">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="inline-block px-2.5 py-1.5 rounded border border-white/10 text-white/70 hover:text-white transition"
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  const sync = () => {
+    const light = document.documentElement.classList.contains('light');
+    btn?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', light ? '#fafafa' : '#0a0a0a');
+  };
+  sync();
+  btn?.addEventListener('click', () => {
+    const light = !document.documentElement.classList.contains('light');
+    document.documentElement.classList.toggle('light', light);
+    document.documentElement.classList.toggle('dark', !light);
+    localStorage.setItem('theme', light ? 'light' : 'dark');
+    sync();
+  });
+</script>

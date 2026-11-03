@@ -1,0 +1,33 @@
+---
+interface Props {
+  tags: string[];
+  wide?: boolean;
+}
+const { tags, wide = false } = Astro.props;
+---
+
+<article
+  class:list={[
+    'group bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/40 hover:-translate-y-0.5 transition flex flex-col',
+    wide && 'md:col-span-2',
+  ]}
+>
+  <div class="flex items-center gap-2 mb-1">
+    <span class="text-green-400 font-mono text-sm" aria-hidden="true">$</span>
+    <h3 class="text-white font-mono font-bold text-base"><slot name="title" /></h3>
+  </div>
+  <div class="flex flex-wrap gap-2 mb-2">
+    {
+      tags.map((t) => (
+        <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded">
+          #{t}
+        </span>
+      ))
+    }
+    <slot name="tags" />
+  </div>
+  <p class="text-white/60 text-xs md:text-[13px] font-mono mb-2"><slot name="summary" /></p>
+  <div class="space-y-1 text-white/70 text-xs md:text-[13px] font-mono flex-1">
+    <slot />
+  </div>
+</article>

@@ -5,7 +5,8 @@ Portfolio Website (adamnajmi.com):
 - Uses React for interactive components (the chatbot).
 - Deployed on Vercel with serverless functions for the API.
 - The chatbot uses Google's Gemini API (gemini-3.1-flash-lite) to answer questions about Adam based on his resume.
-- Features a terminal-inspired design with a green-on-black color scheme.
+- Features a terminal-inspired design with a green-on-black color scheme, plus a light theme toggle (sun/moon button in the header) that remembers the visitor's choice.
+- Has SEO metadata, Open Graph preview images, structured data, and respects reduced-motion settings.
 - The domain is registered through Cloudflare.
 - The source code is available on GitHub (github.com/adamatnoh).
 - The terminal aesthetic reflects Adam's passion for clean, CLI-friendly tools and backend development.
@@ -19,7 +20,7 @@ A daily word-guessing challenge (Wordle-style) hidden in the portfolio. The goal
 How to play:
 1. Open the game by clicking the "$ ./daily_cipher.sh" button at the top-right corner of the screen.
 2. A terminal-styled widget will appear showing an empty 6x5 grid.
-3. Click on any 5-letter word that appears on the portfolio page (e.g., "MYSQL" in the tech stack, "REACT" in the projects, "NAJMI" in the hero section, or "QUEUE" in the experience bullets). Clickable words turn cyan when hovered.
+3. Click on any 5-letter word that appears on the portfolio page (e.g., "MYSQL" in the tech stack, "REACT" in the projects, "NAJMI" in the hero section, or "KEMAS" in the experience bullets). Clickable words turn cyan when hovered.
 4. The widget will fill in your guess and give you feedback:
    - 🟩 Green = Correct letter, correct position.
    - 🟨 Yellow = Correct letter, wrong position.

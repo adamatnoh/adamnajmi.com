@@ -1,568 +1,479 @@
 ---
-import Chatbot from '../components/Chatbot';
-import DailyCipher from '../components/DailyCipher';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
 import Word from '../components/Word.astro';
-import Analytics from '@vercel/analytics/astro';
+
+const RESUME_URL = import.meta.env.RESUME_URL || '/file/resume.pdf';
+const LINKEDIN_URL = import.meta.env.LINKEDIN_URL || 'https://www.linkedin.com/in/adamnajmi';
+const GITHUB_URL = import.meta.env.GITHUB_URL || 'https://github.com/adamatnoh';
+
+const tag = 'text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded';
+const bullet = 'text-green-400/60';
+
+const skills: { group: string; items: string[] }[] = [
+  { group: 'languages', items: ['TypeScript', 'JavaScript', 'PHP', 'Java', 'SQL'] },
+  { group: 'backend_apis', items: ['Node.js', 'NestJS', 'Laravel', 'REST APIs', 'Swagger'] },
+  {
+    group: 'frontend',
+    items: ['Vue.js 3', 'React Native', 'Next.js', 'Pinia', 'Tailwind CSS', 'Vite'],
+  },
+  { group: 'database_orm', items: ['PostgreSQL', 'MySQL', 'Prisma'] },
+  { group: 'testing_quality', items: ['Playwright', 'ESLint', 'Prettier'] },
+  {
+    group: 'devops_tooling',
+    items: ['Git', 'GitHub', 'Docker', 'Sentry', 'npm', 'Postman', 'Axios'],
+  },
+  { group: 'data_reporting', items: ['Power BI', 'DAX'] },
+];
+
+const stats = [
+  { value: '3', label: 'years shipping production software' },
+  { value: '5,000+', label: 'preschool centres on SPTK' },
+  { value: '6', label: 'junior developers led' },
+  { value: '3.88', label: 'CGPA · BCS (Software Eng.), UTM' },
+];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adam Najmi · Software Engineer</title>
-    <style>
-      /* A tiny custom blink animation for the terminal cursor */
-      .cursor-blink {
-        animation: blink 1s step-end infinite;
-      }
-      @keyframes blink {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0;
-        }
-      }
-      /* Smooth fade-in for the page */
-      body {
-        background-color: #0a0a0a;
-        color: #e5e5e5;
-        font-family: 'Inter', sans-serif;
-      }
-    </style>
-    <style>
-      @import '../styles/global.css';
-    </style>
-    <Analytics />
-  </head>
+<Base>
+  <!-- ========== HERO ========== -->
+  <section aria-label="Introduction" class="space-y-6">
+    <div class="bg-black border border-white/10 rounded-lg p-5 sm:p-6 shadow-2xl">
+      <div class="flex items-center gap-2 border-b border-white/10 pb-3 mb-4" aria-hidden="true">
+        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+        <span class="text-white/40 text-xs ml-2 font-mono">zsh — 80×24</span>
+      </div>
 
-  <body class="min-h-screen flex items-center justify-center p-6">
-    <!-- Main Container -->
-    <div class="max-w-4xl w-full space-y-16">
-      <!-- ========== HERO SECTION ========== -->
-      <section class="space-y-6">
-        <!-- The Terminal Intro -->
-        <div class="bg-black border border-white/10 rounded-lg p-6 shadow-2xl">
-          <div class="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
-            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div class="w-3 h-3 rounded-full bg-green-500"></div>
-            <span class="text-white/30 text-xs ml-2 font-mono">zsh — 80×24</span>
+      <div class="font-mono text-sm md:text-base space-y-2">
+        <p>
+          <span class="text-green-400">➜</span>
+          <span class="text-white/60">~</span>
+          <span class="text-white">whoami</span>
+        </p>
+        <div class="flex items-center gap-3">
+          <div class="relative group inline-block cursor-pointer">
+            <h1 class="text-white font-bold text-2xl md:text-4xl tracking-tight">
+              Adam <Word word="Najmi" />
+            </h1>
+            <div
+              class="absolute left-0 top-full mt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-10"
+            >
+              <div class="bg-black border border-white/10 rounded-lg shadow-2xl p-1">
+                <picture>
+                  <source srcset="/file/adam.webp" type="image/webp" />
+                  <img
+                    src="/file/adam.png"
+                    alt="Portrait of Adam Najmi"
+                    width="128"
+                    height="128"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-32 h-32 object-cover rounded-md"
+                  />
+                </picture>
+              </div>
+            </div>
           </div>
+        </div>
+        <p>
+          <span class="text-green-400">➜</span>
+          <span class="text-white/60">~</span>
+          <span class="text-white">cat /etc/profile</span>
+        </p>
+        <p class="text-white/80 text-lg md:text-2xl font-light">
+          Full Stack Software Engineer · <span class="text-white font-medium"
+            >Fintech &amp; Government</span
+          >
+        </p>
+        <p class="text-white/60 text-sm max-w-2xl leading-relaxed">
+          3 years building production web, mobile and data systems. Led delivery of a cross-platform
+          crypto wallet, a Power BI reporting ecosystem and a national-scale kindergarten management
+          platform serving 5,000+ centres.
+        </p>
+        <p>
+          <span class="text-green-400">➜</span>
+          <span class="text-white/60">~</span>
+          <span class="text-cyan-400">./adam --location</span>
+        </p>
+        <p class="text-white/60">
+          <Word word="Johor" /> Bahru, Malaysia <span class="text-white/30">|</span> Open to Remote &amp;
+          On-site
+        </p>
+        <div class="pt-1 flex flex-wrap gap-x-4 gap-y-2 items-center">
+          <span class="text-green-400" aria-hidden="true">➜</span>
+          <a
+            href={RESUME_URL}
+            target="_blank"
+            rel="noopener"
+            class="text-white border border-white/20 px-4 py-1 rounded hover:bg-white hover:text-black transition text-sm"
+            >Open Resume</a
+          >
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-white/60 hover:text-white transition text-sm">linkedin.com/in/adamnajmi</a
+          >
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-white/60 hover:text-white transition text-sm">github.com/adamatnoh</a
+          >
+        </div>
+        <p class="pt-2 text-white/30 text-xs" aria-hidden="true">
+          <span class="cursor-blink inline-block w-2 h-4 bg-white align-middle"></span>
+        </p>
+      </div>
+    </div>
 
-          <div class="font-mono text-sm md:text-base space-y-2">
-            <p>
-              <span class="text-green-400">➜</span>
-              <span class="text-white/60">~</span>
-              <span class="text-white">whoami</span>
-            </p>
-            <!-- Avatar + Name -->
-            <div class="flex items-center gap-3">
-              <div class="relative group inline-block cursor-pointer">
-                <p class="text-white font-bold text-xl md:text-3xl tracking-tight">
-                  Adam <Word word="Najmi" />
-                </p>
-                <!-- Preview on hover -->
-                <div
-                  class="absolute left-0 top-full mt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-10"
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-3" data-reveal>
+      {
+        stats.map((s) => (
+          <div class="bg-white/[0.03] border border-white/10 rounded-md px-4 py-3">
+            <dt class="sr-only">{s.label}</dt>
+            <dd class="font-mono text-xl md:text-2xl font-bold text-green-400">{s.value}</dd>
+            <dd class="text-white/50 text-xs font-mono mt-0.5">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- ========== TECH STACK ========== -->
+  <section aria-labelledby="stack" data-reveal>
+    <SectionHeading id="stack" icon="⚙️" title="tech_stack">
+      // Languages &amp; <Word word="Tools" />
+    </SectionHeading>
+
+    <div class="space-y-4">
+      {
+        skills.map((s) => (
+          <div class="grid md:grid-cols-[10rem_1fr] gap-2 md:gap-4 items-start">
+            <p class="font-mono text-xs text-white/40 pt-2">{s.group}</p>
+            <ul class="flex flex-wrap gap-2">
+              {s.items.map((tech) => (
+                <li
+                  data-word={tech}
+                  onclick="window.guessWord && window.guessWord(this.dataset.word)"
+                  class="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-pointer"
                 >
-                  <div class="bg-black border border-white/10 rounded-lg shadow-2xl p-1">
-                    <img
-                      src="/file/adam.png"
-                      alt="Adam Najmi"
-                      class="min-w-32 h-32 object-cover rounded-md"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p>
-              <span class="text-green-400">➜</span>
-              <span class="text-white/60">~</span>
-              <span class="text-white">cat /etc/profile</span>
-            </p>
-            <p class="text-white/80 text-lg md:text-2xl font-light">
-              Software Engineer · <span class="text-white font-medium">Backend & Fintech</span>
-            </p>
-            <p>
-              <span class="text-green-400">➜</span>
-              <span class="text-white/60">~</span>
-              <span class="text-cyan-400">./adam --location</span>
-            </p>
-            <p class="text-white/60">
-              <Word word="Johor" />, Malaysia <span class="text-white/30">|</span> Open to Remote & On-site
-            </p>
-            <div class="pt-1 flex flex-wrap gap-4 items-center">
-              <span class="text-green-400">➜</span>
-              <a
-                href={import.meta.env.RESUME_URL}
-                target="_blank"
-                class="text-white border border-white/20 px-4 py-1 rounded hover:bg-white hover:text-black transition text-sm"
-                >Open Resume</a
-              >
-              <a
-                href={import.meta.env.LINKEDIN_URL}
-                target="_blank"
-                class="text-white/60 hover:text-white transition text-sm"
-                >linkedin.com/in/adamnajmi</a
-              >
-              <a
-                href={import.meta.env.GITHUB_URL}
-                target="_blank"
-                class="text-white/60 hover:text-white transition text-sm">github.com/adamatnoh</a
-              >
-            </div>
-            <p class="pt-2 text-white/30 text-xs">
-              <span class="cursor-blink inline-block w-2 h-4 bg-white align-middle"></span>
-              <!-- Blinking cursor -->
-            </p>
+                  {tech}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-        <!-- End Terminal -->
-      </section>
+        ))
+      }
+    </div>
+  </section>
 
-      <!-- ========== TECH STACK ========== -->
-      <section>
-        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
-          <span class="text-green-400 font-mono text-sm">⚙️</span>
-          <h2 class="text-2xl font-mono font-bold text-white">tech_stack</h2>
-          <span class="text-white/30 text-sm font-mono">// Languages & <Word word="Tools" /></span>
-        </div>
+  <!-- ========== EXPERIENCE ========== -->
+  <section aria-labelledby="experience">
+    <SectionHeading id="experience" icon="💻" title="experience">// Work History</SectionHeading>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {
-            [
-              'TypeScript',
-              'JavaScript',
-              'Node.js',
-              'NestJS',
-              'Laravel',
-              'PHP',
-              'React Native',
-              'MySQL',
-              'Prisma',
-              'Power BI',
-              'Docker',
-              'Git',
-            ].map((tech) => (
-              <div
-                data-word={tech}
-                onclick="window.guessWord && window.guessWord(this.dataset.word)"
-                class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-center text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-pointer"
-              >
-                {tech}
-              </div>
-            ))
-          }
-        </div>
-      </section>
-
-      <!-- ========== EXPERIENCE ========== -->
-      <section>
-        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
-          <span class="text-green-400 font-mono text-sm">💻</span>
-          <h2 class="text-2xl font-mono font-bold text-white">experience</h2>
-          <span class="text-white/30 text-sm font-mono">// Work History</span>
-        </div>
-
-        <!-- Rapidz -->
-        <div
-          class="bg-black border border-white/10 rounded-lg p-6 mb-6 hover:border-white/30 transition"
+    <ol class="relative border-l border-white/10 ml-2 space-y-6">
+      <!-- Mechanikos -->
+      <li class="pl-6 relative" data-reveal>
+        <span
+          class="absolute -left-[7px] top-6 w-3 h-3 rounded-full bg-green-400 ring-4 ring-green-400/20"
+          aria-hidden="true"></span>
+        <article
+          class="bg-black border border-white/10 rounded-lg p-5 sm:p-6 hover:border-white/30 transition"
         >
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
             <div>
-              <h3 class="text-xl font-mono font-bold text-white">Rapidz Inc.</h3>
-              <p class="text-cyan-400 font-mono text-sm">Web Developer · 2+ Years</p>
+              <h3 class="text-xl font-mono font-bold text-white">Mechanikos Sdn. Bhd.</h3>
+              <p class="text-cyan-400 font-mono text-sm">
+                Full Stack Developer · Aug 2026 – Present
+              </p>
             </div>
             <span
-              class="text-white/20 text-sm font-mono border border-white/10 px-3 py-1 rounded-full"
-              >Fintech · Crypto</span
+              class="self-start text-white/50 text-xs font-mono border border-white/10 px-3 py-1 rounded-full"
+              >GovTech · Education</span
             >
           </div>
           <ul
-            class="space-y-2 font-mono text-white/70 text-sm list-disc list-inside marker:text-green-400"
+            class="space-y-2 font-mono text-white/70 text-sm list-disc pl-5 marker:text-green-400"
           >
             <li>
-              Implemented HMAC request signing &amp; JWT (RS256) authentication for secure APIs.
+              Directing full-stack development of SPTK, a national MIS for 5,000+ TABIKA preschool
+              centres under <Word word="KEMAS" /> (Ministry of Rural and Regional Development): registration,
+              GPS-verified attendance, digital library and role-based access across centre, district,
+              state and HQ.
             </li>
             <li>
-              <Word word="Built" /> a push notification <Word word="queue" /> (FCM) handling millions
-              of
-              <Word word="daily" /> events.
+              Leading a team of 6 junior developers through code reviews and technical decisions
+              across the Laravel backend and Vue 3 + TypeScript frontend.
             </li>
             <li>
-              Designed a <Word word="Power" /> BI reporting ecosystem (P&amp;L, <Word
-                word="yield"
-              />, product performance) from scratch.
+              Restructured sprint planning, ticketing, backlog prioritisation and module ownership
+              in the first week.
             </li>
             <li>
-              Championed on migration from Laravel/PHP to NestJS + <Word word="React" /> Native <Word
-                word="stack"
-              />.
+              Established Playwright E2E testing, TypeScript strict mode and structured
+              API/repository patterns for maintainability at <Word word="scale" />.
+            </li>
+            <li>
+              Coordinating cross-module delivery (system management, registration &amp; attendance,
+              digital library, finance) across staging and pre-production government environments.
             </li>
           </ul>
-        </div>
+        </article>
+      </li>
 
-        <!-- Intel -->
-        <div
-          class="bg-black border border-white/10 rounded-lg p-6 hover:border-white/30 transition"
+      <!-- Rapidz -->
+      <li class="pl-6 relative" data-reveal>
+        <span class="absolute -left-[7px] top-6 w-3 h-3 rounded-full bg-white/30" aria-hidden="true"
+        ></span>
+        <article
+          class="bg-black border border-white/10 rounded-lg p-5 sm:p-6 hover:border-white/30 transition"
         >
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
             <div>
               <h3 class="text-xl font-mono font-bold text-white">
-                <Word word="Intel" /> Corporation
+                Rapidz Inc. <span class="text-white/40 text-sm font-normal"
+                  >@ Clarity Techworks Sdn. Bhd.</span
+                >
               </h3>
-              <p class="text-cyan-400 font-mono text-sm">Software Engineering Intern</p>
+              <p class="text-cyan-400 font-mono text-sm">
+                Software Engineer (Backend / Full-Stack) · Oct 2023 – May 2026
+              </p>
             </div>
             <span
-              class="text-white/20 text-sm font-mono border border-white/10 px-3 py-1 rounded-full"
+              class="self-start text-white/50 text-xs font-mono border border-white/10 px-3 py-1 rounded-full"
+              >Fintech · Crypto</span
+            >
+          </div>
+          <ul
+            class="space-y-2 font-mono text-white/70 text-sm list-disc pl-5 marker:text-green-400"
+          >
+            <li>
+              Hardened API security with server-to-server HMAC request signing and replay-attack
+              protection.
+            </li>
+            <li>
+              Engineered a JWT (RS256) access &amp; refresh <Word word="token" /> system with automated
+              revocation for 2FA, biometric and OAuth <Word word="flows" />.
+            </li>
+            <li>
+              Architected a <Word word="Power" /> BI reporting ecosystem from scratch for real-time revenue
+              and campaign performance visibility.
+            </li>
+            <li>
+              Contributed to the migration from Laravel/PHP to NestJS + <Word word="React" /> Native
+              <Word word="stack" />.
+            </li>
+            <li>
+              Onboarded third-party providers across vendor transitions, and integrated Sentry error
+              tracking with standardised exception handling.
+            </li>
+          </ul>
+        </article>
+      </li>
+
+      <!-- Intel -->
+      <li class="pl-6 relative" data-reveal>
+        <span class="absolute -left-[7px] top-6 w-3 h-3 rounded-full bg-white/30" aria-hidden="true"
+        ></span>
+        <article
+          class="bg-black border border-white/10 rounded-lg p-5 sm:p-6 hover:border-white/30 transition"
+        >
+          <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
+            <div>
+              <h3 class="text-xl font-mono font-bold text-white">
+                <Word word="Intel" /> Technology Sdn. Bhd.
+              </h3>
+              <p class="text-cyan-400 font-mono text-sm">
+                Software Engineer Intern · Oct 2022 – Feb 2023
+              </p>
+            </div>
+            <span
+              class="self-start text-white/50 text-xs font-mono border border-white/10 px-3 py-1 rounded-full"
               >Semiconductor</span
             >
           </div>
           <ul
-            class="space-y-2 font-mono text-white/70 text-sm list-disc list-inside marker:text-green-400"
+            class="space-y-2 font-mono text-white/70 text-sm list-disc pl-5 marker:text-green-400"
           >
-            <li>Developed Python &amp; Perl scripts for GUI automation and verification.</li>
             <li>
-              Worked with Verilog &amp; SystemVerilog for hardware validation <Word word="flows" />.
+              Diagnosed, fixed and integrated a system GUI with its Perl &amp; Python scripts for
+              mass deployment across Intel departments.
+            </li>
+            <li>Authored user manuals and end-user testing protocols.</li>
+            <li>
+              Hands-on chipset design verification with Python, Perl, Tk, Verilog &amp;
+              SystemVerilog on Unix/Linux.
             </li>
             <li>
-              Collaborated across global <Word word="teams" /> (US, Malaysia) to deliver testing frameworks.
+              Collaborated with cross-geo <Word word="teams" /> (USA, India) through design meetings and
+              knowledge-sharing sessions.
             </li>
           </ul>
-        </div>
-      </section>
+        </article>
+      </li>
+    </ol>
+  </section>
 
-      <!-- ========== PROJECTS ========== -->
-      <section>
-        <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-2">
-          <span class="text-green-400 font-mono text-sm">🖥️</span>
-          <h2 class="text-2xl font-mono font-bold text-white">projects</h2>
-          <span class="text-white/30 text-sm font-mono">// Project Builds</span>
-        </div>
+  <!-- ========== PROJECTS ========== -->
+  <section aria-labelledby="projects">
+    <SectionHeading id="projects" icon="🖥️" title="projects">// Project Builds</SectionHeading>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Rapidz -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">rapidz</h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#crypto</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#api</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#nestjs</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#<Word word="react" />-native</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Production-<Word word="grade" /> wallet serving thousands of <Word word="users" /> globally.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p><span class="text-green-400/50">></span> Deposit / Withdraw crypto</p>
-              <p>
-                <span class="text-green-400/50">></span> Hold & receive digital collectibles (NFT)
-              </p>
-              <p>
-                <span class="text-green-400/50">></span>
-                <Word word="Stake" /> &amp; earn real <Word word="yield" />
-                <Word word="rates" />
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> Instant <Word word="swaps" /> (20+ cryptos)
-              </p>
-              <p><span class="text-green-400/50">></span> Rapidz Card spending integration</p>
-            </div>
-          </div>
-
-          <!-- Verrefin -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">verrefin</h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#defi</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#webapp</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#nestjs</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#<Word word="react" />-native</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Neo crypto bank unifying traditional and decentralized finance.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p>
-                <span class="text-green-400/50">></span> Fiat wallet & <Word word="cross" />-border
-                payments
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> Earn yields through ecosystem <Word
-                  word="vault"
-                />
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> 70% <Word word="lower" /> fees than traditional
-                <Word word="banks" />
-              </p>
-              <p><span class="text-green-400/50">></span> Co-branded card program</p>
-            </div>
-          </div>
-
-          <!-- Admin Portal -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">
-                <Word word="admin" />-portal
-              </h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#<Word word="admin" /></span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#webapp</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#laravel</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#php</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Internal management portal for Rapidz administrators.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p>
-                <span class="text-green-400/50">></span> Deposit / Withdraw <Word word="admin" />
-                <Word word="funds" />
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> User account &amp; transaction management
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> Bulk <Word word="email" />
-                distribution to <Word word="users" />
-              </p>
-            </div>
-          </div>
-
-          <!-- Merchant Portal -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">merchant-portal</h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#merchant</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#webapp</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#laravel</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#php</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Management portal for Rapidz merchants/clients.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p>
-                <span class="text-green-400/50">></span>
-                <Word word="Staff" /> account &amp; role management
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> Virtual card issuance &amp; distribution
-              </p>
-              <p>
-                <span class="text-green-400/50">></span>
-                <Word word="Token" />/NFT airdrops for campaigns
-              </p>
-            </div>
-          </div>
-
-          <!-- OTC Telegram Bot -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">otc-telegram-bot</h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#telegram</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#bot</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#nodejs</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#nestjs</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Trading bot enabling crypto/fiat exchange via Telegram.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p>
-                <span class="text-green-400/50">></span> Buy &amp; sell crypto with integrated <Word
-                  word="rates"
-                />
-              </p>
-              <p>
-                <span class="text-green-400/50">></span> Custom <Word word="rates" /> per client/<Word
-                  word="agent"
-                />
-              </p>
-              <p>
-                <span class="text-green-400/50">></span>
-                <Word word="Agent" />-assisted transactions on behalf of clients
-              </p>
-            </div>
-          </div>
-
-          <!-- Power BI Reporting -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">
-                <Word word="power" />-bi-analytics
-              </h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#rapidz-inc</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#ms-<Word word="power" />-bi</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#dax</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#reporting</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              Real-time Rapidz executive dashboards for revenue, <Word word="yield" />, and product
-              performance.
-            </p>
-            <div class="space-y-1 text-white/60 text-xs md:text-[13px] font-mono flex-1">
-              <p>
-                <span class="text-green-400/50">></span> Real-time <Word word="power" /> P&amp;L &amp;
-                <Word word="yield" /> tracking
-              </p>
-              <p><span class="text-green-400/50">></span> Product performance dashboards</p>
-              <p><span class="text-green-400/50">></span> Data-driven executive decision-making</p>
-            </div>
-          </div>
-
-          <!-- HSS (Final Year Project) -->
-          <div
-            class="bg-black border border-green-500/10 rounded-md p-4 hover:border-green-500/30 transition flex flex-col md:col-span-2"
-          >
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-green-400 font-mono text-sm">$</span>
-              <h3 class="text-white font-mono font-bold text-base">hospital-scheduling-system</h3>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#fyp-utm</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#healthcare</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#webapp</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#laravel</span
-              >
-              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded"
-                >#php</span
-              >
-            </div>
-            <p class="text-white/50 text-xs md:text-[13px] font-mono mb-2">
-              <Word word="Final" /> Year Project – Hospital scheduling system streamlining appointments
-              and resource management.
-            </p>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-white/60 text-xs md:text-[13px] font-mono flex-1"
-            >
-              <div class="space-y-1">
-                <p><span class="text-green-400/50">></span> Real-time availability booking</p>
-                <p><span class="text-green-400/50">></span> Doctor schedule management</p>
-              </div>
-              <div class="space-y-1">
-                <p><span class="text-green-400/50">></span> Automated reminders & notifications</p>
-                <p><span class="text-green-400/50">></span> Administrative oversight dashboard</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ========== FOOTER / CONTACT ========== -->
-      <footer class="border-t border-white/10 pt-8 text-center text-white/30 text-xs font-mono">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal>
+      <ProjectCard tags={['rapidz-inc', 'crypto', 'api', 'nestjs']}>
+        <Fragment slot="title">rapidz</Fragment>
+        <span slot="tags" class={tag}>#<Word word="react" />-native</span>
+        <Fragment slot="summary">
+          Production-<Word word="grade" /> wallet serving thousands of <Word word="users" /> globally.
+        </Fragment>
+        <p><span class={bullet}>&gt;</span> Deposit / Withdraw crypto</p>
+        <p><span class={bullet}>&gt;</span> Hold &amp; receive digital collectibles (NFT)</p>
         <p>
-          adamnajmi.com ·
-          <a href="mailto:adamnajminoh@gmail.com" class="text-white/50 hover:text-white"
-            >adamnajminoh@gmail.com</a
-          > ·
-          <span class="text-green-400">●</span> Open for opportunities
+          <span class={bullet}>&gt;</span>
+          <Word word="Stake" /> &amp; earn real <Word word="yield" />
+          <Word word="rates" />
         </p>
-      </footer>
+        <p><span class={bullet}>&gt;</span> Instant <Word word="swaps" /> (20+ cryptos)</p>
+        <p><span class={bullet}>&gt;</span> Rapidz Card spending integration</p>
+      </ProjectCard>
+
+      <ProjectCard tags={['rapidz-inc', 'defi', 'webapp', 'nestjs']}>
+        <Fragment slot="title">verrefin</Fragment>
+        <span slot="tags" class={tag}>#<Word word="react" />-native</span>
+        <Fragment slot="summary"
+          >Neo crypto bank unifying traditional and decentralized finance.</Fragment
+        >
+        <p>
+          <span class={bullet}>&gt;</span> Fiat wallet &amp; <Word word="cross" />-border payments
+        </p>
+        <p><span class={bullet}>&gt;</span> Earn yields through ecosystem <Word word="vault" /></p>
+        <p>
+          <span class={bullet}>&gt;</span> 70% <Word word="lower" /> fees than traditional
+          <Word word="banks" />
+        </p>
+        <p><span class={bullet}>&gt;</span> Co-branded card program</p>
+      </ProjectCard>
+
+      <ProjectCard tags={['rapidz-inc', 'webapp', 'laravel', 'php']}>
+        <Fragment slot="title"><Word word="admin" />-portal</Fragment>
+        <span slot="tags" class={tag}>#<Word word="admin" /></span>
+        <Fragment slot="summary">
+          Internal management portal <Word word="built" /> for Rapidz administrators.
+        </Fragment>
+        <p>
+          <span class={bullet}>&gt;</span> Deposit / Withdraw <Word word="admin" />
+          <Word word="funds" />
+        </p>
+        <p><span class={bullet}>&gt;</span> User account &amp; transaction management</p>
+        <p>
+          <span class={bullet}>&gt;</span> Bulk <Word word="email" /> distribution to <Word
+            word="users"
+          />
+        </p>
+      </ProjectCard>
+
+      <ProjectCard tags={['rapidz-inc', 'merchant', 'webapp', 'laravel', 'php']}>
+        <Fragment slot="title">merchant-portal</Fragment>
+        <Fragment slot="summary">Management portal for Rapidz merchants/clients.</Fragment>
+        <p>
+          <span class={bullet}>&gt;</span>
+          <Word word="Staff" /> account &amp; role management
+        </p>
+        <p><span class={bullet}>&gt;</span> Virtual card issuance &amp; distribution</p>
+        <p>
+          <span class={bullet}>&gt;</span>
+          <Word word="Token" />/NFT airdrops for campaigns
+        </p>
+      </ProjectCard>
+
+      <ProjectCard tags={['rapidz-inc', 'telegram', 'bot', 'nodejs', 'nestjs']}>
+        <Fragment slot="title">otc-telegram-bot</Fragment>
+        <Fragment slot="summary">Trading bot enabling crypto/fiat exchange via Telegram.</Fragment>
+        <p>
+          <span class={bullet}>&gt;</span> Buy &amp; sell crypto with integrated <Word
+            word="rates"
+          />
+        </p>
+        <p>
+          <span class={bullet}>&gt;</span> Custom <Word word="rates" /> per client/<Word
+            word="agent"
+          />
+        </p>
+        <p>
+          <span class={bullet}>&gt;</span>
+          <Word word="Agent" />-assisted transactions on behalf of clients
+        </p>
+      </ProjectCard>
+
+      <ProjectCard tags={['rapidz-inc', 'dax', 'reporting']}>
+        <Fragment slot="title"><Word word="power" />-bi-analytics</Fragment>
+        <span slot="tags" class={tag}>#ms-<Word word="power" />-bi</span>
+        <Fragment slot="summary">
+          Real-time Rapidz executive dashboards for revenue, <Word word="yield" />, and product
+          performance.
+        </Fragment>
+        <p>
+          <span class={bullet}>&gt;</span> Real-time P&amp;L &amp; <Word word="yield" /> tracking
+        </p>
+        <p><span class={bullet}>&gt;</span> Revenue &amp; campaign performance dashboards</p>
+        <p><span class={bullet}>&gt;</span> Data-driven executive decision-making</p>
+      </ProjectCard>
+
+      <ProjectCard tags={['fyp-utm', 'healthcare', 'laravel', 'livewire', 'postgresql']} wide>
+        <Fragment slot="title">hospital-scheduling-system</Fragment>
+        <Fragment slot="summary">
+          My <Word word="final" /> year project at UTM (2023), rebuilt in 2026 — duty rosters for hospital
+          departments.
+        </Fragment>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
+          <div class="space-y-1">
+            <p><span class={bullet}>&gt;</span> On-call, ward rotation &amp; shift generators</p>
+            <p><span class={bullet}>&gt;</span> Preview + fairness report before publishing</p>
+          </div>
+          <div class="space-y-1">
+            <p><span class={bullet}>&gt;</span> Leave, on-call &amp; swap request reviews</p>
+            <p><span class={bullet}>&gt;</span> Live at hss.adamnajmi.com</p>
+          </div>
+        </div>
+      </ProjectCard>
     </div>
-    <Chatbot client:load />
-    <DailyCipher client:load />
-  </body>
-</html>
+  </section>
+
+  <!-- ========== EDUCATION & LANGUAGES ========== -->
+  <section aria-labelledby="education" data-reveal>
+    <SectionHeading id="education" icon="🎓" title="education"
+      >// Degrees &amp; Languages</SectionHeading
+    >
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <article class="bg-black border border-white/10 rounded-lg p-5 md:col-span-2 space-y-4">
+        <div>
+          <h3 class="font-mono font-bold text-white">Universiti Teknologi Malaysia (UTM)</h3>
+          <p class="text-cyan-400 font-mono text-sm">
+            Bachelor of Computer Science (Software Engineering)
+          </p>
+          <p class="text-white/50 font-mono text-xs mt-1">2019 – 2023 · CGPA 3.88</p>
+        </div>
+        <div class="border-t border-white/10 pt-4">
+          <h3 class="font-mono font-bold text-white">Kolej Matrikulasi Johor</h3>
+          <p class="text-cyan-400 font-mono text-sm">KPM Matriculation Certificate</p>
+          <p class="text-white/50 font-mono text-xs mt-1">2018 – 2019 · CGPA 3.75</p>
+        </div>
+      </article>
+      <article class="bg-black border border-white/10 rounded-lg p-5">
+        <h3 class="font-mono font-bold text-white mb-3">languages</h3>
+        <ul class="font-mono text-sm space-y-2">
+          <li class="flex justify-between gap-2">
+            <span class="text-white/80">Bahasa Melayu</span><span class="text-white/40">native</span
+            >
+          </li>
+          <li class="flex justify-between gap-2">
+            <span class="text-white/80">English</span><span class="text-white/40">fluent</span>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</Base>

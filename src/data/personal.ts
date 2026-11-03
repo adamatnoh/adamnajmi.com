@@ -13,8 +13,10 @@ export const PERSONAL_INFO = `
 - Born in: Kluang, Johor, Malaysia
 - Current Address: Gelang Patah, Johor, Malaysia
 - Appearance: Very handsome guy
-- Title: 'Full-Stack Software Engineer',
+- Title: 'Full Stack Software Engineer',
 - Linkedin: 'linkedin.com/in/adamnajmi',
 - Github: 'github.com/adamatnoh',
+- Website: 'adamnajmi.com',
+- Current Role: Full Stack Developer at Mechanikos Sdn. Bhd. (since Aug 2026)
 - Availability: 'Open to remote, hybrid, or on-site roles in Johor or Singapore',
 `;

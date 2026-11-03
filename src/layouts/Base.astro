@@ -1,0 +1,151 @@
+---
+import Analytics from '@vercel/analytics/astro';
+import Chatbot from '../components/Chatbot';
+import DailyCipher from '../components/DailyCipher';
+import Nav from '../components/Nav.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+}
+
+const SITE = 'https://adamnajmi.com';
+const {
+  title = 'Adam Najmi · Full Stack Software Engineer',
+  description = 'Adam Najmi is a Full Stack Software Engineer in Johor Bahru, Malaysia, building production web, mobile and data systems for fintech and government.',
+  path = Astro.url.pathname,
+  image = '/og.png',
+} = Astro.props;
+const canonical = new URL(path, SITE).toString();
+const ogImage = new URL(image, SITE).toString();
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Adam Najmi Bin Mat Noh',
+  alternateName: 'Adam Najmi',
+  jobTitle: 'Full Stack Software Engineer',
+  url: SITE,
+  email: 'mailto:adamnajminoh@gmail.com',
+  image: `${SITE}/file/adam.png`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Johor Bahru',
+    addressRegion: 'Johor',
+    addressCountry: 'MY',
+  },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universiti Teknologi Malaysia' },
+  sameAs: ['https://www.linkedin.com/in/adamnajmi', 'https://github.com/adamatnoh'],
+};
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Adam Najmi" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark light" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="adamnajmi.com" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+
+    <!-- Apply the saved theme before first paint so there is no flash. -->
+    <script is:inline>
+      (() => {
+        const param = new URLSearchParams(location.search).get('theme');
+        if (param === 'light' || param === 'dark') localStorage.setItem('theme', param);
+        const saved = localStorage.getItem('theme');
+        const theme = saved === 'light' ? 'light' : 'dark';
+        document.documentElement.classList.toggle('light', theme === 'light');
+        document.documentElement.classList.toggle('dark', theme !== 'light');
+      })();
+    </script>
+    <Analytics />
+  </head>
+
+  <body class="min-h-screen antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:bg-green-400 focus:text-black focus:px-3 focus:py-2 focus:rounded font-mono text-sm"
+      >Skip to content</a
+    >
+    <div class="bg-grid" aria-hidden="true"></div>
+    <Nav />
+    <main id="main" class="relative mx-auto w-full max-w-4xl px-5 sm:px-6 pb-16 space-y-20">
+      <slot />
+    </main>
+
+    <footer
+      class="relative mx-auto max-w-4xl px-5 sm:px-6 border-t border-white/10 py-8 pb-24 sm:pb-8 text-center text-white/40 text-xs font-mono space-y-2"
+    >
+      <p>
+        adamnajmi.com ·
+        <a href="mailto:adamnajminoh@gmail.com" class="text-white/60 hover:text-white"
+          >adamnajminoh@gmail.com</a
+        > ·
+        <span class="text-green-400" aria-hidden="true">●</span> Open for opportunities
+      </p>
+      <p>
+        <a
+          href="https://www.linkedin.com/in/adamnajmi"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-white">LinkedIn</a
+        > ·
+        <a
+          href="https://github.com/adamatnoh"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-white">GitHub</a
+        >
+      </p>
+    </footer>
+
+    <Chatbot client:load />
+    <DailyCipher client:load />
+
+    <script>
+      // Reveal sections as they scroll into view. Without JS, or with reduced
+      // motion, everything is simply visible.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (!reduce && 'IntersectionObserver' in window) {
+        document.documentElement.classList.add('js-reveal');
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+        );
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>
