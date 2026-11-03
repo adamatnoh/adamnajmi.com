@@ -84,7 +84,8 @@ Portfolio Projects:
 7. HSS (Hospital Scheduling System)
    Timeline: Final Year Project at Universiti Teknologi Malaysia (UTM) in 2023, rebuilt from scratch in 2026
    Tech Stack: Laravel 12, Livewire 3, Tailwind CSS 4, PostgreSQL (Neon), FullCalendar, deployed on Vercel
-   Live demo: https://hss.adamnajmi.com
+   Live demo: https://hss.adamnajmi.com (guided tour and case study at adamnajmi.com/hss; adamnajmi.com/hss/live opens the live app)
+   Source code: https://github.com/adamatnoh/hospital-scheduling-system
    A duty-roster web app for hospital departments, with three roles: admin, scheduler, and doctor.
    Features:
    - Three schedule generators: on-call, ward rotation, and shifts, each with a preview and a fairness report before publishing.

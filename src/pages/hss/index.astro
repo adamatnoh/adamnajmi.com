@@ -1,0 +1,357 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import BrowserFrame from '../../components/hss/BrowserFrame.astro';
+import Carousel from '../../components/hss/Carousel.astro';
+import { FEATURES, HSS_LOGIN_URL, HSS_REPO_URL, ROLES, STACK } from '../../data/hss';
+
+const accounts = ROLES.filter((r) => r.id !== 'mobile');
+---
+
+<Base
+  title="HSS · Hospital Scheduling System — Adam Najmi"
+  description="A guided tour of HSS, my hospital duty-roster app built with Laravel 12, Livewire 3 and PostgreSQL. Try the live demo with one of the public demo accounts."
+  path="/hss"
+  image="/hss/og.jpg"
+>
+  <!-- ========== HERO ========== -->
+  <section aria-labelledby="hss-title" class="space-y-5">
+    <a href="/#projects" class="inline-block font-mono text-xs text-white/50 hover:text-white"
+      >← cd ~/projects</a
+    >
+    <div class="font-mono space-y-2">
+      <p class="text-sm">
+        <span class="text-green-400">➜</span>
+        <span class="text-white/60">~/projects</span>
+        <span class="text-white">cat hss/README.md</span>
+      </p>
+      <h1 id="hss-title" class="text-white font-bold text-3xl md:text-5xl tracking-tight">
+        Hospital Scheduling System
+      </h1>
+      <p class="text-white/70 text-sm md:text-base leading-relaxed max-w-3xl">
+        A duty-roster app for hospital departments. Schedulers generate fair on-call, ward and shift
+        rosters, preview them, then publish; doctors see their duties, request leave or swaps, and
+        subscribe to their schedule from any calendar app. It started as my final year project at
+        UTM in 2023, and I rebuilt it from scratch in 2026.
+      </p>
+    </div>
+    <ul class="flex flex-wrap gap-2" aria-label="Built with">
+      {
+        STACK.map((t) => (
+          <li class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded">{t}</li>
+        ))
+      }
+    </ul>
+    <div class="flex flex-wrap items-center gap-3 font-mono text-sm pt-1">
+      <a
+        href="/hss/live"
+        class="inline-flex items-center gap-2 rounded-md bg-green-400 text-black font-bold px-4 py-2 hover:bg-green-300 transition"
+        ><span aria-hidden="true">▶</span> Launch live demo</a
+      >
+      <a
+        href="#try"
+        class="inline-flex items-center gap-2 rounded-md border border-white/20 text-white px-4 py-2 hover:bg-white hover:text-black transition"
+        >Try it here <span aria-hidden="true">↓</span></a
+      >
+      <a
+        href={HSS_REPO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-white/60 hover:text-white transition">source on GitHub ↗</a
+      >
+    </div>
+  </section>
+
+  <!-- ========== GUIDED TOUR ========== -->
+  <section aria-labelledby="tour" data-reveal>
+    <SectionHeading id="tour" icon="🧭" title="guided_tour">// pick a role</SectionHeading>
+
+    <div
+      role="tablist"
+      aria-label="HSS roles"
+      class="flex flex-wrap gap-2 mb-5 font-mono text-sm"
+      data-tabs
+    >
+      {
+        ROLES.map((role, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${role.id}`}
+            aria-controls={`panel-${role.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="px-3 py-1.5 rounded-md border border-white/15 text-white/70 hover:text-white transition aria-selected:bg-green-400 aria-selected:text-black aria-selected:border-green-400 aria-selected:font-bold"
+          >
+            {role.label}
+          </button>
+        ))
+      }
+    </div>
+
+    {
+      ROLES.map((role, i) => (
+        <div
+          role="tabpanel"
+          id={`panel-${role.id}`}
+          aria-labelledby={`tab-${role.id}`}
+          hidden={i !== 0}
+          data-panel
+        >
+          <p class="font-mono text-sm text-white/70 mb-4">
+            <span class="text-white">{role.name}</span>
+            <span class="text-white/30"> · </span>
+            {role.blurb}
+          </p>
+          {role.id === 'mobile' ? (
+            <div class="flex flex-wrap justify-center gap-6">
+              {role.steps.map((step) => (
+                <figure class="w-[min(16rem,42vw)]">
+                  <div class="rounded-[1.75rem] border-[6px] border-white/15 bg-black overflow-hidden shadow-2xl">
+                    <img
+                      src={step.src}
+                      alt={step.alt}
+                      width="640"
+                      height="1386"
+                      loading="lazy"
+                      decoding="async"
+                      class="w-full h-auto"
+                    />
+                  </div>
+                  <figcaption class="mt-2 text-center font-mono text-xs text-white/60">
+                    {step.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : (
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_15rem]">
+              <BrowserFrame url={`hss.adamnajmi.com · ${role.account}`} tilt>
+                <Carousel
+                  slides={role.steps}
+                  label={`${role.label} walkthrough`}
+                  interval={5000}
+                  eager={i === 0}
+                  showCaption={false}
+                />
+              </BrowserFrame>
+              <ol class="space-y-2" data-steps>
+                {role.steps.map((step, n) => (
+                  <li>
+                    <button
+                      type="button"
+                      data-goto={n}
+                      aria-current={n === 0 ? 'step' : 'false'}
+                      class="w-full text-left rounded-md border border-white/10 p-3 font-mono text-xs leading-relaxed text-white/60 hover:border-white/30 transition aria-[current=step]:border-green-400/60 aria-[current=step]:text-white aria-[current=step]:bg-green-400/5"
+                    >
+                      {step.caption}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section aria-labelledby="features" data-reveal>
+    <SectionHeading id="features" icon="✨" title="features">// what it does</SectionHeading>
+    <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {
+        FEATURES.map((f) => (
+          <li class="rounded-md border border-white/10 bg-black p-4 font-mono text-sm text-white/80 hover:border-green-400/40 transition">
+            <span class="text-green-400" aria-hidden="true">
+              ✓
+            </span>{' '}
+            {f}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- ========== TRY IT ========== -->
+  <section aria-labelledby="try" data-reveal>
+    <SectionHeading id="try" icon="🧪" title="try_it_live">// no sign-up needed</SectionHeading>
+
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_17rem]">
+      <BrowserFrame url="hss.adamnajmi.com/login">
+        <div class="relative aspect-[16/10] bg-white/5" data-live>
+          <img
+            src="/hss/login.webp"
+            alt="HSS login page with demo account buttons"
+            width="1600"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+            class="absolute inset-0 w-full h-full object-cover object-top"
+            data-live-poster
+          />
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-[2px] p-4 text-center"
+            data-live-overlay
+          >
+            <button
+              type="button"
+              data-live-load
+              class="hidden lg:inline-flex items-center gap-2 rounded-md bg-green-400 text-black font-mono font-bold text-sm px-4 py-2 hover:bg-green-300 transition"
+            >
+              <span aria-hidden="true">▶</span> Load the live app here
+            </button>
+            <a
+              href="/hss/live"
+              class="inline-flex items-center gap-2 rounded-md border border-white/30 bg-black/50 text-white font-mono text-sm px-4 py-2 hover:bg-white hover:text-black transition"
+              >Open in a new page ↗</a
+            >
+            <p class="font-mono text-[11px] text-white/60 max-w-xs">
+              Opens on the login page, with the demo accounts ready to use.
+            </p>
+          </div>
+        </div>
+      </BrowserFrame>
+
+      <div class="space-y-3">
+        <p class="font-mono text-xs text-white/60 leading-relaxed">
+          Use the demo buttons on the login page, or sign in with one of these accounts:
+        </p>
+        <ul class="space-y-2">
+          {
+            accounts.map((a) => (
+              <li class="rounded-md border border-white/10 bg-black p-3 font-mono text-xs">
+                <p class="text-white font-bold">
+                  {a.label} <span class="font-normal text-white/50">· {a.name}</span>
+                </p>
+                <p class="mt-1 flex items-center justify-between gap-2">
+                  <code class="text-cyan-400 truncate">{a.account}</code>
+                  <button
+                    type="button"
+                    data-copy={a.account}
+                    class="shrink-0 text-white/50 hover:text-white border border-white/15 rounded px-1.5 py-0.5"
+                    aria-label={`Copy ${a.account}`}
+                  >
+                    copy
+                  </button>
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="font-mono text-xs text-white/50">
+          password for all: <code class="text-cyan-400">password</code>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== STORY ========== -->
+  <section aria-labelledby="story" data-reveal>
+    <SectionHeading id="story" icon="📜" title="git_log">// how it got here</SectionHeading>
+    <ol class="relative border-l border-white/10 ml-2 space-y-5 font-mono text-sm">
+      <li class="pl-6 relative">
+        <span
+          class="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-white/30"
+          aria-hidden="true"></span>
+        <p class="text-white/40 text-xs">2023</p>
+        <p class="text-white">Final year project, Universiti Teknologi Malaysia</p>
+        <p class="text-white/60 text-xs mt-1">
+          The first version of HSS, built for my Bachelor of Computer Science (Software
+          Engineering).
+        </p>
+      </li>
+      <li class="pl-6 relative">
+        <span
+          class="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-4 ring-green-400/20"
+          aria-hidden="true"></span>
+        <p class="text-white/40 text-xs">2026</p>
+        <p class="text-white">Rebuilt from scratch and deployed</p>
+        <p class="text-white/60 text-xs mt-1">
+          Laravel 12, Livewire 3 and Tailwind CSS 4 on PostgreSQL (Neon), running on Vercel at
+          <a
+            href={HSS_LOGIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-cyan-400 hover:underline">hss.adamnajmi.com</a
+          >.
+        </p>
+      </li>
+    </ol>
+  </section>
+</Base>
+
+<script>
+  import { HSS_LOGIN_URL } from '../../data/hss';
+
+  // ---- Role tabs (WAI-ARIA tabs pattern) ----
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-panel]')];
+  const select = (i: number, focus = false) => {
+    tabs.forEach((t, n) => {
+      const on = n === i;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (panels[n]) panels[n].hidden = !on;
+    });
+    if (focus) tabs[i]?.focus();
+    panels[i]
+      ?.querySelector('[data-carousel]')
+      ?.dispatchEvent(new CustomEvent('carousel:go', { detail: 0 }));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') select((i + 1) % tabs.length, true);
+      if (e.key === 'ArrowLeft') select((i - 1 + tabs.length) % tabs.length, true);
+    });
+  });
+
+  // ---- Step list drives the carousel, and follows it ----
+  panels.forEach((panel) => {
+    const carousel = panel.querySelector<HTMLElement>('[data-carousel]');
+    const steps = [...panel.querySelectorAll<HTMLButtonElement>('[data-goto]')];
+    if (!carousel) return;
+    steps.forEach((b) =>
+      b.addEventListener('click', () =>
+        carousel.dispatchEvent(new CustomEvent('carousel:go', { detail: Number(b.dataset.goto) })),
+      ),
+    );
+    carousel.addEventListener('carousel:change', (e) => {
+      const idx = (e as CustomEvent<number>).detail;
+      steps.forEach((b, n) => b.setAttribute('aria-current', n === idx ? 'step' : 'false'));
+    });
+  });
+
+  // ---- Load the live app inside the page on demand ----
+  // HSS session cookies are SameSite=Lax, so signing in inside the frame only works when this
+  // page is served from the same site (adamnajmi.com). Elsewhere (localhost, *.vercel.app
+  // previews) drop the button and keep the "Open in a new page" link.
+  const sameSite = /(^|\.)adamnajmi\.com$/.test(location.hostname);
+  if (!sameSite) document.querySelector('[data-live-load]')?.remove();
+  document.querySelector('[data-live-load]')?.addEventListener('click', () => {
+    const box = document.querySelector<HTMLElement>('[data-live]');
+    if (!box) return;
+    const frame = document.createElement('iframe');
+    frame.src = HSS_LOGIN_URL;
+    frame.title = 'HSS live demo';
+    frame.className = 'absolute inset-0 w-full h-full bg-white';
+    frame.setAttribute('loading', 'eager');
+    box.querySelector('[data-live-overlay]')?.remove();
+    box.appendChild(frame);
+    frame.addEventListener('load', () => box.querySelector('[data-live-poster]')?.remove());
+  });
+
+  // ---- Copy demo e-mails ----
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy || '');
+        b.textContent = 'copied';
+        setTimeout(() => (b.textContent = 'copy'), 1500);
+      } catch {
+        /* clipboard blocked; the address is visible anyway */
+      }
+    });
+  });
+</script>

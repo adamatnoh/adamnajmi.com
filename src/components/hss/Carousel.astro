@@ -1,0 +1,166 @@
+---
+import type { Slide } from '../../data/hss';
+
+interface Props {
+  slides: Slide[];
+  label: string;
+  interval?: number;
+  eager?: boolean;
+  showCaption?: boolean;
+}
+const { slides, label, interval = 4500, eager = false, showCaption = true } = Astro.props;
+---
+
+<div
+  class="hss-carousel relative select-none"
+  data-carousel
+  data-interval={interval}
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-captions={JSON.stringify(slides.map((x) => (showCaption ? x.caption : '')))}
+>
+  <div class="relative aspect-[16/10] overflow-hidden bg-white/5">
+    {
+      slides.map((slide, i) => (
+        <img
+          src={slide.src}
+          alt={slide.alt}
+          width="1600"
+          height="1000"
+          loading={i === 0 && eager ? 'eager' : 'lazy'}
+          decoding="async"
+          data-slide={i}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+          class:list={[
+            'absolute inset-0 w-full h-full object-cover object-top transition-[opacity,transform] duration-700 ease-out',
+            i === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]',
+          ]}
+        />
+      ))
+    }
+    <div
+      class="absolute bottom-0 left-0 h-0.5 bg-green-400/80 w-0"
+      data-progress
+      aria-hidden="true"
+    >
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3 px-3 py-2.5 border-t border-white/10 bg-black">
+    <button
+      type="button"
+      data-prev
+      class="shrink-0 w-7 h-7 rounded border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition font-mono text-xs"
+      aria-label="Previous screenshot">&larr;</button
+    >
+    <p
+      class="flex-1 min-w-0 font-mono text-xs text-white/70 truncate"
+      data-caption
+      aria-live="polite"
+    >
+      {showCaption ? slides[0]?.caption : ''}
+    </p>
+    <div class="hidden sm:flex items-center gap-1.5" role="group" aria-label="Choose screenshot">
+      {
+        slides.map((slide, i) => (
+          <button
+            type="button"
+            data-dot={i}
+            aria-label={`Show screenshot ${i + 1}: ${slide.caption}`}
+            aria-current={i === 0 ? 'true' : 'false'}
+            class="w-2 h-2 rounded-full bg-white/25 aria-[current=true]:bg-green-400 aria-[current=true]:w-5 transition-all"
+          />
+        ))
+      }
+    </div>
+    <button
+      type="button"
+      data-next
+      class="shrink-0 w-7 h-7 rounded border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition font-mono text-xs"
+      aria-label="Next screenshot">&rarr;</button
+    >
+  </div>
+</div>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLImageElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    const caption = root.querySelector<HTMLElement>('[data-caption]');
+    const progress = root.querySelector<HTMLElement>('[data-progress]');
+    const captions: string[] = JSON.parse(root.dataset.captions || '[]');
+    const interval = Number(root.dataset.interval) || 4500;
+    let index = 0;
+    let timer: number | undefined;
+    let paused = false;
+
+    const go = (next: number, user = false) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((img, i) => {
+        const on = i === index;
+        img.classList.toggle('opacity-100', on);
+        img.classList.toggle('scale-100', on);
+        img.classList.toggle('opacity-0', !on);
+        img.classList.toggle('scale-[1.02]', !on);
+        img.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if (on && img.loading === 'lazy') img.loading = 'eager';
+      });
+      // Warm the next image so the crossfade never shows a blank frame.
+      const upcoming = slides[(index + 1) % slides.length];
+      if (upcoming) upcoming.loading = 'eager';
+      dots.forEach((d, i) => d.setAttribute('aria-current', i === index ? 'true' : 'false'));
+      if (caption) caption.textContent = captions[index] ?? '';
+      root.dispatchEvent(new CustomEvent('carousel:change', { detail: index }));
+      if (user) restart();
+    };
+
+    const animateProgress = () => {
+      if (!progress) return;
+      progress.style.transition = 'none';
+      progress.style.width = '0';
+      if (reduce || paused) return;
+      requestAnimationFrame(() => {
+        progress.style.transition = `width ${interval}ms linear`;
+        progress.style.width = '100%';
+      });
+    };
+
+    const restart = () => {
+      window.clearInterval(timer);
+      animateProgress();
+      if (reduce || paused) return;
+      timer = window.setInterval(() => {
+        go(index + 1);
+        animateProgress();
+      }, interval);
+    };
+
+    const setPaused = (value: boolean) => {
+      paused = value;
+      restart();
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => go(index - 1, true));
+    root.querySelector('[data-next]')?.addEventListener('click', () => go(index + 1, true));
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i, true)));
+    root.addEventListener('carousel:go', (e) => go((e as CustomEvent<number>).detail, true));
+    root.addEventListener('carousel:pause', () => setPaused(true));
+    root.addEventListener('carousel:resume', () => setPaused(false));
+    root.addEventListener('mouseenter', () => setPaused(true));
+    root.addEventListener('mouseleave', () => setPaused(false));
+    root.addEventListener('focusin', () => setPaused(true));
+    root.addEventListener('focusout', () => setPaused(false));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(index - 1, true);
+      if (e.key === 'ArrowRight') go(index + 1, true);
+    });
+
+    // Only autoplay while the carousel is on screen.
+    const io = new IntersectionObserver(([entry]) => setPaused(!entry?.isIntersecting));
+    io.observe(root);
+    document.addEventListener('visibilitychange', () => setPaused(document.hidden));
+  });
+</script>

@@ -1,0 +1,139 @@
+---
+import { HSS_LOGIN_URL } from '../../data/hss';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opening HSS…</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://adamnajmi.com/hss" />
+    <noscript><meta http-equiv="refresh" content={`0; url=${HSS_LOGIN_URL}`} /></noscript>
+    <link rel="preconnect" href="https://hss.adamnajmi.com" />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #0a0a0a;
+        color: #e5e5e5;
+        font:
+          14px/1.7 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+      .term {
+        width: min(34rem, calc(100vw - 2rem));
+        background: #000;
+        border: 1px solid rgb(255 255 255 / 0.12);
+        border-radius: 10px;
+        box-shadow: 0 30px 80px rgb(0 0 0 / 0.6);
+        overflow: hidden;
+      }
+      .bar {
+        display: flex;
+        gap: 8px;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgb(255 255 255 / 0.1);
+      }
+      .bar i {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        display: block;
+      }
+      .out {
+        padding: 16px 18px 20px;
+        min-height: 11.5rem;
+      }
+      .out p {
+        margin: 0;
+        opacity: 0;
+        transform: translateY(4px);
+        animation: in 0.25s ease forwards;
+      }
+      .g {
+        color: #4ade80;
+      }
+      .c {
+        color: #22d3ee;
+      }
+      .d {
+        color: rgb(255 255 255 / 0.45);
+      }
+      .track {
+        height: 3px;
+        margin-top: 12px;
+        background: rgb(255 255 255 / 0.08);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        width: 0;
+        background: #4ade80;
+        animation: fill 1.6s ease-in-out forwards;
+      }
+      a {
+        color: #22d3ee;
+      }
+      @keyframes in {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes fill {
+        to {
+          width: 100%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .out p,
+        .fill {
+          animation-duration: 0.01ms;
+          animation-delay: 0s !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="term" aria-live="polite">
+      <div class="bar" aria-hidden="true">
+        <i style="background:#ef4444"></i><i style="background:#eab308"></i><i
+          style="background:#22c55e"></i>
+      </div>
+      <div class="out">
+        <p style="animation-delay:0s">
+          <span class="g">➜</span>
+          <span class="d">~</span> ssh demo@hss.adamnajmi.com
+        </p>
+        <p style="animation-delay:.3s" class="d">resolving hss.adamnajmi.com … ok</p>
+        <p style="animation-delay:.6s" class="d">loading demo accounts: admin, scheduler, doctor</p>
+        <p style="animation-delay:.9s">
+          password for all: <span class="c">password</span>
+        </p>
+        <p style="animation-delay:1.2s">
+          <span class="g">✓</span> opening the Hospital Scheduling System…
+        </p>
+        <div class="track" aria-hidden="true"><div class="fill"></div></div>
+        <p style="animation-delay:1.6s; margin-top:12px" class="d">
+          Not redirected? <a href={HSS_LOGIN_URL}>Open hss.adamnajmi.com</a> ·
+          <a href="/hss">back to the tour</a>
+        </p>
+      </div>
+    </main>
+    <script is:inline define:vars={{ url: HSS_LOGIN_URL }}>
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => window.location.replace(url), reduce ? 300 : 1800);
+    </script>
+  </body>
+</html>

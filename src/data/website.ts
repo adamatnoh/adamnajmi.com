@@ -6,6 +6,7 @@ Portfolio Website (adamnajmi.com):
 - Deployed on Vercel with serverless functions for the API.
 - The chatbot uses Google's Gemini API (gemini-3.1-flash-lite) to answer questions about Adam based on his resume.
 - Features a terminal-inspired design with a green-on-black color scheme, plus a light theme toggle (sun/moon button in the header) that remembers the visitor's choice.
+- Has a featured, interactive showcase of HSS (Hospital Scheduling System): an auto-playing screenshot carousel in a tilting browser frame on the home page, and a /hss page with a guided tour by role (scheduler, doctor, admin, mobile), a button that loads the live app inside the page, and the demo accounts. /hss/live plays a short terminal animation and then opens https://hss.adamnajmi.com.
 - Has SEO metadata, Open Graph preview images, structured data, and respects reduced-motion settings.
 - The domain is registered through Cloudflare.
 - The source code is available on GitHub (github.com/adamatnoh).

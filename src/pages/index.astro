@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Word from '../components/Word.astro';
+import HssFeatured from '../components/hss/HssFeatured.astro';
 
 const RESUME_URL = import.meta.env.RESUME_URL || '/file/resume.pdf';
 const LINKEDIN_URL = import.meta.env.LINKEDIN_URL || 'https://www.linkedin.com/in/adamnajmi';
@@ -321,6 +322,8 @@ const stats = [
   <section aria-labelledby="projects">
     <SectionHeading id="projects" icon="🖥️" title="projects">// Project Builds</SectionHeading>
 
+    <HssFeatured />
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal>
       <ProjectCard tags={['rapidz-inc', 'crypto', 'api', 'nestjs']}>
         <Fragment slot="title">rapidz</Fragment>
@@ -419,24 +422,6 @@ const stats = [
         </p>
         <p><span class={bullet}>&gt;</span> Revenue &amp; campaign performance dashboards</p>
         <p><span class={bullet}>&gt;</span> Data-driven executive decision-making</p>
-      </ProjectCard>
-
-      <ProjectCard tags={['fyp-utm', 'healthcare', 'laravel', 'livewire', 'postgresql']} wide>
-        <Fragment slot="title">hospital-scheduling-system</Fragment>
-        <Fragment slot="summary">
-          My <Word word="final" /> year project at UTM (2023), rebuilt in 2026 — duty rosters for hospital
-          departments.
-        </Fragment>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
-          <div class="space-y-1">
-            <p><span class={bullet}>&gt;</span> On-call, ward rotation &amp; shift generators</p>
-            <p><span class={bullet}>&gt;</span> Preview + fairness report before publishing</p>
-          </div>
-          <div class="space-y-1">
-            <p><span class={bullet}>&gt;</span> Leave, on-call &amp; swap request reviews</p>
-            <p><span class={bullet}>&gt;</span> Live at hss.adamnajmi.com</p>
-          </div>
-        </div>
       </ProjectCard>
     </div>
   </section>

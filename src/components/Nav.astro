@@ -1,6 +1,6 @@
 ---
 interface Props {
-  links?: { href: string; label: string }[];
+  links?: { href: string; label: string; highlight?: boolean }[];
 }
 const {
   links = [
@@ -8,8 +8,10 @@ const {
     { href: '/#experience', label: 'experience' },
     { href: '/#projects', label: 'projects' },
     { href: '/#education', label: 'education' },
+    { href: '/hss', label: 'hss', highlight: true },
   ],
 } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <header class="relative z-30 mx-auto w-full max-w-4xl px-5 sm:px-6 pt-5 pb-10">
@@ -56,8 +58,16 @@ const {
             <li>
               <a
                 href={l.href}
-                class="px-2.5 py-1.5 rounded text-white/60 hover:text-white hover:bg-white/5 transition"
+                aria-current={path === l.href ? 'page' : undefined}
+                class:list={[
+                  'px-2.5 py-1.5 rounded transition hover:bg-white/5',
+                  l.highlight
+                    ? 'text-green-400 hover:text-green-300'
+                    : 'text-white/60 hover:text-white',
+                  path === l.href && 'bg-white/5',
+                ]}
               >
+                {l.highlight && <span aria-hidden="true">▶ </span>}
                 {l.label}
               </a>
             </li>
@@ -73,8 +83,15 @@ const {
           <li>
             <a
               href={l.href}
-              class="inline-block px-2.5 py-1.5 rounded border border-white/10 text-white/70 hover:text-white transition"
+              aria-current={path === l.href ? 'page' : undefined}
+              class:list={[
+                'inline-block px-2.5 py-1.5 rounded border transition',
+                l.highlight
+                  ? 'border-green-400/40 text-green-400'
+                  : 'border-white/10 text-white/70 hover:text-white',
+              ]}
             >
+              {l.highlight && <span aria-hidden="true">▶ </span>}
               {l.label}
             </a>
           </li>

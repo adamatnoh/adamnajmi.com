@@ -19,7 +19,11 @@ This is my personal portfolio website, built as a terminal-inspired digital resu
 
 ## ✨ Features
 
-- **Terminal-Inspired UI** – Green-on-black color scheme with a custom terminal-style layout.
+- **Terminal-Inspired UI** – Green-on-black color scheme with a custom terminal-style layout, plus an optional light theme (toggle in the nav, remembered per browser).
+
+- **Interactive HSS Showcase** – The Hospital Scheduling System is featured on the home page with an auto-playing screenshot carousel inside a tilting browser frame. `/hss` is a guided tour by role (scheduler, doctor, admin, mobile) with the demo accounts and a button that loads the live app in the page, and `/hss/live` plays a short terminal animation before opening [hss.adamnajmi.com](https://hss.adamnajmi.com).
+
+- **SEO & Sharing** – Canonical URLs, Open Graph/Twitter cards, JSON-LD, `robots.txt` and `sitemap.xml`.
 
 - **AI Chatbot** – Ask questions about my experience, skills, or the portfolio itself. Powered by Google Gemini.
 
@@ -45,6 +49,8 @@ cd adam-portfolio
 ```
 
 ### 2. Install dependencies
+
+Requires Node.js 22.12 or newer.
 
 ```bash
 npm install
@@ -75,13 +81,26 @@ src/
 ├── components/
 │   ├── Chatbot.jsx
 │   ├── DailyCipher.jsx
-|   └── Word.astro
+│   ├── Nav.astro
+│   ├── ProjectCard.astro
+│   ├── SectionHeading.astro
+│   ├── Word.astro
+│   └── hss/
+│       ├── BrowserFrame.astro
+│       ├── Carousel.astro
+│       └── HssFeatured.astro
 ├── data/
+│   ├── hss.ts
 │   ├── personal.ts
 │   ├── resume.ts
 │   └── website.ts
+├── layouts/
+│   └── Base.astro
 ├── pages/
 │   ├── index.astro
+│   ├── hss/
+│   │   ├── index.astro
+│   │   └── live.astro
 │   └── api/
 │       └── chat.ts
 └── styles/
