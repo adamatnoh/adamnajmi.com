@@ -153,5 +153,5 @@ MIT © [Adam Najmi](https://adamnajmi.com)
 
 ## Photo credit
 
-islamic-tv-launcher card sample image: **Masjid Putra (Putra Mosque), Putrajaya, Malaysia** — photograph by [CEphoto, Uwe Aranas](https://commons.wikimedia.org/wiki/File:Putrajaya_Malaysia_Putra-Mosque-06.jpg), licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
+islamic-tv-launcher card sample image: **Masjid Putra (Putra Mosque), Putrajaya, Malaysia** — photograph by [CEphoto, Uwe Aranas](https://commons.wikimedia.org/wiki/File:Putrajaya_Malaysia_Putra-Mosque-10.jpg), licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 
