@@ -5,7 +5,7 @@ Professional Experience:
 1. Full Stack Developer at Mechanikos Sdn. Bhd. (Aug 2026 - Present):
    - Accelerated delivery momentum within the first week by restructuring sprint planning, proper ticketing, backlog prioritisation, and module ownership across a multi-module government platform.
    - Led a team of developers, conducting code reviews, unblocking technical decisions, and aligning backend (Laravel) and frontend (Vue 3, TypeScript) work across parallel feature streams.
-   - Directed full-stack development for SPTK / Kemas EduCeria (live at https://ceria.kemas.gov.my/), a national MIS digitising operations for 5,000+ TABIKA preschool centres under KEMAS (Ministry of Rural and Regional Development), covering registration, GPS-verified attendance, digital library, and role-based access across centre/district/state/HQ hierarchies. EduCeria also serves TABIKA & TASKA KEMAS registration.
+   - Directed full-stack development for Kemas EduCeria (live at https://ceria.kemas.gov.my/), a national MIS digitising operations for 5,000+ TABIKA preschool centres under KEMAS (Ministry of Rural and Regional Development), covering registration, GPS-verified attendance, digital library, and role-based access across centre/district/state/HQ hierarchies. EduCeria also serves TABIKA & TASKA KEMAS registration.
    - Established engineering quality practices including Playwright E2E test coverage, TypeScript strict-mode standards, and structured API/repository patterns to support long-term maintainability at scale.
    - Coordinated cross-module delivery (system management, registration & attendance, digital library, finance) while maintaining production stability for staging and pre-production government environments.
 
@@ -29,7 +29,6 @@ Portfolio Projects:
    Timeline: Aug 2026 – Present (Mechanikos Sdn. Bhd.)
    Tech Stack: Laravel, Vue.js 3, TypeScript, Playwright
    Live: https://ceria.kemas.gov.my/ (public EduCeria / TABIKA & TASKA KEMAS)
-   Internal system name: SPTK. User-facing product name: Kemas EduCeria.
    A national Management Information System digitising operations for 5,000+ TABIKA preschool centres under KEMAS (Ministry of Rural and Regional Development).
    Features:
    - Centre registration and child enrolment for TABIKA & TASKA KEMAS.

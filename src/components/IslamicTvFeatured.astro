@@ -3,35 +3,34 @@ import FeaturedChrome from './FeaturedChrome.astro';
 
 const shots = [
   {
+    src: '/file/islamic-tv/putra-mosque.webp',
+    alt: 'Masjid Putra, Putrajaya — sample imagery for islamic-tv-launcher',
+  },
+  {
     src: '/file/cleartv/islamik-home.jpg',
-    alt: 'ClearTV Islamic home launcher with prayer times and channel grid',
+    alt: 'Islamic TV home launcher with prayer times and channel grid',
   },
   {
     src: '/file/cleartv/azan.jpg',
-    alt: 'Azan overlay on ClearTV Islamic launcher',
+    alt: 'Azan overlay on the Islamic TV launcher',
   },
   {
     src: '/file/cleartv/screensaver-islamik.jpg',
-    alt: 'Islamic screensaver on ClearTV',
-  },
-  {
-    src: '/file/cleartv/islamik-grid.jpg',
-    alt: 'Channel grid on ClearTV Islamic launcher',
+    alt: 'Islamic screensaver on the TV launcher',
   },
 ];
 ---
 
 <FeaturedChrome
-  id="cleartv-featured-title"
-  title="ClearTV Islamic Launcher"
-  slug="islamic-tv-launcher"
+  id="islamic-tv-featured-title"
+  title="islamic-tv-launcher"
   badge="side project · Android TV"
   badgeTone="green"
   accent="green"
 >
   <p class="mt-2 max-w-3xl font-mono text-sm leading-relaxed text-white/70">
     Android TV home launcher with JAKIM prayer times, azan alerts, child lock and an Islamic-themed
-    screensaver — screenshots from the ClearTV Islamic build.
+    screensaver.
   </p>
 
   <ul class="mt-4 grid gap-x-4 gap-y-1.5 font-mono text-[13px] text-white/70 sm:grid-cols-2">
@@ -43,7 +42,7 @@ const shots = [
 
   <div class="mt-4 flex flex-wrap gap-2">
     {
-      ['Java', 'Android TV', 'ClearTV'].map((t) => (
+      ['Java', 'Android TV'].map((t) => (
         <span class="rounded border border-cyan-400/30 bg-cyan-400/5 px-2 py-0.5 font-mono text-[11px] text-cyan-300">
           {t}
         </span>
@@ -68,6 +67,15 @@ const shots = [
       ))
     }
   </div>
+  <p class="mt-2 font-mono text-[10px] text-white/35">
+    Sample photo: Masjid Putra, Putrajaya — CEphoto, Uwe Aranas
+    <a
+      href="https://creativecommons.org/licenses/by-sa/3.0/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-white/55">CC BY-SA 3.0</a
+    >.
+  </p>
 
   <div class="mt-5">
     <a

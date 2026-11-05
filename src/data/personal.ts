@@ -18,7 +18,7 @@ export const PERSONAL_INFO = `
 - Github: 'github.com/adamatnoh',
 - Website: 'adamnajmi.com',
 - Current Role: Full Stack Developer at Mechanikos Sdn. Bhd. (since Aug 2026)
-- Current product: Kemas EduCeria (SPTK) for KEMAS — live at https://ceria.kemas.gov.my/
+- Current product: Kemas EduCeria for KEMAS — live at https://ceria.kemas.gov.my/
 - Certificate: AWS Certified Solutions Architect Associate (SAA-C03), issued September 2026 — https://www.credly.com/badges/790fa709-42ef-4f85-9c1e-813f69223625
 - Availability: 'Open to remote, hybrid, or on-site roles in Johor or Singapore',
 `;
