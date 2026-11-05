@@ -6,6 +6,7 @@ import Word from '../components/Word.astro';
 import { isCipherWord } from '../data/cipher';
 import HssFeatured from '../components/hss/HssFeatured.astro';
 import EduceriaFeatured from '../components/EduceriaFeatured.astro';
+import IslamicTvFeatured from '../components/IslamicTvFeatured.astro';
 
 const RESUME_URL = import.meta.env.RESUME_URL || '/file/resume.pdf';
 const LINKEDIN_URL = import.meta.env.LINKEDIN_URL || 'https://www.linkedin.com/in/adamnajmi';
@@ -345,9 +346,11 @@ const stats = [
   <section aria-labelledby="projects">
     <SectionHeading id="projects" icon="🖥️" title="projects">// Project Builds</SectionHeading>
 
+    <EduceriaFeatured />
+
     <HssFeatured />
 
-    <EduceriaFeatured />
+    <IslamicTvFeatured />
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal>
       <ProjectCard tags={['rapidz-inc', 'crypto', 'api', 'nestjs']}>

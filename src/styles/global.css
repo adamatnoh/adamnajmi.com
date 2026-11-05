@@ -52,6 +52,33 @@ body {
     color 0.25s ease;
 }
 
+.bg-photo {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: var(--page-bg);
+  background-image:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--page-bg) 55%, transparent) 0%,
+      color-mix(in srgb, var(--page-bg) 78%, transparent) 45%,
+      var(--page-bg) 100%
+    ),
+    image-set(
+      url('/file/bg/putra-mosque.webp') type('image/webp'),
+      url('/file/bg/putra-mosque.jpg') type('image/jpeg')
+    );
+  background-size: cover;
+  background-position: center 35%;
+  background-repeat: no-repeat;
+  opacity: 0.45;
+  filter: saturate(0.85) brightness(0.55);
+}
+html.light .bg-photo {
+  opacity: 0.28;
+  filter: saturate(0.7) brightness(1.05);
+}
 .bg-grid {
   position: fixed;
   inset: 0;
