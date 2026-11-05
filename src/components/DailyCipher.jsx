@@ -2,6 +2,74 @@ import { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics';
 import { WORDS, getDailySecret, isCipherWord } from '../data/cipher';
 
+
+// ============================================
+// 1b. AUTO-LINK every on-page 5-letter pool word
+// ============================================
+// Manual <Word> chips cover many tokens, but plain text like "Bahru" in
+// "Johor Bahru" was dead. Walk visible text once and wrap any exact
+// 5-letter alphabetic token that is in WORDS so hover/click always works.
+function linkPageCipherWords() {
+  if (typeof document === 'undefined') return;
+  const wordSet = new Set(WORDS);
+  const roots = [
+    document.getElementById('main'),
+    document.querySelector('header'),
+    document.querySelector('footer'),
+    document.querySelector('nav'),
+  ].filter(Boolean);
+  if (!roots.length) roots.push(document.body);
+
+  const skipSel =
+    '[data-word], [data-cipher-ui], script, style, noscript, textarea, input, select, option';
+
+  for (const root of roots) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !/[A-Za-z]{5}/.test(node.nodeValue)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        const el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest(skipSel)) return NodeFilter.FILTER_REJECT;
+        if (['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT', 'BUTTON', 'SVG'].includes(el.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const textNode of nodes) {
+      const text = textNode.nodeValue;
+      const parts = text.split(/(\b[A-Za-z]{5}\b)/);
+      let changed = false;
+      const frag = document.createDocumentFragment();
+      for (const part of parts) {
+        if (/^[A-Za-z]{5}$/.test(part) && wordSet.has(part.toUpperCase())) {
+          changed = true;
+          const span = document.createElement('span');
+          span.dataset.word = part.toUpperCase();
+          span.textContent = part;
+          span.className = 'cursor-pointer hover:text-cyan-400 transition';
+          span.setAttribute('role', 'button');
+          span.tabIndex = 0;
+          span.setAttribute(
+            'onclick',
+            'window.guessWord && window.guessWord(this.dataset.word)',
+          );
+          frag.appendChild(span);
+        } else {
+          frag.appendChild(document.createTextNode(part));
+        }
+      }
+      if (changed && textNode.parentNode) {
+        textNode.parentNode.replaceChild(frag, textNode);
+      }
+    }
+  }
+}
+
 // ============================================
 // 2. REWARD IMAGE POOLS
 // ============================================
@@ -203,6 +271,12 @@ const DailyCipher = () => {
     setStreak(getStreak());
   }, []);
 
+  // Wrap every on-page pool word so chips like Bahru / Axios are live
+  useEffect(() => {
+    linkPageCipherWords();
+  }, []);
+
+
   // Expose guess function to window – with game state saving
   useEffect(() => {
     window.guessWord = (word) => {
@@ -348,7 +422,7 @@ const DailyCipher = () => {
   if (!isOpen) {
     return (
       <>
-        <div className="fixed top-4 right-6 z-40">
+        <div className="fixed top-4 right-6 z-40" data-cipher-ui>
           {isCipherMounted && (
             <div
               className={`absolute top-full right-0 mt-3 bg-[#0a0a0a] border border-green-500/30 text-green-400 text-xs font-mono px-3 py-1.5 rounded shadow-lg whitespace-nowrap transition-all duration-700 ease-in-out ${showCipherTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
@@ -376,7 +450,7 @@ const DailyCipher = () => {
 
         {/* Tutorial Modal */}
         {showTutorial && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80">
+          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80" data-cipher-ui>
             <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg p-6 max-w-md w-full font-mono shadow-2xl">
               <div className="flex items-center gap-2 border-b border-green-500/20 pb-3 mb-4">
                 <div className="flex gap-1.5">
@@ -469,7 +543,7 @@ const DailyCipher = () => {
   // 10. UI: GAME WIDGET (Top Right)
   // ============================================
   return (
-    <div className="fixed top-4 right-4 z-40 w-72">
+    <div className="fixed top-4 right-4 z-40 w-72" data-cipher-ui>
       <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-green-500/20">
           <div className="flex items-center gap-3 min-w-0">
@@ -538,7 +612,7 @@ const DailyCipher = () => {
 
       {/* Reward Modal – only shown when showRewardModal is true */}
       {reward && showRewardModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80">
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80" data-cipher-ui>
           <div
             className={`${
               reward.rarity === 'super-rare' ? 'border-yellow-500/30' : 'border-green-500/30'

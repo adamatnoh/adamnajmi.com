@@ -21,7 +21,7 @@ A daily word-guessing challenge (Wordle-style) hidden in the portfolio. The goal
 How to play:
 1. Open the game by clicking the "$ ./daily_cipher.sh" button at the top-right corner of the screen.
 2. A terminal-styled widget will appear showing an empty 6x5 grid.
-3. Click on any 5-letter word that appears on the portfolio page (e.g., "MYSQL" in the tech stack, "REACT" in the projects, "NAJMI" in the hero section, or "KEMAS" in the Kemas EduCeria / Mechanikos experience bullets). Clickable words turn cyan when hovered.
+3. Click on any 5-letter word that appears on the portfolio page — every visible 5-letter token is fair game (e.g. "MYSQL" / "AXIOS" in the tech stack, "BAHRU" in the location line, "NAJMI" in the hero, "KEMAS" in EduCeria). Clickable words turn cyan when hovered.
 4. The widget will fill in your guess and give you feedback:
    - 🟩 Green = Correct letter, correct position.
    - 🟨 Yellow = Correct letter, wrong position.
