@@ -1,41 +1,6 @@
 import { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics';
-
-// ============================================
-// 1. WORD POOL
-// ============================================
-const WORDS = [
-  'NAJMI',
-  'JOHOR',
-  'TOOLS',
-  'MYSQL',
-  'POWER',
-  'REACT',
-  'INTEL',
-  'FLOWS',
-  'TEAMS',
-  'BUILT',
-  'KEMAS',
-  'SCALE',
-  'YIELD',
-  'GRADE',
-  'USERS',
-  'STACK',
-  'STAKE',
-  'RATES',
-  'SWAPS',
-  'CROSS',
-  'VAULT',
-  'LOWER',
-  'BANKS',
-  'ADMIN',
-  'FUNDS',
-  'EMAIL',
-  'STAFF',
-  'TOKEN',
-  'AGENT',
-  'FINAL',
-];
+import { WORDS, getDailySecret, isCipherWord } from '../data/cipher';
 
 // ============================================
 // 2. REWARD IMAGE POOLS
@@ -52,20 +17,6 @@ const COMMON_IMAGES = [
 const RARE_IMAGES = ['rare-rayyan.jpeg', 'rare-bengal.jpeg', 'rare-sphynx.jpeg'];
 
 const SUPER_RARE_IMAGES = ['super-rare-oyo.jpeg'];
-
-// ============================================
-// 3. DAILY SECRET WORD (Deterministic)
-// ============================================
-const getDailySecret = () => {
-  const today = new Date().toISOString().slice(0, 10);
-  let hash = 0;
-  for (let i = 0; i < today.length; i++) {
-    hash = (hash << 5) - hash + today.charCodeAt(i);
-    hash = hash & hash;
-  }
-  const index = Math.abs(hash) % WORDS.length;
-  return WORDS[index];
-};
 
 // ============================================
 // 4. WORDLE LOGIC
@@ -259,7 +210,7 @@ const DailyCipher = () => {
       if (gameOver || won) return;
 
       const upperWord = word.toUpperCase();
-      if (!WORDS.includes(upperWord)) return;
+      if (!isCipherWord(upperWord)) return;
 
       const newAttempts = [...attempts, upperWord];
       setAttempts(newAttempts);

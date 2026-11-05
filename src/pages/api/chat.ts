@@ -6,53 +6,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { RESUME_INFO } from '../../data/resume';
 import { PERSONAL_INFO } from '../../data/personal';
 import { WEBSITE_INFO } from '../../data/website';
-
-// ============================================
-// 1. WORDLE WORD POOL (Same as frontend)
-// ============================================
-const WORDS = [
-  'NAJMI',
-  'JOHOR',
-  'TOOLS',
-  'MYSQL',
-  'POWER',
-  'REACT',
-  'INTEL',
-  'FLOWS',
-  'TEAMS',
-  'BUILT',
-  'KEMAS',
-  'SCALE',
-  'YIELD',
-  'GRADE',
-  'USERS',
-  'STACK',
-  'STAKE',
-  'RATES',
-  'SWAPS',
-  'CROSS',
-  'VAULT',
-  'LOWER',
-  'BANKS',
-  'ADMIN',
-  'FUNDS',
-  'EMAIL',
-  'STAFF',
-  'TOKEN',
-  'AGENT',
-  'FINAL',
-];
-
-const getDailySecret = () => {
-  const today = new Date().toISOString().slice(0, 10);
-  let hash = 0;
-  for (let i = 0; i < today.length; i++) {
-    hash = (hash << 5) - hash + today.charCodeAt(i);
-    hash = hash & hash;
-  }
-  const index = Math.abs(hash) % WORDS.length;
-  return WORDS[index];
-};
+import { getDailySecret } from '../../data/cipher';
 
 const DAILY_WORD = getDailySecret();
 
