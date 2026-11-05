@@ -4,6 +4,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Word from '../components/Word.astro';
 import HssFeatured from '../components/hss/HssFeatured.astro';
+import EduceriaFeatured from '../components/EduceriaFeatured.astro';
 
 const RESUME_URL = import.meta.env.RESUME_URL || '/file/resume.pdf';
 const LINKEDIN_URL = import.meta.env.LINKEDIN_URL || 'https://www.linkedin.com/in/adamnajmi';
@@ -30,8 +31,8 @@ const skills: { group: string; items: string[] }[] = [
 
 const stats = [
   { value: '3', label: 'years shipping production software' },
-  { value: '5,000+', label: 'preschool centres on SPTK' },
-  { value: '6', label: 'junior developers led' },
+  { value: '5,000+', label: 'TABIKA centres on Kemas EduCeria' },
+  { value: 'AWS', label: 'Solutions Architect Associate · SAA-C03' },
   { value: '3.88', label: 'CGPA · BCS (Software Eng.), UTM' },
 ];
 ---
@@ -155,15 +156,28 @@ const stats = [
           <div class="grid md:grid-cols-[10rem_1fr] gap-2 md:gap-4 items-start">
             <p class="font-mono text-xs text-white/40 pt-2">{s.group}</p>
             <ul class="flex flex-wrap gap-2">
-              {s.items.map((tech) => (
-                <li
-                  data-word={tech}
-                  onclick="window.guessWord && window.guessWord(this.dataset.word)"
-                  class="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-white/80 text-sm font-mono hover:bg-white hover:text-black hover:border-white transition cursor-pointer"
-                >
-                  {tech}
-                </li>
-              ))}
+              {s.items.map((tech) => {
+                const cipher = tech.replace(/[^A-Za-z]/g, '').toUpperCase();
+                const playable = cipher.length === 5;
+                return (
+                  <li
+                    data-word={playable ? cipher : undefined}
+                    onclick={
+                      playable
+                        ? 'window.guessWord && window.guessWord(this.dataset.word)'
+                        : undefined
+                    }
+                    class:list={[
+                      'bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-white/80 text-sm font-mono transition',
+                      playable
+                        ? 'hover:bg-white hover:text-black hover:border-white cursor-pointer'
+                        : 'cursor-default',
+                    ]}
+                  >
+                    {tech}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))
@@ -200,14 +214,22 @@ const stats = [
             class="space-y-2 font-mono text-white/70 text-sm list-disc pl-5 marker:text-green-400"
           >
             <li>
-              Directing full-stack development of SPTK, a national MIS for 5,000+ TABIKA preschool
-              centres under <Word word="KEMAS" /> (Ministry of Rural and Regional Development): registration,
-              GPS-verified attendance, digital library and role-based access across centre, district,
-              state and HQ.
+              Directing full-stack development of <strong class="text-white">Kemas EduCeria</strong>
+              (internal system SPTK), a national MIS for 5,000+ TABIKA preschool centres under
+              <Word word="KEMAS" /> (Ministry of Rural and Regional Development): registration, GPS-verified
+              attendance, digital library and role-based access across centre, district, state and HQ.
+              Live at
+              <a
+                href="https://ceria.kemas.gov.my/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-cyan-400 hover:underline">ceria.kemas.gov.my</a
+              >.
             </li>
             <li>
-              Leading a team of 6 junior developers through code reviews and technical decisions
-              across the Laravel backend and Vue 3 + TypeScript frontend.
+              Leading a team of developers through code reviews, unblocking technical decisions and
+              aligning Laravel backend with Vue 3 + TypeScript frontend work across parallel feature
+              streams.
             </li>
             <li>
               Restructured sprint planning, ticketing, backlog prioritisation and module ownership
@@ -324,6 +346,8 @@ const stats = [
 
     <HssFeatured />
 
+    <EduceriaFeatured />
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal>
       <ProjectCard tags={['rapidz-inc', 'crypto', 'api', 'nestjs']}>
         <Fragment slot="title">rapidz</Fragment>
@@ -429,7 +453,7 @@ const stats = [
   <!-- ========== EDUCATION & LANGUAGES ========== -->
   <section aria-labelledby="education" data-reveal>
     <SectionHeading id="education" icon="🎓" title="education"
-      >// Degrees &amp; Languages</SectionHeading
+      >// Degrees, Cert &amp; Languages</SectionHeading
     >
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -445,6 +469,20 @@ const stats = [
           <h3 class="font-mono font-bold text-white">Kolej Matrikulasi Johor</h3>
           <p class="text-cyan-400 font-mono text-sm">KPM Matriculation Certificate</p>
           <p class="text-white/50 font-mono text-xs mt-1">2018 – 2019 · CGPA 3.75</p>
+        </div>
+        <div class="border-t border-white/10 pt-4">
+          <h3 class="font-mono font-bold text-white">
+            AWS Certified Solutions Architect – Associate
+          </h3>
+          <p class="text-cyan-400 font-mono text-sm">SAA-C03 · Amazon Web Services</p>
+          <p class="text-white/50 font-mono text-xs mt-1">Issued September 2026</p>
+          <a
+            href="https://www.credly.com/badges/790fa709-42ef-4f85-9c1e-813f69223625"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block mt-2 font-mono text-xs text-cyan-400 hover:underline"
+            >Verify on Credly ↗</a
+          >
         </div>
       </article>
       <article class="bg-black border border-white/10 rounded-lg p-5">
