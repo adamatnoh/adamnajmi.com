@@ -1,5 +1,6 @@
 ---
 import Analytics from '@vercel/analytics/astro';
+import BootIntro from '../components/BootIntro.astro';
 import Chatbot from '../components/Chatbot';
 import DailyCipher from '../components/DailyCipher';
 import Nav from '../components/Nav.astro';
@@ -82,15 +83,92 @@ const person = {
         document.documentElement.classList.toggle('dark', theme !== 'light');
       })();
     </script>
+    <!--
+      Intro gate, before first paint. The overlay is display:none unless this
+      adds boot-intro-on. Reduced motion, a session that already played it, and
+      any storage failure all leave the page alone. Content stays in the HTML.
+    -->
+    <style is:inline>
+      #boot-intro {
+        display: none;
+      }
+      html.boot-intro-on #boot-intro {
+        display: grid;
+        place-items: center;
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        margin: 0;
+        box-sizing: border-box;
+        padding: max(3.25rem, calc(env(safe-area-inset-top) + 2.75rem)) 1rem
+          max(1.25rem, env(safe-area-inset-bottom));
+        overflow: hidden;
+        background: var(--page-bg, #0a0a0a);
+        animation: boot-intro-retire 2.45s linear forwards;
+      }
+      html.boot-intro-on #boot-intro.is-done {
+        pointer-events: none;
+        animation: boot-intro-leave 0.3s ease forwards;
+      }
+      @keyframes boot-intro-retire {
+        0%,
+        86% {
+          opacity: 1;
+          visibility: visible;
+        }
+        100% {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
+      }
+      @keyframes boot-intro-leave {
+        from {
+          opacity: 1;
+          visibility: visible;
+        }
+        to {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-intro {
+          display: none !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          animation: none !important;
+        }
+      }
+      @media print {
+        #boot-intro {
+          display: none !important;
+        }
+      }
+    </style>
+    <script is:inline>
+      (() => {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (sessionStorage.getItem('adam-intro-seen') === '1') return;
+          sessionStorage.setItem('adam-intro-seen', '1');
+          document.documentElement.classList.add('boot-intro-on');
+        } catch {
+          /* Can't remember a session: skip, so later navigations stay clear. */
+        }
+      })();
+    </script>
     <Analytics />
   </head>
 
   <body class="min-h-screen antialiased">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:bg-green-400 focus:text-black focus:px-3 focus:py-2 focus:rounded font-mono text-sm"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[90] focus:bg-green-400 focus:text-black focus:px-3 focus:py-2 focus:rounded font-mono text-sm"
       >Skip to content</a
     >
+    <BootIntro />
     <div class="bg-grid" aria-hidden="true"></div>
     <Nav />
     <main id="main" class="relative mx-auto w-full max-w-4xl px-5 sm:px-6 pb-16 space-y-20">
