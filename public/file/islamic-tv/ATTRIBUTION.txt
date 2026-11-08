@@ -8,3 +8,5 @@ https://creativecommons.org/licenses/by-sa/3.0/
 Device captures (8 November 2026 MYT): home-putra.webp, prayer-clock-putra.webp, child-lock-menu.webp. Masjid Putra photo by CEphoto/Uwe Aranas, CC BY-SA 3.0. Network name and remote QR redacted on Home and app menu. Menu shows Lock entry, not a locked-app screen.
 
 web-remote-offline.webp: uncropped 450x760 offline copy of actual device-served remote UI; controls and networking disabled, visible labels retained. Not live control verification.
+
+child-lock-qr-redacted.webp: actual device child-lock QR unlock UI, 1920x1080. Functional QR, complete unlock URL/token/network address and private household message visibly redacted. No household photograph is visible.

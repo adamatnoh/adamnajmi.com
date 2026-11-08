@@ -14,6 +14,10 @@ const shots = [
     src: '/file/islamic-tv/child-lock-menu.webp',
     alt: 'Actual app context menu showing the child-lock entry, not the locked-app screen; network and QR redacted',
   },
+  {
+    src: '/file/islamic-tv/child-lock-qr-redacted.webp',
+    alt: 'Actual child-lock QR unlock interface for YouTube; functional QR, complete unlock link and private household message visibly redacted',
+  },
 ];
 ---
 
@@ -46,7 +50,7 @@ const shots = [
     }
   </div>
 
-  <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+  <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
     {
       shots.map((s) => (
         <figure class="overflow-hidden rounded-md border border-white/10 bg-black">
@@ -79,7 +83,7 @@ const shots = [
     </figcaption>
   </figure>
   <p class="mt-2 font-mono text-[10px] text-white/35">
-    Actual device captures · network / QR redacted. Wallpaper: Masjid Putra — CEphoto, Uwe Aranas
+    Actual device captures · network, functional QR and household message redacted. Wallpaper: Masjid Putra — CEphoto, Uwe Aranas
     <a
       href="https://creativecommons.org/licenses/by-sa/3.0/"
       target="_blank"
