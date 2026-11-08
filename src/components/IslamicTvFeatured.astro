@@ -3,20 +3,16 @@ import FeaturedChrome from './FeaturedChrome.astro';
 
 const shots = [
   {
-    src: '/file/islamic-tv/putra-mosque.webp',
-    alt: 'Masjid Putra, Putrajaya — sample imagery for islamic-tv-launcher',
+    src: '/file/islamic-tv/home-putra.webp',
+    alt: 'Actual Xiaomi stick Home with Masjid Putra wallpaper, prayer times and countdown; network and QR redacted',
   },
   {
-    src: '/file/cleartv/islamik-home.jpg',
-    alt: 'Islamic TV home launcher with prayer times and channel grid',
+    src: '/file/islamic-tv/prayer-clock-putra.webp',
+    alt: 'Actual prayer clock with Hijri date, five prayer times and a Quran verse over Masjid Putra',
   },
   {
-    src: '/file/cleartv/azan.jpg',
-    alt: 'Azan overlay on the Islamic TV launcher',
-  },
-  {
-    src: '/file/cleartv/screensaver-islamik.jpg',
-    alt: 'Islamic screensaver on the TV launcher',
+    src: '/file/islamic-tv/child-lock-menu.webp',
+    alt: 'Actual app context menu showing the child-lock entry, not the locked-app screen; network and QR redacted',
   },
 ];
 ---
@@ -50,7 +46,7 @@ const shots = [
     }
   </div>
 
-  <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+  <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
     {
       shots.map((s) => (
         <figure class="overflow-hidden rounded-md border border-white/10 bg-black">
@@ -68,7 +64,7 @@ const shots = [
     }
   </div>
   <p class="mt-2 font-mono text-[10px] text-white/35">
-    Sample photo: Masjid Putra, Putrajaya — CEphoto, Uwe Aranas
+    Actual device captures · network / QR redacted. Wallpaper: Masjid Putra — CEphoto, Uwe Aranas
     <a
       href="https://creativecommons.org/licenses/by-sa/3.0/"
       target="_blank"
