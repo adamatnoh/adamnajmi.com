@@ -1,6 +1,6 @@
 # [adamnajmi.com](https://adamnajmi.com/) — Personal Portfolio
 
-This is my personal portfolio website, built as a terminal-inspired digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background. It also features a daily word-hunt minigame with streak-based rewards to keep things interactive.
+This is my personal portfolio website, built as a VS Code-style digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background. It also features a daily word-hunt minigame with streak-based rewards to keep things interactive.
 
 🔗 **Live Site:** [adamnajmi.com](https://adamnajmi.com)
 
@@ -19,9 +19,11 @@ This is my personal portfolio website, built as a terminal-inspired digital resu
 
 ## ✨ Features
 
-- **Terminal-Inspired UI** – Green-on-black color scheme with a custom terminal-style layout, plus an optional light theme (toggle in the nav, remembered per browser).
+- **VS Code-Style Workbench** – The home page is an editor: an Explorer whose files (`README.md`, `about.ts`, `experience.log`, `projects/*`, `stack.json`, `education.md`, `contact.env`, `daily_cipher.sh`) open as closable tabs, Search / Source Control / Run / Extensions views, a bottom panel (TERMINAL with a few commands, PROBLEMS, CIPHER), a collapsible **Ask Adam** chat panel, a status bar and a command palette (`Ctrl/Cmd+Shift+P` or `Ctrl/Cmd+K`). Custom dark and light themes (remembered per browser), deep links such as `/?file=projects/hss.php`, and a drawer layout on phones. Content is plain HTML, so it still reads without JavaScript.
 
-- **Interactive HSS Showcase** – The Hospital Scheduling System is featured on the home page with an auto-playing screenshot carousel inside a tilting browser frame. `/hss` is a guided tour by role (scheduler, doctor, admin, mobile) with the demo accounts and a button that loads the live app in the page, and `/hss/live` plays a short terminal animation before opening [hss.adamnajmi.com](https://hss.adamnajmi.com).
+- **Simple Browser Tab** – `projects/hss.php` can open [hss.adamnajmi.com](https://hss.adamnajmi.com) inside the editor. Kemas EduCeria sends `X-Frame-Options: SAMEORIGIN`, so its tab shows a fallback with an "open in external browser" button.
+
+- **Interactive HSS Showcase** – The Hospital Scheduling System has its own file in the editor with an auto-playing screenshot carousel and a tour by role. `/hss` is a guided tour by role (scheduler, doctor, admin, mobile) with the demo accounts and a button that loads the live app in the page, and `/hss/live` plays a short terminal animation before opening [hss.adamnajmi.com](https://hss.adamnajmi.com).
 
 - **SEO & Sharing** – Canonical URLs, Open Graph/Twitter cards, JSON-LD, `robots.txt` and `sitemap.xml`.
 
@@ -79,23 +81,34 @@ Open `http://localhost:4321` to preview the site.
 ```text
 src/
 ├── components/
-│   ├── Chatbot.jsx
-│   ├── DailyCipher.jsx
+│   ├── BootIntro.astro
+│   ├── Chatbot.jsx           # floating chat on /hss pages
+│   ├── DailyCipher.jsx       # floating widget (/hss) + panel variant (home)
 │   ├── Nav.astro
-│   ├── ProjectCard.astro
 │   ├── SectionHeading.astro
+│   ├── SeoHead.astro         # meta, OG, JSON-LD, theme + analytics
 │   ├── Word.astro
-│   └── hss/
-│       ├── BrowserFrame.astro
-│       ├── Carousel.astro
-│       └── HssFeatured.astro
+│   ├── chat/useChat.js       # shared /api/chat client
+│   ├── hss/
+│   │   ├── BrowserFrame.astro
+│   │   └── Carousel.astro
+│   └── ide/                  # VS Code-style workbench
+│       ├── ActivityBar.astro, Sidebar.astro, TitleBar.astro
+│       ├── Panel.astro, StatusBar.astro, Palette.astro
+│       ├── SimpleBrowser.astro, Welcome.astro
+│       ├── AskAdam.jsx, Code.astro, Icon.astro, FileIcon.astro
+│       └── files/            # one component per editor file
 ├── data/
+│   ├── cipher.ts
 │   ├── hss.ts
+│   ├── ide.ts                # file tree + content for the workbench
 │   ├── personal.ts
 │   ├── resume.ts
 │   └── website.ts
 ├── layouts/
-│   └── Base.astro
+│   ├── Base.astro            # /hss pages
+│   └── Ide.astro             # home page
+├── lib/highlight.ts          # tiny build-time syntax highlighter
 ├── pages/
 │   ├── index.astro
 │   ├── hss/
@@ -103,8 +116,10 @@ src/
 │   │   └── live.astro
 │   └── api/
 │       └── chat.ts
+├── scripts/ide.ts            # tabs, panel, terminal, palette, deep links
 └── styles/
-    └── global.css
+    ├── global.css
+    └── ide.css
 ```
 
 ## 🔧 Deployment
@@ -132,7 +147,7 @@ The Daily Cipher is a word-hunt game designed to make the portfolio interactive 
 
 - Word Selection: The word of the day is chosen using a deterministic hashing function based on the current date (UTC). This ensures all visitors see the same word on the same day without requiring a database or cron job.
 
-- Gameplay: Visitors click on any 5-letter word visible on the portfolio page to make a guess. The grid provides colour-coded feedback: 🟩 correct spot, 🟨 wrong spot, ⬜ not in the word.
+- Gameplay: Visitors click on any 5-letter word visible on the portfolio page to make a guess. On the home page the board lives in the CIPHER tab of the bottom panel and opens by itself on the first guess. The grid provides colour-coded feedback: 🟩 correct spot, 🟨 wrong spot, ⬜ not in the word.
 
 - State Persistence: Game progress (attempts, wins/losses, reward status) is saved in the browser's localStorage, so users can close and reopen the game without losing their place.
 

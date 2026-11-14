@@ -2,15 +2,16 @@ export const WEBSITE_INFO = `
 Portfolio Website (adamnajmi.com):
 
 - Built with Astro (static site generator) and Tailwind CSS.
-- Uses React for interactive components (the chatbot).
+- Uses React for interactive components (the Ask Adam chat and the Daily Cipher).
 - Deployed on Vercel with serverless functions for the API.
 - The chatbot uses Google's Gemini API (gemini-3.1-flash-lite) to answer questions about Adam based on his resume.
-- Features a terminal-inspired design with a green-on-black color scheme, plus a light theme toggle (sun/moon button in the header) that remembers the visitor's choice.
-- Has a featured, interactive showcase of HSS (Hospital Scheduling System): an auto-playing screenshot carousel in a tilting browser frame on the home page, and a /hss page with a guided tour by role (scheduler, doctor, admin, mobile), a button that loads the live app inside the page, and the demo accounts. /hss/live plays a short terminal animation and then opens https://hss.adamnajmi.com.
+- The home page looks like the VS Code editor: a title bar, an activity bar, an Explorer with files (README.md, about.ts, experience.log, projects/kemas-educeria.tsx, projects/hss.php, projects/islamic-tv-launcher.kt, projects/rapidz.md, stack.json, education.md, contact.env, daily_cipher.sh) that open as tabs, a bottom panel with TERMINAL / PROBLEMS / CIPHER tabs, an "Ask Adam" chat panel on the right, a blue status bar, and a command palette (Ctrl/Cmd+Shift+P or Ctrl/Cmd+K). It has a custom dark theme and a light theme (sun/moon button in the activity bar or status bar) that remembers the visitor's choice.
+- The terminal tab accepts simple commands such as help, ls, open <file>, ask <question>, cipher and theme.
+- Has a featured, interactive showcase of HSS (Hospital Scheduling System): the projects/hss.php file shows a screenshot carousel and can open the live app in a "Simple Browser" tab inside the editor, and a /hss page with a guided tour by role (scheduler, doctor, admin, mobile), a button that loads the live app inside the page, and the demo accounts. /hss/live plays a short terminal animation and then opens https://hss.adamnajmi.com.
 - Has SEO metadata, Open Graph preview images, structured data, and respects reduced-motion settings.
 - The domain is registered through Cloudflare.
 - The source code is available on GitHub (github.com/adamatnoh).
-- The terminal aesthetic reflects Adam's passion for clean, CLI-friendly tools and backend development.
+- The editor/terminal aesthetic reflects Adam's passion for clean, developer-friendly tools and backend development.
 - The chatbot was built from scratch to demonstrate full-stack capabilities, including API integration and UI design.
 
 Daily Cipher Minigame (./daily_cipher.sh):
@@ -19,8 +20,8 @@ What it is:
 A daily word-guessing challenge (Wordle-style) hidden in the portfolio. The goal is to find the "Secret Word of the Day" by clicking on 5-letter words scattered across the page.
 
 How to play:
-1. Open the game by clicking the "$ ./daily_cipher.sh" button at the top-right corner of the screen.
-2. A terminal-styled widget will appear showing an empty 6x5 grid.
+1. Open the game from the CIPHER tab in the bottom panel (or open daily_cipher.sh in the Explorer and press "Run"). On the /hss pages it is the "$ ./daily_cipher.sh" button at the top-right corner.
+2. A 6x5 grid appears.
 3. Click on any 5-letter word that appears on the portfolio page — every visible 5-letter token is fair game (e.g. "MYSQL" / "AXIOS" in the tech stack, "BAHRU" in the location line, "NAJMI" in the hero, "KEMAS" in EduCeria). Clickable words turn cyan when hovered.
 4. The widget will fill in your guess and give you feedback:
    - 🟩 Green = Correct letter, correct position.
