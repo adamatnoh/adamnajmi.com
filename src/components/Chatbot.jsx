@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import Markdown from 'react-markdown';
 import { track } from '@vercel/analytics';
+import { useChat } from './chat/useChat';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const { messages, isLoading, send } = useChat();
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const messagesEndRef = useRef(null);
@@ -67,48 +67,16 @@ const Chatbot = () => {
   }, [isOpen]);
 
   const sendMessage = async () => {
-    track('chat_sent');
-    if (!input.trim() || isLoading) return;
-
-    const userMessage = { role: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage.content }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'assistant',
-            content: '❌ Alamak! Something went wrong. Please try again.',
-          },
-        ]);
-      }
-    } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: '❌ Network error. Please check your connection.',
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
+    if (!input.trim() || isLoading) {
+      track('chat_sent');
+      return;
     }
+    const text = input;
+    setInput('');
+    await send(text);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 50);
   };
 
   // Floating Toggle Button + Tooltip
