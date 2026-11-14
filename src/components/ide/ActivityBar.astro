@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+const views = [
+  { id: 'explorer', icon: 'files', label: 'Explorer' },
+  { id: 'search', icon: 'search', label: 'Search' },
+  { id: 'scm', icon: 'git', label: 'Source Control' },
+  { id: 'run', icon: 'run', label: 'Run and Debug' },
+  { id: 'extensions', icon: 'extensions', label: 'Extensions' },
+];
+---
+
+<div
+  class="ide-activity"
+  role="toolbar"
+  aria-label="Views"
+  aria-orientation="vertical"
+  data-no-cipher
+>
+  {
+    views.map((v, i) => (
+      <button
+        type="button"
+        class="act-btn"
+        data-view={v.id}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        aria-label={v.label}
+        title={v.label}
+      >
+        <Icon name={v.icon} size={22} />
+      </button>
+    ))
+  }
+  <div class="act-spacer"></div>
+  <button
+    type="button"
+    class="act-btn"
+    data-action="toggle-chat"
+    aria-label="Ask Adam"
+    title="Ask Adam"
+  >
+    <Icon name="sparkle" size={21} />
+  </button>
+  <button
+    type="button"
+    class="act-btn"
+    data-action="theme"
+    aria-label="Toggle light or dark theme"
+    title="Toggle theme"
+  >
+    <span class="icon-sun"><Icon name="sun" size={20} /></span>
+    <span class="icon-moon"><Icon name="moon" size={20} /></span>
+  </button>
+</div>

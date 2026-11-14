@@ -1,0 +1,112 @@
+---
+import Icon from './Icon.astro';
+import DailyCipher from '../DailyCipher';
+---
+
+<section class="ide-panel" id="ide-panel" aria-label="Panel">
+  <div class="panel-resize" data-panel-resize aria-hidden="true"></div>
+  <div class="panel-head" data-no-cipher>
+    <div role="tablist" aria-label="Panel views" style="display:flex">
+      <button
+        type="button"
+        role="tab"
+        class="panel-tab"
+        id="ptab-terminal"
+        aria-controls="ppane-terminal"
+        aria-selected="true"
+        data-panel-tab="terminal">Terminal</button
+      >
+      <button
+        type="button"
+        role="tab"
+        class="panel-tab"
+        id="ptab-problems"
+        aria-controls="ppane-problems"
+        aria-selected="false"
+        tabindex="-1"
+        data-panel-tab="problems">Problems<span class="count">0</span></button
+      >
+      <button
+        type="button"
+        role="tab"
+        class="panel-tab"
+        id="ptab-cipher"
+        aria-controls="ppane-cipher"
+        aria-selected="false"
+        tabindex="-1"
+        data-panel-tab="cipher">Cipher <span aria-hidden="true">🔐</span></button
+      >
+    </div>
+    <div class="panel-actions">
+      <button
+        type="button"
+        class="icon-btn"
+        data-action="panel-max"
+        aria-label="Maximize panel"
+        title="Maximize panel"><Icon name="maximize" size={14} /></button
+      >
+      <button
+        type="button"
+        class="icon-btn panel-collapse"
+        data-action="toggle-panel"
+        aria-label="Collapse panel"
+        title="Collapse panel"><Icon name="chevron-down" size={15} /></button
+      >
+    </div>
+  </div>
+  <div class="panel-body">
+    <div
+      class="panel-pane term"
+      id="ppane-terminal"
+      role="tabpanel"
+      aria-labelledby="ptab-terminal"
+      data-panel-pane="terminal"
+    >
+      <div class="term-out" data-term-out aria-live="polite">
+        <p><span class="t-user">adam@portfolio</span> <span class="t-path">~</span> % whoami</p>
+        <p>Adam Najmi — Full Stack Software Engineer · Johor Bahru, MY</p>
+        <p class="t-dim">
+          Type <span class="t-acc">help</span> for commands. Try <span class="t-acc"
+            >open hss.php</span
+          > or <span class="t-acc">ask what is HSS?</span>
+        </p>
+      </div>
+      <form class="term-form" data-term-form>
+        <label for="term-input"
+          ><span class="t-user">adam@portfolio</span> <span class="t-path">~</span> %</label
+        >
+        <input
+          id="term-input"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Terminal command"
+          data-term-input
+        />
+      </form>
+    </div>
+    <div
+      class="panel-pane"
+      id="ppane-problems"
+      role="tabpanel"
+      aria-labelledby="ptab-problems"
+      data-panel-pane="problems"
+      hidden
+    >
+      <p class="problems-empty">
+        <Icon name="check" size={14} /> No problems have been detected in the workspace.
+      </p>
+    </div>
+    <div
+      class="panel-pane"
+      id="ppane-cipher"
+      role="tabpanel"
+      aria-labelledby="ptab-cipher"
+      data-panel-pane="cipher"
+      hidden
+    >
+      <DailyCipher client:load variant="panel" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+---
+import Code from '../Code.astro';
+import Icon from '../Icon.astro';
+import { CONTACT_ENV, EMAIL, LINKEDIN_URL, GITHUB_URL, RESUME_URL } from '../../../data/ide';
+---
+
+<Code code={CONTACT_ENV} lang="env" label="contact.env" />
+<div class="md" style="padding-left:72px;padding-top:0">
+  <div class="btns" data-no-cipher>
+    <a class="btn primary" data-no-cipher href={`mailto:${EMAIL}`}
+      ><Icon name="send" size={14} /> Email Adam</a
+    >
+    <a class="btn" data-no-cipher href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer"
+      >LinkedIn</a
+    >
+    <a class="btn" data-no-cipher href={GITHUB_URL} target="_blank" rel="noopener noreferrer"
+      >GitHub</a
+    >
+    <a class="btn" data-no-cipher href={RESUME_URL} target="_blank" rel="noopener">Resume (PDF)</a>
+  </div>
+</div>

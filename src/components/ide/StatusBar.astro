@@ -1,0 +1,52 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="ide-status" role="contentinfo" aria-label="Status bar" data-no-cipher>
+  <div class="status-group">
+    <button
+      type="button"
+      class="status-item status-remote"
+      data-action="palette"
+      aria-label="Open command palette"
+    >
+      <Icon name="terminal" size={13} /><span class="hide-sm">adamnajmi.com</span>
+    </button>
+    <span class="status-item" title="Git branch"><Icon name="branch" size={13} /> main</span>
+    <button
+      type="button"
+      class="status-item"
+      data-panel-open="problems"
+      aria-label="0 errors, 0 warnings"
+    >
+      <Icon name="error" size={13} /> 0 <Icon name="warning" size={13} /> 0
+    </button>
+    <span class="status-item hide-sm" title="Built with">Astro · React · Tailwind</span>
+  </div>
+  <div class="status-group">
+    <span class="status-item" data-status-pos>Ln 1, Col 1</span>
+    <span class="status-item hide-sm">UTF-8</span>
+    <span class="status-item hide-sm" data-status-lang>Markdown</span>
+    <span class="status-item hide-sm" title="Hometown"
+      ><Icon name="pin" size={13} /> Kluang, MY</span
+    >
+    <button
+      type="button"
+      class="status-item"
+      data-action="theme"
+      aria-label="Toggle light or dark theme"
+    >
+      <span class="icon-sun"><Icon name="sun" size={13} /></span><span class="icon-moon"
+        ><Icon name="moon" size={13} /></span
+      >
+    </button>
+    <button
+      type="button"
+      class="status-item"
+      data-action="toggle-chat"
+      aria-label="Toggle Ask Adam chat"
+    >
+      <Icon name="sparkle" size={13} /><span class="hide-sm">Ask Adam</span>
+    </button>
+  </div>
+</div>

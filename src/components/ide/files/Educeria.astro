@@ -1,0 +1,83 @@
+---
+import Word from '../../Word.astro';
+import Icon from '../Icon.astro';
+import { EDUCERIA_URL } from '../../../data/ide';
+
+const features = [
+  'TABIKA & TASKA registration',
+  'GPS-verified attendance',
+  'Digital library',
+  'RBAC across centre → district → state → HQ',
+  'Playwright E2E + TypeScript strict mode',
+  'Cross-module delivery (incl. finance)',
+];
+---
+
+<div class="pv" data-gutter>
+  <div class="gutter" aria-hidden="true"></div>
+  <article class="md">
+    <p class="mono muted small" aria-hidden="true">
+      <span class="tk-c">// projects/kemas-educeria.tsx · work product at Mechanikos Sdn. Bhd.</span
+      >
+    </p>
+    <div class="card-top" style="font-size:12px;margin-top:10px">
+      <span class="pill live" style="margin-left:0">live at ceria.kemas.gov.my</span>
+      <span class="pill" style="margin-left:0">Aug 2026 – present</span>
+    </div>
+    <h1 style="font-size:2rem;margin-top:.6rem">
+      <span class="tk-k mono" style="font-size:.6em">&lt;</span>Kemas EduCeria<span
+        class="tk-k mono"
+        style="font-size:.6em"
+      >
+        /&gt;</span>
+    </h1>
+    <p class="lead">
+      National MIS for 5,000+ TABIKA preschool centres under <Word word="KEMAS" /> (Ministry of Rural
+      and Regional Development) — registration, GPS-verified attendance, digital library, and role-based
+      access across centre / district / state / HQ.
+    </p>
+
+    <h2><span class="hash" aria-hidden="true">##</span>What it does</h2>
+    <ul class="bullets">
+      {features.map((f) => <li>{f}</li>)}
+    </ul>
+    <p>EduCeria also serves the public TABIKA &amp; TASKA <Word word="KEMAS" /> registration.</p>
+
+    <h2><span class="hash" aria-hidden="true">##</span>My role</h2>
+    <ul class="bullets">
+      <li>
+        Directing full-stack development and leading the developer team (code reviews, technical
+        decisions).
+      </li>
+      <li>
+        Aligning Laravel backend with Vue 3 + TypeScript frontend across parallel feature streams.
+      </li>
+      <li>Set up Playwright E2E coverage and structured API/repository patterns.</li>
+    </ul>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Built with</h2>
+    <ul class="chips">
+      {
+        ['Laravel', 'Vue.js 3', 'TypeScript', 'Playwright'].map((t) => (
+          <li class="chip accent">{t}</li>
+        ))
+      }
+    </ul>
+
+    <div class="btns" data-no-cipher>
+      <button type="button" class="btn primary" data-no-cipher data-browser-open="browser-educeria"
+        ><Icon name="run" size={14} /> Open in Simple Browser</button
+      >
+      <a class="btn" data-no-cipher href={EDUCERIA_URL} target="_blank" rel="noopener noreferrer"
+        ><Icon name="external" size={14} /> Open ceria.kemas.gov.my</a
+      >
+      <button
+        type="button"
+        class="btn"
+        data-no-cipher
+        data-ask="What did Adam build for Kemas EduCeria?"
+        ><Icon name="sparkle" size={14} /> Ask about EduCeria</button
+      >
+    </div>
+  </article>
+</div>

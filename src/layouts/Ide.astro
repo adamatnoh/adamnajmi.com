@@ -1,0 +1,29 @@
+---
+import BootIntro from '../components/BootIntro.astro';
+import SeoHead from '../components/SeoHead.astro';
+import '../styles/global.css';
+import '../styles/ide.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+}
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark ide-page">
+  <head>
+    <SeoHead {...props} themeColor="#0a0c12" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body class="antialiased">
+    <a href="#main" class="skip-link">Skip to editor</a>
+    <BootIntro />
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,99 @@
+---
+import Icon from './Icon.astro';
+import type { BrowserTab } from '../../data/ide';
+interface Props {
+  tab: BrowserTab;
+}
+const { tab } = Astro.props;
+---
+
+<div
+  class="sb"
+  data-browser={tab.id}
+  data-url={tab.url}
+  data-host={tab.host}
+  data-embeddable={tab.embeddable ? 'true' : 'false'}
+>
+  <div class="sb-bar" data-no-cipher>
+    <button type="button" class="icon-btn" data-sb="back" aria-label="Back" title="Back" disabled
+      ><Icon name="back" /></button
+    >
+    <button
+      type="button"
+      class="icon-btn"
+      data-sb="forward"
+      aria-label="Forward"
+      title="Forward"
+      disabled><Icon name="forward" /></button
+    >
+    <button
+      type="button"
+      class="icon-btn"
+      data-sb="reload"
+      aria-label="Reload"
+      title="Reload"
+      disabled={!tab.embeddable}><Icon name="reload" /></button
+    >
+    <form class="sb-url" data-sb="form">
+      <Icon name="lock" size={13} />
+      <label class="sr-only" for={`${tab.id}-url`}>Address</label>
+      <input
+        id={`${tab.id}-url`}
+        type="url"
+        value={tab.url}
+        spellcheck="false"
+        autocomplete="off"
+        data-sb="url"
+      />
+    </form>
+    <a
+      class="icon-btn"
+      href={tab.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-sb="external"
+      aria-label="Open in external browser"
+      title="Open in external browser"
+    >
+      <Icon name="external" />
+    </a>
+  </div>
+  {
+    tab.embeddable ? (
+      <div class="sb-view" data-sb="view">
+        <div class="sb-loading" data-sb="loading">
+          Loading {tab.host}…
+        </div>
+      </div>
+    ) : (
+      <div class="sb-blocked">
+        <div class="sb-blocked-card">
+          <span class="sb-blocked-icon" aria-hidden="true">
+            <Icon name="warning" size={28} />
+          </span>
+          <h2>{tab.host} refused to connect inside the editor</h2>
+          <p>
+            The site sends <code>X-Frame-Options: SAMEORIGIN</code> and a{' '}
+            <code>frame-src 'self'</code> policy, so browsers only allow it on its own domain.
+            That's a sensible setting for a government system.
+          </p>
+          <p>Open it in a normal browser tab instead:</p>
+          <div class="btns" data-no-cipher>
+            <a
+              class="btn primary"
+              data-no-cipher
+              href={tab.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="external" size={14} /> Open {tab.host}
+            </a>
+            <button type="button" class="btn" data-no-cipher data-open="educeria">
+              Back to kemas-educeria.tsx
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</div>

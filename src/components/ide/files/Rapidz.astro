@@ -1,0 +1,39 @@
+---
+import { RAPIDZ_ABOUT, RAPIDZ_PROJECTS } from '../../../data/ide';
+---
+
+<div class="pv" data-gutter>
+  <div class="gutter" aria-hidden="true"></div>
+  <article class="md">
+    <h1 style="font-size:2rem"><span class="hash" aria-hidden="true">#</span>rapidz</h1>
+    <p class="lead">
+      Software Engineer (Backend / Full-Stack) at Rapidz Inc. @ Clarity Techworks Sdn. Bhd. · Oct
+      2023 – May 2026
+    </p>
+    <blockquote>{RAPIDZ_ABOUT}</blockquote>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Builds</h2>
+    <div class="cards">
+      {
+        RAPIDZ_PROJECTS.map((p) => (
+          <article class="card hoverable">
+            <h3 class="card-top">
+              <span class="tk-s">$</span> <span>{p.title}</span>
+            </h3>
+            <div class="tags">
+              {['rapidz-inc', ...p.tags].map((t) => (
+                <span class="tag">#{t}</span>
+              ))}
+            </div>
+            <p>{p.summary}</p>
+            <ul class="points">
+              {p.points.map((pt) => (
+                <li>{pt}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </article>
+</div>

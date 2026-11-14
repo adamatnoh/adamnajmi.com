@@ -1,0 +1,23 @@
+---
+import type { FileIcon } from '../../data/ide';
+interface Props {
+  icon: FileIcon | 'browser' | 'folder' | 'folder-open';
+}
+const { icon } = Astro.props;
+const LABEL: Record<string, string> = {
+  md: 'M↓',
+  ts: 'TS',
+  tsx: 'TSX',
+  log: '≡',
+  php: 'php',
+  kt: 'K',
+  json: '{}',
+  env: '⚙',
+  sh: '$_',
+  browser: '◎',
+  folder: '▸',
+  'folder-open': '▾',
+};
+---
+
+<span class={`ficon ficon-${icon}`} aria-hidden="true">{LABEL[icon]}</span>

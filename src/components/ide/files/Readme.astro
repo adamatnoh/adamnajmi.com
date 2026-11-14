@@ -1,0 +1,172 @@
+---
+import Word from '../../Word.astro';
+import FileIcon from '../FileIcon.astro';
+import Icon from '../Icon.astro';
+import {
+  README_BADGES,
+  README_TECH,
+  STATS,
+  RESUME_URL,
+  LINKEDIN_URL,
+  GITHUB_URL,
+} from '../../../data/ide';
+
+const featured = [
+  {
+    id: 'educeria',
+    icon: 'tsx',
+    file: 'kemas-educeria.tsx',
+    title: 'Kemas EduCeria',
+    pill: 'live',
+    body: 'National MIS for 5,000+ TABIKA preschool centres under KEMAS. Laravel, Vue 3, TypeScript.',
+  },
+  {
+    id: 'hss',
+    icon: 'php',
+    file: 'hss.php',
+    title: 'Hospital Scheduling System',
+    pill: 'live demo',
+    body: 'Final year project at UTM, rebuilt from scratch in 2026. Fair on-call, ward and shift rosters.',
+  },
+  {
+    id: 'tv',
+    icon: 'kt',
+    file: 'islamic-tv-launcher.kt',
+    title: 'islamic-tv-launcher',
+    pill: 'side project',
+    body: 'Android TV home launcher with JAKIM prayer times, azan alerts, child lock and screensaver.',
+  },
+  {
+    id: 'rapidz',
+    icon: 'md',
+    file: 'rapidz.md',
+    title: 'Rapidz platform',
+    pill: 'fintech',
+    body: 'Crypto wallet, neo bank, admin & merchant portals, OTC bot and Power BI analytics.',
+  },
+] as const;
+---
+
+<div class="pv" data-gutter>
+  <div class="gutter" aria-hidden="true"></div>
+  <article class="md">
+    <div class="hero">
+      <picture>
+        <source srcset="/file/adam.webp" type="image/webp" />
+        <img
+          src="/file/adam.png"
+          alt="Portrait of Adam Najmi"
+          width="84"
+          height="84"
+          decoding="async"
+        />
+      </picture>
+      <div>
+        <h1><span class="hash" aria-hidden="true">#</span>Adam <Word word="Najmi" /></h1>
+        <p class="lead">Full Stack Software Engineer · <strong>Fintech &amp; Government</strong></p>
+      </div>
+    </div>
+
+    <div class="badges" aria-label="Summary badges" data-no-cipher>
+      {
+        README_BADGES.map((b) => (
+          <span class:list={['badge', b.tone]}>
+            <span>{b.k}</span>
+            <span>{b.v}</span>
+          </span>
+        ))
+      }
+    </div>
+
+    <p>
+      3 years building production web, mobile and data systems. Led delivery of a cross-platform
+      crypto wallet, a Power BI reporting ecosystem and a national-scale kindergarten management
+      platform serving 5,000+ centres.
+    </p>
+    <blockquote>
+      Currently <strong>Full Stack Developer at Mechanikos Sdn. Bhd.</strong>, directing Kemas
+      EduCeria (live at <a
+        href="https://ceria.kemas.gov.my/"
+        target="_blank"
+        rel="noopener noreferrer">ceria.kemas.gov.my</a
+      >). Based in Johor Bahru, Malaysia · open to remote &amp; on-site.
+    </blockquote>
+
+    <div class="btns" data-no-cipher>
+      <a class="btn primary" data-no-cipher href={RESUME_URL} target="_blank" rel="noopener"
+        ><Icon name="files" size={14} /> Open Resume</a
+      >
+      <a class="btn" data-no-cipher href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer"
+        >linkedin.com/in/adamnajmi</a
+      >
+      <a class="btn" data-no-cipher href={GITHUB_URL} target="_blank" rel="noopener noreferrer"
+        >github.com/adamatnoh</a
+      >
+      <button type="button" class="btn" data-no-cipher data-action="toggle-chat"
+        ><Icon name="sparkle" size={14} /> Ask Adam</button
+      >
+    </div>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Stats</h2>
+    <dl class="stats">
+      {
+        STATS.map((s) => (
+          <div class="stat">
+            <dt class="sr-only">{s.label}</dt>
+            <dd class="v">{s.value}</dd>
+            <dd class="l">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Languages &amp; tools</h2>
+    <ul class="chips" aria-label="Main technologies">
+      {README_TECH.map((t) => <li class="chip">{t}</li>)}
+    </ul>
+    <p class="muted small">
+      Full list in <button
+        type="button"
+        class="btn"
+        data-no-cipher
+        style="height:24px"
+        data-open="stack"><FileIcon icon="json" /> stack.json</button>
+    </p>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Featured projects</h2>
+    <div class="cards">
+      {
+        featured.map((p) => (
+          <button type="button" class="card" data-open={p.id}>
+            <span class="card-top">
+              <FileIcon icon={p.icon} />
+              {p.title}
+              <span class:list={['pill', (p.pill === 'live' || p.pill === 'live demo') && 'live']}>
+                {p.pill}
+              </span>
+            </span>
+            <p>{p.body}</p>
+            <span class="tag" style="align-self:flex-start">
+              projects/{p.file}
+            </span>
+          </button>
+        ))
+      }
+    </div>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Getting around</h2>
+    <ul class="bullets">
+      <li>Open files from the <strong>Explorer</strong> on the left; each one opens as a tab.</li>
+      <li>
+        Press <kbd data-kbd>Ctrl Shift P</kbd> for the command palette, or type <code>help</code> in the
+        terminal.
+      </li>
+      <li>Ask questions about Adam's work in the <strong>Ask Adam</strong> panel.</li>
+      <li>Switch between the dark and light theme from the activity bar or the status bar.</li>
+      <li>
+        There's a daily word game hidden in the 5-letter words. Open the <strong>CIPHER</strong> tab below
+        to play.
+      </li>
+    </ul>
+  </article>
+</div>

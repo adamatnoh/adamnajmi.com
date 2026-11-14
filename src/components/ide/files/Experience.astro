@@ -1,0 +1,38 @@
+---
+import { EXPERIENCE } from '../../../data/ide';
+---
+
+<ol class="code log" aria-label="experience.log">
+  <li><span class="tk-c"># experience.log · tail -f career</span></li>
+  <li></li>
+  {
+    EXPERIENCE.map((job) => (
+      <>
+        <li>
+          <span class="tk-n">[{job.range}]</span>{' '}
+          <span class={`state-${job.state}`}>
+            {job.state === 'RUNNING' ? '● RUNNING' : '○ EXITED '}
+          </span>{' '}
+          <span class="job">{job.role}</span> <span class="tk-o">@</span>{' '}
+          <span class="tk-t">{job.company}</span>
+          {job.companyNote && <span class="tk-c"> {job.companyNote}</span>}
+          <span class="tk-c"> # {job.sector}</span>
+        </li>
+        {job.entries.map((e) => (
+          <li style="--i:2">
+            <span class={`lv lv-${e.level}`}>{e.level}</span>{' '}
+            {e.href ? (
+              <a href={e.href} target="_blank" rel="noopener noreferrer">
+                {e.text}
+              </a>
+            ) : (
+              e.text
+            )}
+          </li>
+        ))}
+        <li />
+      </>
+    ))
+  }
+  <li><span class="tk-c"># EOF · ask the Ask Adam panel about any line</span></li>
+</ol>

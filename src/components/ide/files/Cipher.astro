@@ -1,0 +1,21 @@
+---
+import Code from '../Code.astro';
+import Icon from '../Icon.astro';
+import { CIPHER_SH } from '../../../data/ide';
+---
+
+<Code code={CIPHER_SH} lang="sh" label="daily_cipher.sh" />
+<div class="md" style="padding-left:72px;padding-top:0">
+  <div class="btns" data-no-cipher>
+    <button type="button" class="btn primary" data-no-cipher data-action="cipher"
+      ><Icon name="run" size={14} /> Run daily_cipher.sh</button
+    >
+    <button
+      type="button"
+      class="btn"
+      data-no-cipher
+      data-ask="Give me a hint for today's daily cipher word"
+      ><Icon name="sparkle" size={14} /> Ask for a hint</button
+    >
+  </div>
+</div>

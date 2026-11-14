@@ -1,0 +1,77 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="ide-titlebar" data-no-cipher>
+  <div class="tb-left">
+    <button
+      type="button"
+      class="icon-btn tb-burger"
+      data-action="toggle-sidebar"
+      aria-label="Open explorer"
+      aria-controls="ide-left"
+    >
+      <Icon name="menu" />
+    </button>
+    <div class="tb-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="tb-menu hide-sm" aria-hidden="true">
+      <span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>Go</span><span
+        >Run</span
+      ><span>Terminal</span><span>Help</span>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="tb-command"
+    data-action="palette"
+    aria-label="Search files and commands"
+    aria-keyshortcuts="Control+Shift+P Meta+Shift+P Control+K Meta+K"
+  >
+    <Icon name="search" size={13} />
+    <span class="tb-title">adamnajmi.com — portfolio</span>
+    <kbd data-kbd>Ctrl Shift P</kbd>
+  </button>
+  <div class="tb-right">
+    <span class="tb-layout">
+      <button
+        type="button"
+        class="icon-btn"
+        data-action="toggle-sidebar"
+        data-pressed-for="sidebar"
+        aria-label="Toggle primary side bar"
+        title="Toggle Primary Side Bar (Ctrl+B)"
+      >
+        <Icon name="sidebar" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn"
+        data-action="toggle-panel"
+        data-pressed-for="panel"
+        aria-label="Toggle panel"
+        title="Toggle Panel (Ctrl+`)"
+      >
+        <Icon name="panel" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn"
+        data-action="toggle-chat"
+        data-pressed-for="chat"
+        aria-label="Toggle Ask Adam chat"
+        title="Toggle Ask Adam"
+      >
+        <Icon name="chat-panel" />
+      </button>
+    </span>
+    <button
+      type="button"
+      class="icon-btn tb-chat-mobile"
+      data-action="toggle-chat"
+      aria-label="Open Ask Adam chat"
+      aria-controls="ide-chat"
+    >
+      <Icon name="sparkle" />
+    </button>
+  </div>
+</div>

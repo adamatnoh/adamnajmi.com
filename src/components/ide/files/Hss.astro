@@ -1,0 +1,100 @@
+---
+import Word from '../../Word.astro';
+import Icon from '../Icon.astro';
+import BrowserFrame from '../../hss/BrowserFrame.astro';
+import Carousel from '../../hss/Carousel.astro';
+import { FEATURES, HIGHLIGHTS, ROLES, STACK, HSS_REPO_URL } from '../../../data/hss';
+const accounts = ROLES.filter((r) => r.account.includes('@'));
+---
+
+<div class="pv" data-gutter>
+  <div class="gutter" aria-hidden="true"></div>
+  <article class="md">
+    <p class="mono muted small" aria-hidden="true">
+      <span class="tk-k">&lt;?php</span>
+      <span class="tk-c">// projects/hss.php · ★ FYP project · UTM</span>
+    </p>
+    <div class="card-top" style="font-size:12px;margin-top:10px">
+      <span class="pill live" style="margin-left:0">live at hss.adamnajmi.com</span>
+      <span class="pill" style="margin-left:0">2023 → rebuilt 2026</span>
+    </div>
+    <h1 style="font-size:2rem;margin-top:.6rem">Hospital Scheduling System</h1>
+    <p class="lead">
+      My <Word word="final" /> year project at UTM (2023), rebuilt from scratch in 2026 — a duty-roster
+      app where hospital departments generate fair on-call, ward and shift rosters, then let doctors request
+      leave and swaps.
+    </p>
+
+    <div class="btns" data-no-cipher>
+      <button type="button" class="btn primary" data-no-cipher data-browser-open="browser-hss"
+        ><Icon name="run" size={14} /> Open in Simple Browser</button
+      >
+      <a class="btn" data-no-cipher href="/hss"><Icon name="layers" size={14} /> Guided tour</a>
+      <a class="btn" data-no-cipher href="/hss/live"
+        ><Icon name="external" size={14} /> Launch live demo</a
+      >
+      <a class="btn" data-no-cipher href={HSS_REPO_URL} target="_blank" rel="noopener noreferrer"
+        >Source on GitHub</a
+      >
+    </div>
+
+    <BrowserFrame url="hss.adamnajmi.com" class="mt-4">
+      <Carousel slides={HIGHLIGHTS} label="HSS screenshots" interval={4500} />
+    </BrowserFrame>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Features</h2>
+    <ul class="bullets">
+      {FEATURES.map((f) => <li>{f}</li>)}
+    </ul>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Demo login</h2>
+    <div class="demo-box">
+      <p style="margin:0">
+        <span class="t-user">➜</span> login --demo
+      </p>
+      <p style="margin:0" class="muted">
+        Use the demo buttons on the login page to sign in as <strong>Dr Adam</strong> (admin),
+        <strong>Dr Farah</strong> (scheduler) or <strong>Dr Firdaus</strong> (doctor). password:
+        <code>password</code>
+      </p>
+      <p style="margin:.4rem 0 0" class="muted">
+        The login page has the demo accounts ready to use, or sign in with one of these:
+      </p>
+      <ul class="bullets" style="margin:.2rem 0 0">
+        {
+          accounts.map((r) => (
+            <li>
+              <code>{r.account}</code> · {r.label.toLowerCase()} · {r.name}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Tour by role</h2>
+    {
+      ROLES.map((r) => (
+        <section style="margin:0 0 1rem">
+          <h3>
+            {r.label}{' '}
+            <span class="muted" style="font-weight:400">
+              · {r.name}
+            </span>
+          </h3>
+          <p style="margin:.2rem 0">{r.blurb}</p>
+          <ol class="bullets" style="margin:.2rem 0">
+            {r.steps.map((st) => (
+              <li>{st.caption.replace(/^\d+ · /, '')}</li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+    <p class="muted small">Screenshots: {HIGHLIGHTS.map((h) => h.caption).join(' · ')}.</p>
+
+    <h2><span class="hash" aria-hidden="true">##</span>Stack</h2>
+    <ul class="chips">
+      {STACK.map((t) => <li class="chip accent">{t}</li>)}
+    </ul>
+  </article>
+</div>

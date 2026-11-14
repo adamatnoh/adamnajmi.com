@@ -1,0 +1,194 @@
+---
+import Icon from './Icon.astro';
+import FileIcon from './FileIcon.astro';
+import { FILES, SKILLS, TIMELINE, RESUME_URL } from '../../data/ide';
+
+const root = FILES.filter((f) => !f.folder);
+const projects = FILES.filter((f) => f.folder === 'projects');
+// Explorer order: README, about, experience, projects/, then the rest.
+const top = root.slice(0, 3);
+const rest = root.slice(3);
+const initials = (s: string) =>
+  s
+    .replace(/[^A-Za-z0-9 .]/g, ' ')
+    .split(/[\s.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+const extensions = SKILLS.flatMap((g) => g.items.map((name) => ({ name, group: g.group })));
+---
+
+<aside class="ide-sidebar" id="ide-sidebar" aria-label="Side bar" data-no-cipher>
+  <!-- EXPLORER -->
+  <section class="side-view is-active" data-side-view="explorer" aria-label="Explorer">
+    <div class="side-head">
+      <span>Explorer</span>
+      <button type="button" class="icon-btn" data-action="palette" aria-label="Search files"
+        ><Icon name="search" size={14} /></button
+      >
+    </div>
+    <div class="side-scroll">
+      <button
+        type="button"
+        class="side-section"
+        aria-expanded="true"
+        aria-controls="tree-root"
+        data-collapse
+      >
+        <Icon name="chevron-down" size={14} /> adamnajmi.com
+      </button>
+      <ul class="tree" id="tree-root" role="list">
+        {
+          top.map((f) => (
+            <li>
+              <button type="button" class="tree-item" data-open={f.id} title={f.path}>
+                <FileIcon icon={f.icon} />
+                <span>{f.name}</span>
+              </button>
+            </li>
+          ))
+        }
+        <li>
+          <button
+            type="button"
+            class="tree-item"
+            aria-expanded="true"
+            aria-controls="tree-projects"
+            data-collapse
+          >
+            <span class="tree-chev"><Icon name="chevron-down" size={14} /></span>
+            <span>projects</span>
+          </button>
+          <ul class="tree" id="tree-projects" role="list">
+            {
+              projects.map((f) => (
+                <li>
+                  <button
+                    type="button"
+                    class="tree-item"
+                    style="--depth:1"
+                    data-open={f.id}
+                    title={f.path}
+                  >
+                    <FileIcon icon={f.icon} />
+                    <span>{f.name}</span>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+        {
+          rest.map((f) => (
+            <li>
+              <button type="button" class="tree-item" data-open={f.id} title={f.path}>
+                <FileIcon icon={f.icon} />
+                <span>{f.name}</span>
+                {f.id === 'cipher' && <span class="tree-hint">▶ play</span>}
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="side-note hide-sm">
+        Tip: <kbd data-kbd>Ctrl Shift P</kbd> opens the command palette. Ask anything in
+        <strong>Ask Adam</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="side-view" data-side-view="search" aria-label="Search">
+    <div class="side-head"><span>Search</span></div>
+    <label class="sr-only" for="side-search">Search across files</label>
+    <input
+      id="side-search"
+      class="side-input"
+      type="search"
+      placeholder="Search"
+      autocomplete="off"
+      data-search-input
+    />
+    <div class="side-scroll">
+      <p class="side-note" data-search-status>
+        Type to search README, projects, experience and more.
+      </p>
+      <ul class="side-list" data-search-results></ul>
+    </div>
+  </section>
+
+  <!-- SOURCE CONTROL -->
+  <section class="side-view" data-side-view="scm" aria-label="Source control">
+    <div class="side-head"><span>Source Control</span></div>
+    <div class="side-scroll">
+      <p class="side-note">
+        <Icon name="branch" size={13} /> main · working tree clean. The history below is Adam's career,
+        newest first.
+      </p>
+      <ul class="side-list">
+        {
+          TIMELINE.map((c) => (
+            <li>
+              <button type="button" class="side-row scm-row" data-open={c.open}>
+                <span class="scm-dot" aria-hidden="true" />
+                <span>
+                  {c.msg}
+                  <small>{c.when}</small>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- RUN AND DEBUG -->
+  <section class="side-view" data-side-view="run" aria-label="Run and debug">
+    <div class="side-head"><span>Run and Debug</span></div>
+    <div class="side-scroll">
+      <button type="button" class="run-btn" data-browser-open="browser-hss"
+        ><Icon name="run" size={14} /> Launch HSS (Simple Browser)</button
+      >
+      <a class="run-btn secondary" href="/hss/live"
+        ><Icon name="external" size={14} /> /hss/live — full-page demo</a
+      >
+      <a class="run-btn secondary" href="/hss"
+        ><Icon name="layers" size={14} /> /hss — guided tour</a
+      >
+      <button type="button" class="run-btn secondary" data-action="cipher"
+        ><Icon name="bug" size={14} /> Run daily_cipher.sh</button
+      >
+      <a class="run-btn secondary" href={RESUME_URL} target="_blank" rel="noopener"
+        ><Icon name="files" size={14} /> Open resume.pdf</a
+      >
+      <p class="side-note">Live targets open inside the editor where the site allows framing.</p>
+    </div>
+  </section>
+
+  <!-- EXTENSIONS -->
+  <section class="side-view" data-side-view="extensions" aria-label="Extensions">
+    <div class="side-head"><span>Extensions · Installed</span></div>
+    <div class="side-scroll">
+      <ul class="side-list">
+        {
+          extensions.map((e) => (
+            <li>
+              <button type="button" class="side-row ext-row" data-open="stack">
+                <span class="ext-logo" aria-hidden="true">
+                  {initials(e.name)}
+                </span>
+                <span>
+                  {e.name}
+                  <small>{e.group.replace('_', ' & ')}</small>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</aside>

@@ -1,0 +1,15 @@
+---
+import { highlight, type Lang } from '../../lib/highlight';
+interface Props {
+  code: string;
+  lang: Lang;
+  cipher?: boolean;
+  label?: string;
+}
+const { code, lang, cipher = false, label } = Astro.props;
+const lines = highlight(code, lang, { cipher });
+---
+
+<ol class="code" aria-label={label}>
+  {lines.map((l) => <li style={`--i:${l.indent}`} set:html={l.html} />)}
+</ol>

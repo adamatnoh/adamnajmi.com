@@ -1,0 +1,81 @@
+---
+import Icon from '../Icon.astro';
+import { TV_REPO_URL } from '../../../data/ide';
+
+const shots = [
+  {
+    src: '/file/islamic-tv/home-putra.webp',
+    alt: 'Actual Xiaomi stick Home with Masjid Putra wallpaper, prayer times and countdown; network and QR redacted',
+  },
+  {
+    src: '/file/islamic-tv/prayer-clock-putra.webp',
+    alt: 'Actual prayer clock with Hijri date, five prayer times and a Quran verse over Masjid Putra',
+  },
+  {
+    src: '/file/islamic-tv/child-lock-menu.webp',
+    alt: 'Actual app context menu showing the child-lock entry, not the locked-app screen; network and QR redacted',
+  },
+  {
+    src: '/file/islamic-tv/child-lock-qr-redacted.webp',
+    alt: 'Actual child-lock QR unlock interface for YouTube; functional QR, complete unlock link and private household message visibly redacted',
+  },
+];
+---
+
+<div class="pv" data-gutter>
+  <div class="gutter" aria-hidden="true"></div>
+  <article class="md">
+    <p class="mono muted small" aria-hidden="true">
+      <span class="tk-c">// projects/islamic-tv-launcher.kt · side project · Android TV</span>
+    </p>
+    <h1 style="font-size:2rem;margin-top:.6rem">islamic-tv-launcher</h1>
+    <p class="lead">
+      Android TV home launcher with JAKIM prayer times, azan alerts, child lock and an
+      Islamic-themed screensaver.
+    </p>
+    <ul class="bullets">
+      <li>Custom Android TV home</li>
+      <li>JAKIM prayer times + azan</li>
+      <li>Child lock / parental controls</li>
+      <li>Islamic screensaver</li>
+    </ul>
+    <ul class="chips">
+      {['Java', 'Android TV'].map((t) => <li class="chip accent">{t}</li>)}
+    </ul>
+
+    <div class="shots">
+      {
+        shots.map((s) => (
+          <figure>
+            <img src={s.src} alt={s.alt} width="640" height="360" loading="lazy" decoding="async" />
+          </figure>
+        ))
+      }
+    </div>
+    <p class="muted small">
+      Actual device captures · network, functional QR and household message redacted. Wallpaper:
+      Masjid Putra — CEphoto, Uwe Aranas
+      <a
+        href="https://creativecommons.org/licenses/by-sa/3.0/"
+        target="_blank"
+        rel="noopener noreferrer">CC BY-SA 3.0</a
+      >.
+    </p>
+    <div class="btns" data-no-cipher>
+      <a
+        class="btn primary"
+        data-no-cipher
+        href={TV_REPO_URL}
+        target="_blank"
+        rel="noopener noreferrer"><Icon name="external" size={14} /> View on GitHub</a
+      >
+      <button
+        type="button"
+        class="btn"
+        data-no-cipher
+        data-ask="Tell me about Adam's islamic-tv-launcher project"
+        ><Icon name="sparkle" size={14} /> Ask about it</button
+      >
+    </div>
+  </article>
+</div>
