@@ -21,7 +21,7 @@ function linkPageCipherWords() {
   if (!roots.length) roots.push(document.body);
 
   const skipSel =
-    '[data-word], [data-cipher-ui], script, style, noscript, textarea, input, select, option';
+    '[data-word], [data-cipher-ui], [data-no-cipher], button, script, style, noscript, textarea, input, select, option';
 
   for (const root of roots) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -196,9 +196,12 @@ const setTutorialSeen = () => {
 // ============================================
 // 8. REACT COMPONENT
 // ============================================
-const DailyCipher = () => {
+// variant "floating" (default): the original top-right widget used on /hss pages.
+// variant "panel": always-open board rendered inside the IDE's CIPHER panel tab.
+const DailyCipher = ({ variant = 'floating' }) => {
+  const isPanel = variant === 'panel';
   const SECRET = getDailySecret();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isPanel);
   const [attempts, setAttempts] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
@@ -239,8 +242,9 @@ const DailyCipher = () => {
     }
   }, [isOpen]);
 
-  // Tooltip timers
+  // Tooltip timers (floating button only)
   useEffect(() => {
+    if (isPanel) return undefined;
     const showTimer = setTimeout(() => {
       setIsCipherMounted(true);
       requestAnimationFrame(() => {
@@ -271,6 +275,22 @@ const DailyCipher = () => {
     setStreak(getStreak());
   }, []);
 
+  // Panel variant: the IDE fires cipher:open when the CIPHER tab is shown.
+  // First-timers get the tutorial once per page view.
+  useEffect(() => {
+    if (!isPanel) return undefined;
+    let shown = false;
+    const onOpen = () => {
+      track('cipher_open');
+      if (!shown && !hasSeenTutorial()) {
+        shown = true;
+        setShowTutorial(true);
+      }
+    };
+    window.addEventListener('cipher:open', onOpen);
+    return () => window.removeEventListener('cipher:open', onOpen);
+  }, [isPanel]);
+
   // Wrap every on-page pool word so chips like Bahru / Axios are live
   useEffect(() => {
     linkPageCipherWords();
@@ -285,6 +305,7 @@ const DailyCipher = () => {
 
       const upperWord = word.toUpperCase();
       if (!isCipherWord(upperWord)) return;
+      window.dispatchEvent(new CustomEvent('cipher:guess', { detail: { word: upperWord } }));
 
       const newAttempts = [...attempts, upperWord];
       setAttempts(newAttempts);
@@ -416,40 +437,7 @@ const DailyCipher = () => {
     return grid;
   };
 
-  // ============================================
-  // 9. UI: TOGGLE BUTTON WITH TOOLTIP (Top Right)
-  // ============================================
-  if (!isOpen) {
-    return (
-      <>
-        <div className="fixed top-4 right-6 z-40" data-cipher-ui>
-          {isCipherMounted && (
-            <div
-              className={`absolute top-full right-0 mt-3 bg-[#0a0a0a] border border-green-500/30 text-green-400 text-xs font-mono px-3 py-1.5 rounded shadow-lg whitespace-nowrap transition-all duration-700 ease-in-out ${showCipherTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
-            >
-              🔍 Crack the daily cipher!
-              <div className="absolute -top-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-t border-l border-green-500/30 rotate-45"></div>
-            </div>
-          )}
-
-          <button
-            onClick={() => {
-              if (!hasSeenTutorial()) {
-                setShowTutorial(true);
-              } else {
-                setIsOpen(true);
-              }
-            }}
-            className="bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
-          >
-            <span className="flex items-center gap-2">
-              <span className="text-green-500">$</span> ./daily_cipher.sh
-            </span>
-          </button>
-        </div>
-
-        {/* Tutorial Modal */}
-        {showTutorial && (
+  const tutorialModal = showTutorial && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80" data-cipher-ui>
             <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg p-6 max-w-md w-full font-mono shadow-2xl">
               <div className="flex items-center gap-2 border-b border-green-500/20 pb-3 mb-4">
@@ -534,7 +522,157 @@ const DailyCipher = () => {
               </button>
             </div>
           </div>
-        )}
+        );
+
+  // Reward modal – only shown when showRewardModal is true
+  const rewardModal = reward && showRewardModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80" data-cipher-ui>
+          <div
+            className={`${
+              reward.rarity === 'super-rare' ? 'border-yellow-500/30' : 'border-green-500/30'
+            } bg-[#0a0a0a] border rounded-lg p-8 max-w-sm w-full text-center font-mono shadow-2xl`}
+          >
+            <div className="text-6xl mb-4">
+              {reward.rarity === 'super-rare' && '👑'}
+              {reward.rarity === 'rare' && '🌟'}
+              {reward.rarity === 'common' && '🐱'}
+            </div>
+            <h3
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'text-green-400'
+              } text-xl font-bold mb-2`}
+            >
+              You cracked the code!
+            </h3>
+            <p className="text-white/60 text-sm mb-2">
+              The word of the day is <span className="font-extrabold italic">{SECRET}</span>! Here
+              is your reward
+            </p>
+            {streak > 0 && (
+              <p className="text-yellow-500/80 text-xs font-mono mb-2">🔥 {streak}-day streak!</p>
+            )}
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 m-4 flex items-center">
+              <img
+                src={reward.image}
+                alt="Reward cat"
+                className="w-32 h-32 object-cover rounded-lg mx-auto border border-white/10"
+                onError={(e) => {
+                  e.target.src =
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="128" height="128"%3E%3Crect fill="%230a0a0a" width="128" height="128"/%3E%3Ctext x="64" y="70" text-anchor="middle" font-size="40" fill="%23ffffff"%3E🐱%3C/text%3E%3C/svg%3E';
+                }}
+              />
+            </div>
+            <p
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'text-cyan-400'
+              } text-xs font-mono mb-4`}
+            >
+              {reward.label}
+            </p>
+            <button
+              onClick={() => {
+                setShowRewardModal(false);
+                if (!isPanel) setIsOpen(false);
+              }}
+              className={`${
+                reward.rarity === 'super-rare'
+                  ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
+                  : 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30'
+              } px-4 py-2 rounded transition font-mono text-sm`}
+            >
+              $ continue_browsing
+            </button>
+          </div>
+        </div>
+      );
+
+  // ============================================
+  // 9a. UI: PANEL VARIANT (IDE bottom panel)
+  // ============================================
+  if (isPanel) {
+    return (
+      <div className="cipher-panel" data-cipher-ui>
+        <div aria-label={`Daily cipher board, ${attempts.length} of 6 attempts used`} role="group">
+          {renderGrid()}
+        </div>
+        <div className="cipher-info">
+          <p style={{ margin: 0 }}>
+            <span className="text-green-500">$</span> ./daily_cipher.sh --today{' '}
+            {streak > 0 && <span className="text-yellow-500/80">🔥 {streak}-day streak</span>}
+          </p>
+          <p className="dim" style={{ margin: 0 }}>
+            attempts: {attempts.length}/6 · a new word every day (UTC)
+          </p>
+          {!gameOver && (
+            <p style={{ margin: '6px 0 0' }}>
+              Click any 5-letter word in the editor above to guess. 🟩 correct spot · 🟨 wrong spot · ⬜
+              not in word.
+            </p>
+          )}
+          {gameOver && !won && (
+            <p className="text-red-400/80" style={{ margin: '6px 0 0' }}>
+              Game over. The word was <span className="font-bold">{SECRET}</span>. Come back tomorrow!
+            </p>
+          )}
+          {won && (
+            <button
+              type="button"
+              className="btn primary"
+              style={{ marginTop: 8 }}
+              onClick={() => setShowRewardModal(true)}
+            >
+              🐱 Claim your reward
+            </button>
+          )}
+          <p style={{ margin: '8px 0 0' }}>
+            <button type="button" className="btn" onClick={() => setShowTutorial(true)}>
+              ? how to play
+            </button>
+          </p>
+        </div>
+        {tutorialModal}
+        {rewardModal}
+      </div>
+    );
+  }
+
+  // ============================================
+  // 9. UI: TOGGLE BUTTON WITH TOOLTIP (Top Right)
+  // ============================================
+  if (!isOpen) {
+    return (
+      <>
+        <div className="fixed top-4 right-6 z-40" data-cipher-ui>
+          {isCipherMounted && (
+            <div
+              className={`absolute top-full right-0 mt-3 bg-[#0a0a0a] border border-green-500/30 text-green-400 text-xs font-mono px-3 py-1.5 rounded shadow-lg whitespace-nowrap transition-all duration-700 ease-in-out ${showCipherTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
+            >
+              🔍 Crack the daily cipher!
+              <div className="absolute -top-1.5 right-4 w-2 h-2 bg-[#0a0a0a] border-t border-l border-green-500/30 rotate-45"></div>
+            </div>
+          )}
+
+          <button
+            onClick={() => {
+              if (!hasSeenTutorial()) {
+                setShowTutorial(true);
+              } else {
+                setIsOpen(true);
+              }
+            }}
+            className="bg-[#0a0a0a] border border-green-500/30 text-green-400 px-4 py-2 rounded-lg shadow-2xl hover:border-green-400 hover:text-green-300 transition-all duration-200 font-mono text-sm"
+          >
+            <span className="flex items-center gap-2">
+              <span className="text-green-500">$</span> ./daily_cipher.sh
+            </span>
+          </button>
+        </div>
+
+        {tutorialModal}
       </>
     );
   }
@@ -610,71 +748,7 @@ const DailyCipher = () => {
         </div>
       </div>
 
-      {/* Reward Modal – only shown when showRewardModal is true */}
-      {reward && showRewardModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-auto bg-black/80" data-cipher-ui>
-          <div
-            className={`${
-              reward.rarity === 'super-rare' ? 'border-yellow-500/30' : 'border-green-500/30'
-            } bg-[#0a0a0a] border rounded-lg p-8 max-w-sm w-full text-center font-mono shadow-2xl`}
-          >
-            <div className="text-6xl mb-4">
-              {reward.rarity === 'super-rare' && '👑'}
-              {reward.rarity === 'rare' && '🌟'}
-              {reward.rarity === 'common' && '🐱'}
-            </div>
-            <h3
-              className={`${
-                reward.rarity === 'super-rare'
-                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
-                  : 'text-green-400'
-              } text-xl font-bold mb-2`}
-            >
-              You cracked the code!
-            </h3>
-            <p className="text-white/60 text-sm mb-2">
-              The word of the day is <span className="font-extrabold italic">{SECRET}</span>! Here
-              is your reward
-            </p>
-            {streak > 0 && (
-              <p className="text-yellow-500/80 text-xs font-mono mb-2">🔥 {streak}-day streak!</p>
-            )}
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4 m-4 flex items-center">
-              <img
-                src={reward.image}
-                alt="Reward cat"
-                className="w-32 h-32 object-cover rounded-lg mx-auto border border-white/10"
-                onError={(e) => {
-                  e.target.src =
-                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="128" height="128"%3E%3Crect fill="%230a0a0a" width="128" height="128"/%3E%3Ctext x="64" y="70" text-anchor="middle" font-size="40" fill="%23ffffff"%3E🐱%3C/text%3E%3C/svg%3E';
-                }}
-              />
-            </div>
-            <p
-              className={`${
-                reward.rarity === 'super-rare'
-                  ? 'text-yellow-400 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
-                  : 'text-cyan-400'
-              } text-xs font-mono mb-4`}
-            >
-              {reward.label}
-            </p>
-            <button
-              onClick={() => {
-                setShowRewardModal(false);
-                setIsOpen(false);
-              }}
-              className={`${
-                reward.rarity === 'super-rare'
-                  ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 [text-shadow:0_0_20px_rgba(250,204,21,0.6)]'
-                  : 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30'
-              } px-4 py-2 rounded transition font-mono text-sm`}
-            >
-              $ continue_browsing
-            </button>
-          </div>
-        </div>
-      )}
+      {rewardModal}
     </div>
   );
 };
