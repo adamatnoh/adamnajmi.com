@@ -16,7 +16,7 @@ import {
 
 export * from './profile';
 
-export type FileIcon = 'md' | 'ts' | 'log' | 'tsx' | 'php' | 'kt' | 'json' | 'env' | 'sh';
+export type FileIcon = 'md' | 'ts' | 'log' | 'tsx' | 'php' | 'java' | 'json' | 'env' | 'sh';
 
 export interface IdeFile {
   id: string;
@@ -74,12 +74,12 @@ export const FILES: IdeFile[] = [
   },
   {
     id: 'tv',
-    name: 'islamic-tv-launcher.kt',
-    path: 'projects/islamic-tv-launcher.kt',
-    icon: 'kt',
-    lang: 'Kotlin',
+    name: 'islamic-tv-launcher.java',
+    path: 'projects/islamic-tv-launcher.java',
+    icon: 'java',
+    lang: 'Java',
     folder: 'projects',
-    aliases: ['tv', 'islamic-tv'],
+    aliases: ['tv', 'islamic-tv', 'islamic-tv-launcher.kt', 'projects/islamic-tv-launcher.kt'],
   },
   {
     id: 'rapidz',
