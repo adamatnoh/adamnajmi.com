@@ -1,5 +1,11 @@
 ---
-import { CREDLY_URL } from '../../../data/ide';
+import { EDUCATION, CERTIFICATIONS, SPOKEN } from '../../../data/profile';
+const issued = (ym: string) =>
+  new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-GB', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 ---
 
 <div class="pv" data-gutter>
@@ -8,29 +14,54 @@ import { CREDLY_URL } from '../../../data/ide';
     <h1 style="font-size:2rem"><span class="hash" aria-hidden="true">#</span>education</h1>
     <p class="lead">Degrees, certification &amp; languages</p>
 
-    <h2><span class="hash" aria-hidden="true">##</span>Universiti Teknologi Malaysia (UTM)</h2>
-    <p>Bachelor of Computer Science (Software Engineering)</p>
-    <p class="mono muted small">2019 – 2023 · CGPA 3.88</p>
+    {
+      EDUCATION.map((e) => (
+        <>
+          <h2>
+            <span class="hash" aria-hidden="true">
+              ##
+            </span>
+            {e.school}
+          </h2>
+          <p>{e.award}</p>
+          <p class="mono muted small">
+            {e.period} · {e.grade}
+          </p>
+        </>
+      ))
+    }
 
-    <h2><span class="hash" aria-hidden="true">##</span>Kolej Matrikulasi Johor</h2>
-    <p>KPM Matriculation Certificate</p>
-    <p class="mono muted small">2018 – 2019 · CGPA 3.75</p>
-
-    <h2>
-      <span class="hash" aria-hidden="true">##</span>AWS Certified Solutions Architect – Associate
-    </h2>
-    <p>SAA-C03 · Amazon Web Services</p>
-    <p class="mono muted small">Issued September 2026</p>
-    <div class="btns" data-no-cipher>
-      <a class="btn" data-no-cipher href={CREDLY_URL} target="_blank" rel="noopener noreferrer"
-        >Verify on Credly ↗</a
-      >
-    </div>
+    {
+      CERTIFICATIONS.map((c) => (
+        <>
+          <h2>
+            <span class="hash" aria-hidden="true">
+              ##
+            </span>
+            {c.name}
+          </h2>
+          <p>
+            {c.code} · {c.issuer}
+          </p>
+          <p class="mono muted small">Issued {issued(c.issued)}</p>
+          <div class="btns" data-no-cipher>
+            <a class="btn" data-no-cipher href={c.verify} target="_blank" rel="noopener noreferrer">
+              Verify on Credly ↗
+            </a>
+          </div>
+        </>
+      ))
+    }
 
     <h2><span class="hash" aria-hidden="true">##</span>Languages</h2>
     <ul class="bullets">
-      <li>Bahasa Melayu — native</li>
-      <li>English — fluent</li>
+      {
+        Object.entries(SPOKEN).map(([lang, level]) => (
+          <li>
+            {lang} — {level}
+          </li>
+        ))
+      }
     </ul>
   </article>
 </div>

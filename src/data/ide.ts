@@ -1,8 +1,20 @@
 /**
- * Content + structure for the VS Code-style portfolio shell.
- * Every fact here comes from resume.ts / personal.ts / website.ts or the
- * previous home page; nothing new is claimed.
+ * Structure for the AmCode editor shell (files, browser tabs, generated
+ * file sources). Profile facts live in profile.ts.
  */
+import {
+  SKILLS,
+  EMAIL,
+  LINKEDIN_URL,
+  GITHUB_URL,
+  RESUME_URL,
+  PROFILE,
+  SPOKEN,
+  CERTIFICATIONS,
+  CONTACT,
+} from './profile';
+
+export * from './profile';
 
 export type FileIcon = 'md' | 'ts' | 'log' | 'tsx' | 'php' | 'kt' | 'json' | 'env' | 'sh';
 
@@ -138,235 +150,6 @@ export const BROWSERS: BrowserTab[] = [
   },
 ];
 
-export const RESUME_URL = '/file/resume.pdf';
-export const LINKEDIN_URL = 'https://www.linkedin.com/in/adamnajmi';
-export const GITHUB_URL = 'https://github.com/adamatnoh';
-export const EMAIL = 'adamnajminoh@gmail.com';
-export const EDUCERIA_URL = 'https://ceria.kemas.gov.my/';
-export const TV_REPO_URL = 'https://github.com/adamatnoh/islamic-tv-launcher';
-export const CREDLY_URL = 'https://www.credly.com/badges/790fa709-42ef-4f85-9c1e-813f69223625';
-
-export const SKILLS: { group: string; items: string[] }[] = [
-  { group: 'languages', items: ['TypeScript', 'JavaScript', 'PHP', 'Java', 'SQL'] },
-  { group: 'backend_apis', items: ['Node.js', 'NestJS', 'Laravel', 'REST APIs', 'Swagger'] },
-  {
-    group: 'frontend',
-    items: ['Vue.js 3', 'React Native', 'Next.js', 'Pinia', 'Tailwind CSS', 'Vite'],
-  },
-  { group: 'database_orm', items: ['PostgreSQL', 'MySQL', 'Prisma'] },
-  { group: 'testing_quality', items: ['Playwright', 'ESLint', 'Prettier'] },
-  {
-    group: 'devops_tooling',
-    items: ['Git', 'GitHub', 'Docker', 'Sentry', 'npm', 'Postman', 'Axios'],
-  },
-  { group: 'data_reporting', items: ['Power BI', 'DAX'] },
-];
-
-export const STATS = [
-  { value: '3', label: 'years shipping production software' },
-  { value: '5,000+', label: 'TABIKA centres on Kemas EduCeria' },
-  { value: 'AWS', label: 'Solutions Architect Associate · SAA-C03' },
-  { value: '3.88', label: 'CGPA · BCS (Software Eng.), UTM' },
-];
-
-export const README_BADGES = [
-  { k: 'role', v: 'full stack engineer' },
-  { k: 'location', v: 'Johor Bahru, MY' },
-  { k: 'status', v: 'open to remote & on-site', tone: 'ok' },
-  { k: 'AWS', v: 'SAA-C03' },
-  { k: 'CGPA', v: '3.88 · UTM' },
-];
-
-export const README_TECH = [
-  'TypeScript',
-  'Node.js',
-  'NestJS',
-  'Laravel',
-  'Vue.js 3',
-  'React Native',
-  'PostgreSQL',
-  'MySQL',
-  'Docker',
-  'Playwright',
-  'Power BI',
-];
-
-export interface LogEntry {
-  level: 'INFO' | 'LEAD' | 'SHIP' | 'SEC' | 'FIX' | 'DOCS';
-  text: string;
-  href?: string;
-}
-export interface LogJob {
-  range: string;
-  state: 'RUNNING' | 'EXITED';
-  role: string;
-  company: string;
-  companyNote?: string;
-  sector: string;
-  entries: LogEntry[];
-}
-
-export const EXPERIENCE: LogJob[] = [
-  {
-    range: '2026-08 → present',
-    state: 'RUNNING',
-    role: 'Full Stack Developer',
-    company: 'Mechanikos Sdn. Bhd.',
-    sector: 'GovTech · Education',
-    entries: [
-      {
-        level: 'LEAD',
-        text: 'Directing full-stack development of Kemas EduCeria, a national MIS for 5,000+ TABIKA preschool centres under KEMAS (Ministry of Rural and Regional Development): registration, GPS-verified attendance, digital library and role-based access across centre, district, state and HQ.',
-      },
-      { level: 'INFO', text: 'Live at ceria.kemas.gov.my', href: EDUCERIA_URL },
-      {
-        level: 'LEAD',
-        text: 'Leading a team of developers through code reviews, unblocking technical decisions and aligning Laravel backend with Vue 3 + TypeScript frontend work across parallel feature streams.',
-      },
-      {
-        level: 'SHIP',
-        text: 'Restructured sprint planning, ticketing, backlog prioritisation and module ownership in the first week.',
-      },
-      {
-        level: 'SHIP',
-        text: 'Established Playwright E2E testing, TypeScript strict mode and structured API/repository patterns for maintainability at scale.',
-      },
-      {
-        level: 'INFO',
-        text: 'Coordinating cross-module delivery (system management, registration & attendance, digital library, finance) across staging and pre-production government environments.',
-      },
-    ],
-  },
-  {
-    range: '2023-10 → 2026-05',
-    state: 'EXITED',
-    role: 'Software Engineer (Backend / Full-Stack)',
-    company: 'Rapidz Inc.',
-    companyNote: '@ Clarity Techworks Sdn. Bhd.',
-    sector: 'Fintech · Crypto',
-    entries: [
-      {
-        level: 'SEC',
-        text: 'Hardened API security with server-to-server HMAC request signing and replay-attack protection.',
-      },
-      {
-        level: 'SEC',
-        text: 'Engineered a JWT (RS256) access & refresh token system with automated revocation for 2FA, biometric and OAuth flows.',
-      },
-      {
-        level: 'SHIP',
-        text: 'Architected a Power BI reporting ecosystem from scratch for real-time revenue and campaign performance visibility.',
-      },
-      {
-        level: 'INFO',
-        text: 'Contributed to the migration from Laravel/PHP to NestJS + React Native stack.',
-      },
-      {
-        level: 'INFO',
-        text: 'Onboarded third-party providers across vendor transitions, and integrated Sentry error tracking with standardised exception handling.',
-      },
-    ],
-  },
-  {
-    range: '2022-10 → 2023-02',
-    state: 'EXITED',
-    role: 'Software Engineer Intern',
-    company: 'Intel Technology Sdn. Bhd.',
-    sector: 'Semiconductor',
-    entries: [
-      {
-        level: 'FIX',
-        text: 'Diagnosed, fixed and integrated a system GUI with its Perl & Python scripts for mass deployment across Intel departments.',
-      },
-      { level: 'DOCS', text: 'Authored user manuals and end-user testing protocols.' },
-      {
-        level: 'INFO',
-        text: 'Hands-on chipset design verification with Python, Perl, Tk, Verilog & SystemVerilog on Unix/Linux.',
-      },
-      {
-        level: 'INFO',
-        text: 'Collaborated with cross-geo teams (USA, India) through design meetings and knowledge-sharing sessions.',
-      },
-    ],
-  },
-];
-
-export interface RapidzProject {
-  title: string;
-  tags: string[];
-  summary: string;
-  points: string[];
-}
-
-export const RAPIDZ_ABOUT =
-  'Rapidz is a digital finance and cryptocurrency platform to buy, trade, spend and manage digital assets and fiat currencies in one place: crypto wallet & trading, the Rapidz Card, and high security (2FA, biometric login, institutional-grade custody).';
-
-export const RAPIDZ_PROJECTS: RapidzProject[] = [
-  {
-    title: 'rapidz',
-    tags: ['crypto', 'api', 'nestjs', 'react-native'],
-    summary: 'Production-grade wallet serving thousands of users globally.',
-    points: [
-      'Deposit / Withdraw crypto',
-      'Hold & receive digital collectibles (NFT)',
-      'Stake & earn real yield rates',
-      'Instant swaps (20+ cryptos)',
-      'Rapidz Card spending integration',
-    ],
-  },
-  {
-    title: 'verrefin',
-    tags: ['defi', 'webapp', 'nestjs', 'react-native'],
-    summary: 'Neo crypto bank unifying traditional and decentralized finance.',
-    points: [
-      'Fiat wallet & cross-border payments',
-      'Earn yields through ecosystem vault',
-      '70% lower fees than traditional banks',
-      'Co-branded card program',
-    ],
-  },
-  {
-    title: 'admin-portal',
-    tags: ['webapp', 'laravel', 'php', 'admin'],
-    summary: 'Internal management portal built for Rapidz administrators.',
-    points: [
-      'Deposit / Withdraw admin funds',
-      'User account & transaction management',
-      'Bulk email distribution to users',
-    ],
-  },
-  {
-    title: 'merchant-portal',
-    tags: ['merchant', 'webapp', 'laravel', 'php'],
-    summary: 'Management portal for Rapidz merchants/clients.',
-    points: [
-      'Staff account & role management',
-      'Virtual card issuance & distribution',
-      'Token/NFT airdrops for campaigns',
-    ],
-  },
-  {
-    title: 'otc-telegram-bot',
-    tags: ['telegram', 'bot', 'nodejs', 'nestjs'],
-    summary: 'Trading bot enabling crypto/fiat exchange via Telegram.',
-    points: [
-      'Buy & sell crypto with integrated rates',
-      'Custom rates per client/agent',
-      'Agent-assisted transactions on behalf of clients',
-    ],
-  },
-  {
-    title: 'power-bi-analytics',
-    tags: ['dax', 'reporting', 'ms-power-bi'],
-    summary: 'Real-time Rapidz executive dashboards for revenue, yield, and product performance.',
-    points: [
-      'Real-time P&L & yield tracking',
-      'Revenue & campaign performance dashboards',
-      'Data-driven executive decision-making',
-    ],
-  },
-];
-
 /** Career milestones shown in the Source Control view, newest first. */
 export const TIMELINE = [
   {
@@ -410,6 +193,9 @@ export const TIMELINE = [
   { hash: '2d91f6c', msg: 'init: Universiti Teknologi Malaysia', when: '2019', open: 'education' },
 ] as const;
 
+const P = PROFILE;
+const tsArr = (xs: readonly string[]) => `[${xs.map((x) => `'${x}'`).join(', ')}]`;
+
 export const ABOUT_TS = `
 /**
  * about.ts — the short version.
@@ -418,25 +204,22 @@ export const ABOUT_TS = `
  */
 
 export const adam = {
-  name: 'Adam Najmi bin Mat Noh',
-  nickname: 'Adam',
-  role: 'Full Stack Software Engineer',
-  company: 'Mechanikos Sdn. Bhd.', // since Aug 2026
-  currentProduct: 'Kemas EduCeria', // live for 5,000+ TABIKA centres
-  sectors: ['Fintech', 'Government'],
-  yearsShipping: 3,
-  basedIn: 'Johor Bahru, Johor, Malaysia',
-  hometown: 'Kluang, Johor',
+  name: '${P.name}',
+  nickname: '${P.nickname}',
+  role: '${P.role}',
+  company: '${P.company}', // since Aug 2026
+  currentProduct: '${P.currentProduct}', // live for 5,000+ TABIKA centres
+  sectors: ${tsArr(P.sectors)},
+  yearsShipping: ${P.yearsShipping},
+  basedIn: '${P.basedIn}',
+  hometown: '${P.hometown}',
   strengths: [
-    'API security',
-    'authentication design',
-    'third-party integrations',
-    'technical leadership',
+${P.strengths.map((x) => `    '${x}',`).join('\n')}
   ],
-  certified: 'AWS Solutions Architect – Associate (SAA-C03)',
-  education: 'BCS (Software Engineering), UTM · CGPA 3.88',
-  languages: ['Bahasa Melayu', 'English'],
-  availability: 'Open to remote, hybrid, or on-site roles in Johor or Singapore',
+  certified: '${P.certified}',
+  education: '${P.education}',
+  languages: ${tsArr(P.languages)},
+  availability: '${P.availability}',
 } as const;
 
 // Led delivery of a cross-platform crypto wallet (iOS/Android),
@@ -458,24 +241,26 @@ export const STACK_JSON = `
   "stack": {
 ${SKILLS.map((s, i) => `    ${JSON.stringify(s.group)}: ${jsonArray(s.items)}${i < SKILLS.length - 1 ? ',' : ''}`).join('\n')}
   },
-  "spoken": { "Bahasa Melayu": "native", "English": "fluent" },
-  "certifications": ["AWS Certified Solutions Architect – Associate (SAA-C03)"],
+  "spoken": { ${Object.entries(SPOKEN)
+    .map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)}`)
+    .join(', ')} },
+  "certifications": ${jsonArray(CERTIFICATIONS.map((c) => `${c.name} (${c.code})`))},
   "thisSite": ["Astro", "React", "Tailwind CSS", "Vercel", "Gemini API"]
 }
 `;
 
 export const CONTACT_ENV = `
 # contact.env — public on purpose, safe to commit
-NAME="Adam Najmi"
-ROLE="Full Stack Software Engineer"
+NAME="${CONTACT.name}"
+ROLE="${CONTACT.role}"
 EMAIL=${EMAIL}
 LINKEDIN=${LINKEDIN_URL}
 GITHUB=${GITHUB_URL}
 WEBSITE=https://adamnajmi.com
 RESUME=${RESUME_URL}
-LOCATION="Johor Bahru, Johor, Malaysia"
-AVAILABILITY="Open to remote, hybrid, or on-site roles in Johor or Singapore"
-STATUS=open_for_opportunities
+LOCATION="${CONTACT.location}"
+AVAILABILITY="${CONTACT.availability}"
+STATUS=${CONTACT.status}
 `;
 
 export const CIPHER_SH = `
