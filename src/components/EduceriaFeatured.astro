@@ -1,0 +1,56 @@
+---
+import Word from './Word.astro';
+import FeaturedChrome from './FeaturedChrome.astro';
+
+const EDUCERIA_URL = 'https://ceria.kemas.gov.my/';
+---
+
+<FeaturedChrome
+  id="educeria-title"
+  title="Kemas EduCeria"
+  slug="ceria.kemas.gov.my"
+  badge="work product · Mechanikos"
+  badgeTone="cyan"
+  accent="cyan"
+  liveHost="ceria.kemas.gov.my"
+  liveHref={EDUCERIA_URL}
+>
+  <p class="mt-2 max-w-3xl font-mono text-sm leading-relaxed text-white/70">
+    National MIS for 5,000+ TABIKA preschool centres under <Word word="KEMAS" /> (Ministry of Rural and
+    Regional Development) — registration, GPS-verified attendance, digital library, and role-based access
+    across centre / district / state / HQ. Built with Laravel, Vue 3 and TypeScript.
+  </p>
+
+  <ul class="mt-4 grid gap-x-4 gap-y-1.5 font-mono text-[13px] text-white/70 sm:grid-cols-2">
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> TABIKA &amp; TASKA registration</li>
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> GPS-verified attendance</li>
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> Digital library</li>
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> RBAC across centre → HQ</li>
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> Playwright E2E + TS strict mode</li>
+    <li><span class="text-green-400/70" aria-hidden="true">&gt;</span> Cross-module (incl. finance)</li>
+  </ul>
+
+  <div class="mt-4 flex flex-wrap gap-2">
+    {
+      ['Laravel', 'Vue.js 3', 'TypeScript', 'Playwright'].map((t) => (
+        <span class="rounded border border-cyan-400/30 bg-cyan-400/5 px-2 py-0.5 font-mono text-[11px] text-cyan-300">
+          {t}
+        </span>
+      ))
+    }
+  </div>
+
+  <div class="mt-5 flex flex-wrap gap-3">
+    <a
+      href={EDUCERIA_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 rounded-md bg-green-400 px-4 py-2 font-mono text-sm font-bold text-black transition hover:bg-green-300"
+    >
+      <span aria-hidden="true">↗</span> Open Kemas EduCeria
+    </a>
+    <p class="max-w-xs self-center font-mono text-[11px] text-white/45">
+      Public production site for TABIKA &amp; TASKA <Word word="KEMAS" /> registration.
+    </p>
+  </div>
+</FeaturedChrome>
