@@ -1,0 +1,314 @@
+---
+/**
+ * Prayer-times widget on the desktop intro: today's official JAKIM times
+ * (via /api/solat), the next prayer highlighted and a live countdown.
+ * Starts on the saved zone, or JHR02 (Johor Bahru). Location is only used
+ * when the visitor already granted it or taps "Use my location".
+ */
+import { DEFAULT_SOLAT_ZONE, SOLAT_ZONES } from '../data/solat-zones';
+
+const PRAYERS = [
+  ['subuh', 'Subuh'],
+  ['syuruk', 'Syuruk'],
+  ['zohor', 'Zohor'],
+  ['asar', 'Asar'],
+  ['maghrib', 'Maghrib'],
+  ['isyak', 'Isyak'],
+] as const;
+const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
+---
+
+<section
+  class="solat"
+  data-solat
+  data-state="loading"
+  data-default-zone={DEFAULT_SOLAT_ZONE}
+  aria-labelledby="solat-title"
+>
+  <header class="solat-head">
+    <svg class="solat-glyph" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6z"></path>
+      <path class="star" d="m17.5 3.5.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z"></path>
+    </svg>
+    <div class="solat-where">
+      <h2 class="solat-title" id="solat-title">Waktu Solat</h2>
+      <p class="solat-place" data-solat-place title={def.area}>
+        {def.area.split(',')[0]} · {DEFAULT_SOLAT_ZONE}
+      </p>
+    </div>
+    <button
+      type="button"
+      class="solat-loc"
+      data-solat-locate
+      aria-label="Use my location for prayer times"
+      title="Use my location"
+    >
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+        <path d="M20.5 3.5 3.8 10.4l7 2.8 2.8 7z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <p class="solat-next" data-solat-next-wrap>
+    <strong class="solat-next-name" data-solat-next>Loading</strong>
+    <span class="solat-count" data-solat-count>…</span>
+  </p>
+
+  <ol class="solat-list" data-solat-list>
+    {
+      PRAYERS.map(([key, label]) => (
+        <li data-p={key}>
+          <span class="solat-n">{label}</span>
+          <time class="solat-t" data-t={key}>
+            --:--
+          </time>
+        </li>
+      ))
+    }
+  </ol>
+
+  <footer class="solat-foot">
+    <span data-solat-hijri></span>
+    <span class="solat-status" data-solat-status>JAKIM</span>
+  </footer>
+</section>
+
+<script>
+  type Day = {
+    zone: string;
+    place: string;
+    area: string;
+    resolvedBy: string;
+    date: string;
+    hijriLabel: string | null;
+    times: Record<string, string>;
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-solat]');
+  const html = document.documentElement;
+  const KEY_ZONE = 'adam-solat-zone';
+  const KEY_CACHE = 'adam-solat-cache';
+  const ORDER = ['subuh', 'syuruk', 'zohor', 'asar', 'maghrib', 'isyak'] as const;
+  const NAMES: Record<string, string> = {
+    subuh: 'Subuh',
+    syuruk: 'Syuruk',
+    zohor: 'Zohor',
+    asar: 'Asar',
+    maghrib: 'Maghrib',
+    isyak: 'Isyak',
+  };
+  const MYT = 8 * 3600 * 1000;
+
+  if (root) {
+    const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const placeEl = $('[data-solat-place]');
+    const nextEl = $('[data-solat-next]');
+    const countEl = $('[data-solat-count]');
+    const wrapEl = $('[data-solat-next-wrap]');
+    const hijriEl = $('[data-solat-hijri]');
+    const statusEl = $('[data-solat-status]');
+    const locBtn = $<HTMLButtonElement>('[data-solat-locate]');
+    const defaultZone = root.dataset.defaultZone || 'JHR02';
+
+    const store = {
+      get<T>(k: string): T | null {
+        try {
+          return JSON.parse(localStorage.getItem(k) || 'null');
+        } catch {
+          return null;
+        }
+      },
+      set(k: string, v: unknown) {
+        try {
+          localStorage.setItem(k, JSON.stringify(v));
+        } catch {
+          /* private mode */
+        }
+      },
+    };
+
+    let day: Day | null = null;
+    let started = false;
+    let timer = 0;
+    let loading = false;
+    let lastTry = 0;
+
+    /** Today's date in Malaysia, whatever the visitor's own time zone is. */
+    const mytDate = () => {
+      const d = new Date(Date.now() + MYT);
+      return { y: d.getUTCFullYear(), m: d.getUTCMonth(), d: d.getUTCDate() };
+    };
+    const mytKey = () => {
+      const t = mytDate();
+      return `${t.y}-${t.m + 1}-${t.d}`;
+    };
+    /** "HH:MM" (Malaysia time) today, plus whole days, as an absolute instant. */
+    const instant = (hhmm: string, plusDays = 0) => {
+      const [h, mi] = hhmm.split(':').map(Number);
+      const t = mytDate();
+      return Date.UTC(t.y, t.m, t.d + plusDays, h, mi) - MYT;
+    };
+    const fmt = (ms: number) => {
+      const s = Math.max(0, Math.ceil(ms / 1000));
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const ss = String(s % 60).padStart(2, '0');
+      return h ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
+    };
+
+    const setStatus = (text: string, title = '') => {
+      statusEl.textContent = text;
+      statusEl.title = title;
+    };
+
+    function render(d: Day) {
+      day = d;
+      root!.dataset.state = 'ready';
+      placeEl.textContent = `${d.place} · ${d.zone}`;
+      placeEl.title = d.area;
+      hijriEl.textContent = d.hijriLabel || '';
+      for (const k of ORDER) {
+        const el = root!.querySelector<HTMLElement>(`[data-t="${k}"]`);
+        if (el) el.textContent = d.times[k] || '--:--';
+      }
+      locBtn.classList.toggle('is-on', d.resolvedBy === 'location');
+      tick();
+    }
+
+    function tick() {
+      clearTimeout(timer);
+      if (!day) return;
+      const now = Date.now();
+      let next: string = ORDER[0];
+      let at = instant(day.times.subuh, 1);
+      for (const k of ORDER) {
+        const t = instant(day.times[k]);
+        if (t > now) {
+          next = k;
+          at = t;
+          break;
+        }
+      }
+      root!.querySelectorAll<HTMLElement>('[data-p]').forEach((li) => {
+        const k = li.dataset.p!;
+        const isNext = k === next;
+        li.classList.toggle('is-next', isNext);
+        li.classList.toggle('is-past', !isNext && instant(day!.times[k]) <= now);
+        if (isNext) li.setAttribute('aria-current', 'true');
+        else li.removeAttribute('aria-current');
+      });
+      nextEl.textContent = NAMES[next];
+      const left = fmt(at - now);
+      countEl.textContent = `in ${left}`;
+      wrapEl.setAttribute(
+        'aria-label',
+        `Next prayer: ${NAMES[next]} at ${day.times[next]}, in ${left}`,
+      );
+      // A new Malaysian day: fetch the new table.
+      if (root!.dataset.day && root!.dataset.day !== mytKey() && now - lastTry > 60000)
+        void load(day.zone);
+      if (html.classList.contains('desk-on'))
+        timer = window.setTimeout(tick, 1000 - (Date.now() % 1000) + 8);
+    }
+
+    async function load(zone: string | null, coords?: { lat: number; lng: number }) {
+      if (loading) return;
+      loading = true;
+      lastTry = Date.now();
+      const z = zone || defaultZone;
+      const cache = store.get<{ key: string; zone: string; data: Day }>(KEY_CACHE);
+      if (!day && cache?.data && (coords || cache.zone === z)) render(cache.data);
+      const qs = coords
+        ? `lat=${coords.lat.toFixed(2)}&lng=${coords.lng.toFixed(2)}`
+        : `zone=${encodeURIComponent(z)}`;
+      root!.setAttribute('aria-busy', 'true');
+      try {
+        const res = await fetch(`/api/solat?${qs}`, { headers: { Accept: 'application/json' } });
+        const data = (await res.json()) as Day & { error?: string };
+        if (!res.ok || !data.times) throw new Error(data.error || `HTTP ${res.status}`);
+        root!.dataset.day = mytKey();
+        store.set(KEY_CACHE, { key: mytKey(), zone: data.zone, data });
+        if (coords || zone) store.set(KEY_ZONE, { zone: data.zone, by: data.resolvedBy });
+        setStatus('JAKIM', 'Official times from JAKIM e-solat');
+        render(data);
+      } catch (err) {
+        const stale = cache?.data;
+        if (stale) {
+          root!.dataset.day = cache!.key;
+          render(stale);
+          setStatus(
+            cache!.key === mytKey() ? 'Offline · saved' : 'Offline · old times',
+            'Could not reach JAKIM e-solat, showing the last saved times',
+          );
+        } else {
+          root!.dataset.state = 'error';
+          nextEl.textContent = 'Unavailable';
+          countEl.textContent = 'tap ↻ to retry';
+          setStatus('JAKIM offline', String((err as Error)?.message || err));
+        }
+      } finally {
+        loading = false;
+        root!.removeAttribute('aria-busy');
+      }
+    }
+
+    function locate() {
+      if (!('geolocation' in navigator)) return;
+      locBtn.classList.add('is-busy');
+      setStatus('Locating…');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          locBtn.classList.remove('is-busy');
+          void load(null, { lat: pos.coords.latitude, lng: pos.coords.longitude });
+        },
+        () => {
+          locBtn.classList.remove('is-busy');
+          setStatus(
+            `Location off · ${day?.zone || defaultZone}`,
+            'Location was blocked or unavailable',
+          );
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 30 * 60 * 1000 },
+      );
+    }
+
+    async function start() {
+      if (started) {
+        tick();
+        return;
+      }
+      started = true;
+      if (!('geolocation' in navigator)) locBtn.hidden = true;
+      const saved = store.get<{ zone: string; by?: string }>(KEY_ZONE);
+      await load(saved?.zone || null);
+      // Only reuse location silently when it was granted before; never prompt on load.
+      if (!saved && 'permissions' in navigator) {
+        try {
+          const p = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+          if (p.state === 'granted') locate();
+        } catch {
+          /* Safari < 16 */
+        }
+      }
+    }
+
+    locBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (root.dataset.state === 'error' && !('geolocation' in navigator))
+        return void load(day?.zone || null);
+      locate();
+    });
+    root.addEventListener('click', () => {
+      if (root.dataset.state === 'error') void load(day?.zone || null);
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && started) tick();
+    });
+    // Only wake up while the desktop is on screen.
+    const check = () => {
+      if (html.classList.contains('desk-on')) void start();
+    };
+    new MutationObserver(check).observe(html, { attributes: true, attributeFilter: ['class'] });
+    check();
+  }
+</script>

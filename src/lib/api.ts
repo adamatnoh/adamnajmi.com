@@ -21,4 +21,8 @@ export const API_ROUTES = [
   { path: '/api/experience', description: 'Work history, newest first' },
   { path: '/api/stack', description: 'Tech stack, languages and certifications' },
   { path: '/api/contact', description: 'How to reach Adam' },
+  {
+    path: '/api/solat',
+    description: 'Today’s JAKIM prayer times (?zone=JHR02 or ?lat=&lng=)',
+  },
 ] as const;

@@ -7,6 +7,7 @@
  * close or minimise it, and reopen it from its icon or the dock.
  */
 import AppIcon from './brand/AppIcon.astro';
+import SolatWidget from './SolatWidget.astro';
 import { PROFILE, RESUME_URL } from '../data/profile';
 ---
 
@@ -46,6 +47,8 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       <time data-desk-time>--:--:--</time>
     </span>
   </header>
+
+  <SolatWidget />
 
   <ul class="desk-icons" aria-label="Apps">
     <li>

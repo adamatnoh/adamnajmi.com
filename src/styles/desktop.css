@@ -530,7 +530,7 @@ html.desk-opening .desk {
 /* ---------- phones: home-screen grid ---------- */
 @media (max-width: 767px) {
   .desk {
-    grid-template-rows: 28px auto 1fr;
+    grid-template-rows: 28px auto auto 1fr;
   }
   .desk-bar {
     font-size: 12px;
