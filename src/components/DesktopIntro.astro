@@ -3,6 +3,8 @@
  * First-visit desktop. Hidden unless the head gate in SeoHead adds
  * `desk-on` to <html> (once per session, never for deep links). The editor
  * is already rendered underneath; opening AmCode zooms it out of the icon.
+ * The hello card is a small "Welcome" window: drag it by its title bar,
+ * close or minimise it, and reopen it from its icon or the dock.
  */
 import AppIcon from './brand/AppIcon.astro';
 import { PROFILE, RESUME_URL } from '../data/profile';
@@ -10,7 +12,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 
 <div
   id="desk"
-  class="desk"
+  class="desk win-running"
   role="dialog"
   aria-modal="true"
   aria-labelledby="desk-hello"
@@ -27,8 +29,21 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       <span>adamnajmi.com</span>
     </span>
     <span class="desk-clock">
+      <span class="desk-status" aria-hidden="true">
+        <svg class="desk-wifi" viewBox="0 0 24 24" width="17" height="17" focusable="false">
+          <path d="M2.6 9.2a13.6 13.6 0 0 1 18.8 0"></path>
+          <path d="M5.7 12.6a9.2 9.2 0 0 1 12.6 0"></path>
+          <path d="M8.9 15.9a4.7 4.7 0 0 1 6.2 0"></path>
+          <circle cx="12" cy="19.1" r="1.25"></circle>
+        </svg>
+        <svg class="desk-battery" viewBox="0 0 30 14" width="27" height="13" focusable="false">
+          <rect x=".8" y=".8" width="25" height="12.4" rx="3.4"></rect>
+          <rect class="lvl" x="2.8" y="2.8" width="17" height="8.4" rx="1.8"></rect>
+          <path d="M28.2 5.2v3.6"></path>
+        </svg>
+      </span>
       <span data-desk-date></span>
-      <time data-desk-time>--:--</time>
+      <time data-desk-time>--:--:--</time>
     </span>
   </header>
 
@@ -57,26 +72,93 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         <span>resume.pdf</span>
       </a>
     </li>
+    <li>
+      <button type="button" class="desk-icon" data-desk-open="welcome">
+        <AppIcon name="welcome" size={58} />
+        <span>Welcome</span>
+      </button>
+    </li>
   </ul>
 
-  <section class="desk-card">
-    <p class="desk-kicker">Hi, I'm</p>
-    <h2 id="desk-hello">Adam Najmi</h2>
-    <p class="desk-role">{PROFILE.role} · Johor Bahru, MY</p>
-    <p class="desk-hint" id="desk-hint">
-      <span class="only-fine">Double-click</span><span class="only-coarse">Tap</span>
-      <b>AmCode</b> to open my portfolio as a code editor, <b>PostAm</b> to call its live API, or pick
-      <b>Simple view</b> for a plain page.
-    </p>
-    <div class="desk-actions">
-      <button type="button" class="desk-btn primary" data-desk-open="amcode">
-        <AppIcon name="amcode" size={18} /> Open AmCode
-      </button>
-      <button type="button" class="desk-btn" data-desk-open="simple">
-        <AppIcon name="simple" size={18} /> Simple view
-      </button>
+  <section class="desk-win" data-desk-window aria-labelledby="desk-hello">
+    <div class="desk-win-bar" data-desk-drag>
+      <div class="desk-win-dots">
+        <button
+          type="button"
+          class="dw-dot close"
+          data-desk-win="close"
+          aria-label="Close the Welcome window"
+          title="Close"
+          ><svg viewBox="0 0 12 12" aria-hidden="true"
+            ><path d="M3.5 3.5l5 5M8.5 3.5l-5 5"></path></svg
+          ></button
+        >
+        <button
+          type="button"
+          class="dw-dot min"
+          data-desk-win="min"
+          aria-label="Minimise the Welcome window to the dock"
+          title="Minimise"
+          ><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"></path></svg></button
+        >
+        <button
+          type="button"
+          class="dw-dot max"
+          data-desk-win="zoom"
+          aria-label="Zoom the Welcome window"
+          title="Zoom"
+          ><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 8V4h4M8 4 4 8"></path></svg
+          ></button
+        >
+      </div>
+      <span class="desk-win-title">Welcome</span>
+    </div>
+    <div class="desk-win-body">
+      <p class="desk-kicker">Hi, I'm</p>
+      <h2 id="desk-hello">Adam Najmi</h2>
+      <p class="desk-role">{PROFILE.role} · Johor Bahru, MY</p>
+      <p class="desk-hint" id="desk-hint">
+        <span class="only-fine">Double-click</span><span class="only-coarse">Tap</span>
+        <b>AmCode</b> to open my portfolio as a code editor, <b>PostAm</b> to call its live API, or pick
+        <b>Simple view</b> for a plain page.
+      </p>
+      <div class="desk-actions">
+        <button type="button" class="desk-btn primary" data-desk-open="amcode">
+          <AppIcon name="amcode" size={18} /> Open AmCode
+        </button>
+        <button type="button" class="desk-btn" data-desk-open="simple">
+          <AppIcon name="simple" size={18} /> Simple view
+        </button>
+      </div>
     </div>
   </section>
+
+  <nav class="desk-dock" aria-label="Dock">
+    <button type="button" class="dock-item" data-desk-open="amcode" aria-label="AmCode">
+      <AppIcon name="amcode" size={46} /><span class="dock-tip" aria-hidden="true">AmCode</span>
+    </button>
+    <button type="button" class="dock-item" data-desk-open="postam" aria-label="PostAm">
+      <AppIcon name="postam" size={46} /><span class="dock-tip" aria-hidden="true">PostAm</span>
+    </button>
+    <button type="button" class="dock-item" data-desk-open="simple" aria-label="Simple view">
+      <AppIcon name="simple" size={46} /><span class="dock-tip" aria-hidden="true">Simple view</span
+      >
+    </button>
+    <span class="dock-sep" aria-hidden="true"></span>
+    <button
+      type="button"
+      class="dock-item"
+      data-desk-open="welcome"
+      data-dock-welcome
+      aria-label="Welcome window"
+    >
+      <AppIcon name="welcome" size={46} /><span class="dock-tip" aria-hidden="true">Welcome</span
+      ><span class="dock-dot" aria-hidden="true"></span>
+    </button>
+    <a class="dock-item" href={RESUME_URL} target="_blank" rel="noopener" aria-label="resume.pdf">
+      <AppIcon name="pdf" size={46} /><span class="dock-tip" aria-hidden="true">resume.pdf</span>
+    </a>
+  </nav>
 
   <button type="button" class="desk-skip" data-desk-skip aria-keyshortcuts="Escape">
     Skip intro <kbd aria-hidden="true">esc</kbd>
@@ -86,7 +168,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 <script>
   /**
    * The desktop stays in the DOM (hidden) so AmCode can return to it:
-   * window.amDesk.show(from) shrinks the editor back into the AmCode icon.
+   * window.amDesk.show() shrinks the editor back into the AmCode icon.
    * Tabs and layout are untouched, so reopening restores them.
    */
   const html = document.documentElement;
@@ -94,17 +176,26 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 
   if (desk) {
     const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const small = window.matchMedia('(max-width: 767px)');
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     const ide = document.getElementById('ide');
     const amIcon = () => desk.querySelector<HTMLElement>('[data-desk-first]');
 
-    // Clock + date in the visitor's own time.
+    // ------------------------------------------------------------------
+    // Clock: HH:MM:SS in the visitor's own time, re-armed on each second
+    // boundary (a fixed interval drifts and gets throttled in the background).
+    // ------------------------------------------------------------------
     const timeEl = desk.querySelector<HTMLElement>('[data-desk-time]');
     const dateEl = desk.querySelector<HTMLElement>('[data-desk-date]');
     const tick = () => {
       const now = new Date();
       if (timeEl) {
-        timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        timeEl.textContent = now.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        });
         timeEl.dateTime = now.toISOString();
       }
       if (dateEl)
@@ -114,10 +205,118 @@ import { PROFILE, RESUME_URL } from '../data/profile';
           month: 'short',
         });
     };
-    let clock = 0;
+    let clockTimer = 0;
+    const runClock = () => {
+      window.clearTimeout(clockTimer);
+      tick();
+      clockTimer = window.setTimeout(runClock, 1000 - (Date.now() % 1000) + 8);
+    };
+    const stopClock = () => window.clearTimeout(clockTimer);
+    document.addEventListener('visibilitychange', () => {
+      if (!open) return;
+      if (document.hidden) stopClock();
+      else runClock();
+    });
+
     let open = false; // desktop currently showing
     let busy = false; // an animation is running
     let returnFocus: HTMLElement | null = null;
+
+    // ------------------------------------------------------------------
+    // Welcome window: drag, close, minimise to the dock, zoom, reopen
+    // ------------------------------------------------------------------
+    const win = desk.querySelector<HTMLElement>('[data-desk-window]');
+    const bar = desk.querySelector<HTMLElement>('[data-desk-drag]');
+    const dockWelcome = desk.querySelector<HTMLElement>('[data-dock-welcome]');
+    let winState: 'open' | 'closed' | 'min' = 'open';
+    const TOP = 34; // keep the title bar below the menu bar
+
+    const clampWin = () => {
+      if (!win || !win.style.left) return;
+      const r = win.getBoundingClientRect();
+      const x = Math.min(Math.max(0, r.left), window.innerWidth - r.width);
+      const y = Math.min(Math.max(TOP, r.top), window.innerHeight - 44);
+      win.style.left = `${Math.round(x)}px`;
+      win.style.top = `${Math.round(y)}px`;
+    };
+    const resetPos = () => {
+      if (!win) return;
+      win.style.left = win.style.top = win.style.inset = win.style.margin = '';
+    };
+    const playAnim = (cls: string, ms: number, then?: () => void) => {
+      if (!win) return;
+      if (reduceMq.matches) return then?.();
+      win.classList.add(cls);
+      window.setTimeout(() => {
+        win.classList.remove(cls);
+        then?.();
+      }, ms);
+    };
+    const hideWin = (how: 'closed' | 'min') => {
+      if (!win || winState !== 'open') return;
+      winState = how;
+      desk.classList.toggle('win-running', how === 'min');
+      if (how === 'min' && dockWelcome && dockWelcome.offsetParent) {
+        const w = win.getBoundingClientRect();
+        const d = dockWelcome.getBoundingClientRect();
+        const dx = d.left + d.width / 2 - (w.left + w.width / 2);
+        const dy = d.top + d.height / 2 - (w.top + w.height / 2);
+        win.style.setProperty('--dw-to', `translate(${dx}px, ${dy}px) scale(0.08)`);
+        playAnim('is-minimising', 320, () => (win.hidden = true));
+      } else {
+        playAnim('is-closing', 180, () => (win.hidden = true));
+      }
+    };
+    const showWin = () => {
+      if (!win) return;
+      const wasMin = winState === 'min';
+      winState = 'open';
+      desk.classList.add('win-running');
+      win.hidden = false;
+      clampWin();
+      playAnim(wasMin ? 'is-restoring' : 'is-opening', wasMin ? 320 : 200);
+      win.querySelector<HTMLElement>('.desk-btn.primary')?.focus({ preventScroll: true });
+    };
+    const zoomWin = () => {
+      if (!win || small.matches) return;
+      win.classList.toggle('is-zoomed');
+      resetPos();
+    };
+
+    bar?.addEventListener('pointerdown', (e) => {
+      if (!win || small.matches || e.button > 0) return;
+      if ((e.target as HTMLElement).closest('button')) return;
+      e.preventDefault();
+      const r = win.getBoundingClientRect();
+      const ox = e.clientX - r.left;
+      const oy = e.clientY - r.top;
+      win.style.inset = 'auto';
+      win.style.margin = '0';
+      win.style.left = `${Math.round(r.left)}px`;
+      win.style.top = `${Math.round(r.top)}px`;
+      bar.setPointerCapture?.(e.pointerId);
+      win.classList.add('is-dragging');
+      const move = (ev: PointerEvent) => {
+        const x = Math.min(Math.max(0, ev.clientX - ox), window.innerWidth - r.width);
+        const y = Math.min(Math.max(TOP, ev.clientY - oy), window.innerHeight - 44);
+        win.style.left = `${Math.round(x)}px`;
+        win.style.top = `${Math.round(y)}px`;
+      };
+      const up = () => {
+        win.classList.remove('is-dragging');
+        bar.removeEventListener('pointermove', move);
+        bar.removeEventListener('pointerup', up);
+        bar.removeEventListener('pointercancel', up);
+      };
+      bar.addEventListener('pointermove', move);
+      bar.addEventListener('pointerup', up);
+      bar.addEventListener('pointercancel', up);
+    });
+    bar?.addEventListener('dblclick', (e) => {
+      if (!(e.target as HTMLElement).closest('button')) zoomWin();
+    });
+    window.addEventListener('resize', clampWin);
+    small.addEventListener('change', resetPos);
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && open) {
@@ -133,16 +332,14 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 
     const activate = () => {
       open = true;
-      tick();
-      window.clearInterval(clock);
-      clock = window.setInterval(tick, 15_000);
+      runClock();
       document.addEventListener('keydown', onKey, true);
       ide?.setAttribute('inert', '');
     };
     const deactivate = (focusSel?: string) => {
       open = false;
       busy = false;
-      window.clearInterval(clock);
+      stopClock();
       document.removeEventListener('keydown', onKey, true);
       html.classList.remove('desk-on', 'desk-opening');
       ide?.classList.remove('ide-zoom', 'ide-shrink');
@@ -164,6 +361,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 
     const openApp = (app: string, from?: Element | null) => {
       if (!open || busy) return;
+      if (app === 'welcome') return winState === 'open' ? playAnim('is-nudged', 300) : showWin();
       if (app === 'simple') {
         try {
           localStorage.setItem('adam-view', 'classic');
@@ -218,9 +416,17 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     desk.addEventListener('click', (e) => {
       const t = e.target as HTMLElement;
       if (t.closest('[data-desk-skip]')) return skip();
+      const winBtn = t.closest<HTMLElement>('[data-desk-win]');
+      if (winBtn) {
+        const a = winBtn.dataset.deskWin;
+        if (a === 'close') return hideWin('closed');
+        if (a === 'min') return hideWin(dockWelcome?.offsetParent ? 'min' : 'closed');
+        return zoomWin();
+      }
       const btn = t.closest<HTMLElement>('[data-desk-open]');
       if (!btn) return clearSelection();
       // Desktop icons: click selects, double-click opens (keyboard and touch open at once).
+      // Dock items open on a single click, like a real dock.
       const isIcon = btn.classList.contains('desk-icon');
       if (isIcon && !coarse && e.detail > 0) {
         clearSelection();
