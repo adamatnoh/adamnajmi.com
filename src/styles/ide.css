@@ -150,7 +150,9 @@ html.ide-page body {
 /* ---------- title bar ---------- */
 .ide-titlebar {
   display: grid;
-  grid-template-columns: 1fr minmax(0, 440px) 1fr;
+  /* left menus | command center | right controls: the side columns shrink
+     (menus drop out) before the command center ever overlaps them */
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 440px) minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   padding: 0 8px 0 14px;
@@ -218,15 +220,34 @@ html.ide-page body {
 .ide .tb-dot.max {
   background: #28c840;
 }
+.tb-left {
+  overflow: hidden;
+  /* room for the traffic lights' focus ring inside the clip */
+  padding: 4px;
+  margin-left: -4px;
+}
+.tb-dots,
+.tb-app {
+  flex: none;
+}
+/* Menu items that don't fit wrap onto a hidden second row, so the bar
+   drops them whole from the right (Help first) instead of overlapping. */
 .tb-menu {
   display: flex;
-  gap: 2px;
+  flex-wrap: wrap;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 24px;
+  overflow: hidden;
+  gap: 0 2px;
   font-size: 12.5px;
   margin-left: 8px;
 }
 .tb-menu span {
-  padding: 3px 7px;
+  padding: 0 7px;
+  line-height: 24px;
   border-radius: 5px;
+  white-space: nowrap;
 }
 .tb-command {
   display: flex;
@@ -250,6 +271,11 @@ html.ide-page body {
 .tb-command .tb-title {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.tb-command kbd {
+  flex: none;
 }
 .tb-command kbd {
   font-size: 10px;

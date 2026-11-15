@@ -11,7 +11,6 @@ const {
     { href: `${home}#experience`, label: 'experience' },
     { href: `${home}#projects`, label: 'projects' },
     { href: `${home}#education`, label: 'education' },
-    { href: '/hss', label: 'hss', highlight: true },
   ],
 } = Astro.props;
 ---
@@ -54,7 +53,7 @@ const {
     <button
       type="button"
       id="theme-toggle"
-      class="ml-auto md:ml-0 order-last inline-flex items-center justify-center w-8 h-8 rounded-md border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition"
+      class="ml-auto md:ml-0 order-last inline-flex shrink-0 items-center justify-center w-9 h-9 min-w-9 rounded-md border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition"
       aria-label="Switch to light theme"
       title="Toggle theme"
     >
