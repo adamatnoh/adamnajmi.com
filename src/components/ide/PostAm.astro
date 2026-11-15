@@ -8,6 +8,7 @@ import AppIcon from '../brand/AppIcon.astro';
 import Icon from './Icon.astro';
 import { API_ROUTES } from '../../lib/api';
 
+const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
 const requests = [{ path: '/api', description: 'Index: list every route' }, ...API_ROUTES];
 ---
 
@@ -44,12 +45,51 @@ const requests = [{ path: '/api', description: 'Index: list every route' }, ...A
 
   <section class="pm-main" aria-label="Request">
     <form class="pm-bar" data-pm-form>
-      <label class="pm-method-select">
-        <span class="sr-only">Method</span>
-        <select data-pm-method aria-label="HTTP method">
-          <option>GET</option>
-        </select>
-      </label>
+      <div class="pm-mselect" data-pm-mselect>
+        <button
+          type="button"
+          class="pm-mbtn"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="pm-mlist"
+          aria-label="HTTP method: GET"
+          data-pm-mbtn
+        >
+          <span class="pm-m pm-m-get" data-pm-mlabel>GET</span>
+          <svg class="pm-chev" viewBox="0 0 12 12" aria-hidden="true"
+            ><path d="M3 4.5 6 7.5l3-3"></path></svg
+          >
+        </button>
+        <ul
+          class="pm-mlist"
+          id="pm-mlist"
+          role="listbox"
+          aria-label="HTTP method"
+          tabindex="-1"
+          hidden
+          data-pm-mlist
+        >
+          {
+            METHODS.map((m) => (
+              <li
+                class="pm-mopt"
+                id={`pm-m-${m.toLowerCase()}`}
+                role="option"
+                aria-selected={m === 'GET' ? 'true' : 'false'}
+                aria-disabled={m === 'GET' ? undefined : 'true'}
+                data-method={m}
+                title={m === 'GET' ? undefined : 'Read-only API: only GET is allowed'}
+              >
+                <span class={`pm-m pm-m-${m.toLowerCase()}`}>{m}</span>
+                {m !== 'GET' && <small>read-only</small>}
+                <svg class="pm-check" viewBox="0 0 12 12" aria-hidden="true">
+                  <path d="M2.5 6.2 5 8.6l4.5-5" />
+                </svg>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
       <label class="pm-url">
         <span class="sr-only">Request URL</span>
         <span class="pm-origin" data-pm-origin>adamnajmi.com</span>

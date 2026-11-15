@@ -186,6 +186,97 @@ function init(pm: HTMLElement) {
     }
   });
 
+  // ------------------------------------------------------------------
+  // Method picker (listbox). The API is read-only, so only GET selects.
+  // ------------------------------------------------------------------
+  const mBtn = $<HTMLButtonElement>('[data-pm-mbtn]');
+  const mList = $<HTMLUListElement>('[data-pm-mlist]');
+  const mLabel = $('[data-pm-mlabel]');
+  const opts = Array.from(mList.querySelectorAll<HTMLElement>('[role="option"]'));
+  let mIndex = 0;
+  const setActive = (i: number) => {
+    mIndex = (i + opts.length) % opts.length;
+    opts.forEach((o, j) => o.classList.toggle('is-active', j === mIndex));
+    mList.setAttribute('aria-activedescendant', opts[mIndex].id);
+  };
+  const openMenu = (focusList = true) => {
+    mList.hidden = false;
+    mBtn.setAttribute('aria-expanded', 'true');
+    setActive(
+      Math.max(
+        0,
+        opts.findIndex((o) => o.getAttribute('aria-selected') === 'true'),
+      ),
+    );
+    if (focusList) mList.focus({ preventScroll: true });
+    document.addEventListener('pointerdown', onOutside, true);
+  };
+  const closeMenu = (refocus = true) => {
+    if (mList.hidden) return;
+    mList.hidden = true;
+    mBtn.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('pointerdown', onOutside, true);
+    if (refocus) mBtn.focus({ preventScroll: true });
+  };
+  const onOutside = (e: Event) => {
+    if (!(e.target as HTMLElement).closest('[data-pm-mselect]')) closeMenu(false);
+  };
+  const choose = (o: HTMLElement) => {
+    if (o.getAttribute('aria-disabled') === 'true') {
+      o.classList.remove('is-denied');
+      void o.offsetWidth;
+      o.classList.add('is-denied');
+      return;
+    }
+    const m = o.dataset.method!;
+    opts.forEach((x) => x.setAttribute('aria-selected', String(x === o)));
+    mLabel.textContent = m;
+    mLabel.className = `pm-m pm-m-${m.toLowerCase()}`;
+    mBtn.setAttribute('aria-label', `HTTP method: ${m}`);
+    closeMenu();
+  };
+  mBtn.addEventListener('click', () => (mList.hidden ? openMenu() : closeMenu()));
+  mBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      openMenu();
+    }
+  });
+  mList.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        return setActive(mIndex + 1);
+      case 'ArrowUp':
+        e.preventDefault();
+        return setActive(mIndex - 1);
+      case 'Home':
+        e.preventDefault();
+        return setActive(0);
+      case 'End':
+        e.preventDefault();
+        return setActive(opts.length - 1);
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        return choose(opts[mIndex]);
+      case 'Escape':
+        e.preventDefault();
+        e.stopPropagation();
+        return closeMenu();
+      case 'Tab':
+        return closeMenu(false);
+    }
+  });
+  mList.addEventListener('click', (e) => {
+    const o = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+    if (o) choose(o);
+  });
+  mList.addEventListener('pointermove', (e) => {
+    const o = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+    if (o) setActive(opts.indexOf(o));
+  });
+
   // Auto-send the first time the tab is shown, so there's something to look at.
   let primed = false;
   const prime = () => {
@@ -194,6 +285,8 @@ function init(pm: HTMLElement) {
     run();
   };
   window.addEventListener('postam:show', prime);
+  // Deep link (?file=postam): the tab was activated before this script ran.
+  if (pm.closest('.pane')?.classList.contains('is-active')) prime();
   (window as any).postam = { send: (p?: string) => (p && (url.value = p), run()) };
   showView();
 }
