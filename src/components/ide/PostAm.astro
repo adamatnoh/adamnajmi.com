@@ -1,0 +1,108 @@
+---
+/**
+ * PostAm: a tiny API client tab inside AmCode. It calls this site's real,
+ * read-only JSON endpoints (src/pages/api/*.ts) and shows status, time,
+ * size, headers and the pretty-printed body.
+ */
+import AppIcon from '../brand/AppIcon.astro';
+import Icon from './Icon.astro';
+import { API_ROUTES } from '../../lib/api';
+
+const requests = [{ path: '/api', description: 'Index: list every route' }, ...API_ROUTES];
+---
+
+<div class="pm" data-postam data-no-cipher>
+  <aside class="pm-side" aria-label="PostAm collection">
+    <div class="pm-brand">
+      <AppIcon name="postam" size={22} />
+      <span><b>PostAm</b><small>API client</small></span>
+    </div>
+    <p class="pm-col-title">
+      <Icon name="folder" size={13} /> adamnajmi.com <span class="pm-count">{requests.length}</span>
+    </p>
+    <ul class="pm-list" role="list">
+      {
+        requests.map((r, i) => (
+          <li>
+            <button
+              type="button"
+              class:list={['pm-req', i === 1 && 'is-active']}
+              data-pm-req={r.path}
+              title={r.description}
+            >
+              <span class="pm-method">GET</span>
+              <span class="pm-path">{r.path}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="pm-side-note">
+      Read-only JSON, CORS open. Same data as the editor and the simple view.
+    </p>
+  </aside>
+
+  <section class="pm-main" aria-label="Request">
+    <form class="pm-bar" data-pm-form>
+      <label class="pm-method-select">
+        <span class="sr-only">Method</span>
+        <select data-pm-method aria-label="HTTP method">
+          <option>GET</option>
+        </select>
+      </label>
+      <label class="pm-url">
+        <span class="sr-only">Request URL</span>
+        <span class="pm-origin" data-pm-origin>adamnajmi.com</span>
+        <input
+          type="text"
+          value="/api/about"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          data-pm-url
+          aria-describedby="pm-url-help"
+        />
+      </label>
+      <button type="submit" class="pm-send" data-pm-send>
+        <Icon name="send" size={14} /> Send
+      </button>
+    </form>
+    <p class="sr-only" id="pm-url-help">Paths under /api only.</p>
+
+    <div class="pm-reqmeta">
+      <span class="pm-tab is-on">Headers <span class="pm-count">1</span></span>
+      <code>Accept: application/json</code>
+      <button type="button" class="pm-copy" data-pm-curl title="Copy as cURL">
+        <Icon name="terminal" size={13} />
+        <span>Copy cURL</span>
+      </button>
+    </div>
+
+    <div class="pm-res" aria-live="polite">
+      <div class="pm-res-head">
+        <div class="pm-res-tabs" role="tablist" aria-label="Response views">
+          <button type="button" role="tab" aria-selected="true" data-pm-view="body">Body</button>
+          <button type="button" role="tab" aria-selected="false" data-pm-view="headers"
+            >Headers</button
+          >
+        </div>
+        <div class="pm-stats" data-pm-stats hidden>
+          <span class="pm-status" data-pm-status></span>
+          <span><small>Time</small> <b data-pm-time></b></span>
+          <span><small>Size</small> <b data-pm-size></b></span>
+        </div>
+      </div>
+      <div class="pm-body" data-pm-body>
+        <div class="pm-empty" data-pm-empty>
+          <AppIcon name="postam" size={44} />
+          <p>Hit <b>Send</b> to call the live API.</p>
+          <p class="pm-dim">
+            Pick a request on the left, or type a path like <code>/api/stack</code>.
+          </p>
+        </div>
+        <pre class="pm-json" data-pm-json hidden></pre>
+        <dl class="pm-headers" data-pm-headers hidden></dl>
+      </div>
+    </div>
+  </section>
+</div>

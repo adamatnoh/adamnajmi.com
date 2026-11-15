@@ -1,5 +1,5 @@
 /**
- * VS Code-style workbench controller: tabs, explorer, side views, panel,
+ * AmCode workbench controller: tabs, explorer, side views, panel,
  * terminal, command palette, Simple Browser, deep links and layout state.
  * Plain DOM so the editor content stays static HTML (SEO, no-JS fallback,
  * and the Daily Cipher auto-linker can see every word).
@@ -21,9 +21,13 @@ const root = document.getElementById('ide');
 if (root) init(root);
 
 function init(ide: HTMLElement) {
-  const meta = JSON.parse(ide.dataset.meta || '{}') as { files: Item[]; browsers: Item[] };
+  const meta = JSON.parse(ide.dataset.meta || '{}') as {
+    files: Item[];
+    browsers: Item[];
+    tools: Item[];
+  };
   const items = new Map<string, Item>();
-  [...meta.files, ...meta.browsers].forEach((i) => items.set(i.id, i));
+  [...meta.files, ...meta.browsers, ...(meta.tools || [])].forEach((i) => items.set(i.id, i));
 
   const $ = <T extends Element = HTMLElement>(sel: string, el: ParentNode = document) =>
     el.querySelector<T>(sel) as T;
@@ -170,6 +174,10 @@ function init(ide: HTMLElement) {
   let active: string | null = 'readme';
 
   const iconHtml = (it: Item) => {
+    if (it.icon === 'postam') {
+      const tpl = document.getElementById('ficon-postam') as HTMLTemplateElement | null;
+      return `<span class="ficon ficon-postam" aria-hidden="true">${tpl?.innerHTML ?? '{}'}</span>`;
+    }
     const src = $(`.tree-item[data-open="${it.id}"] .ficon`);
     return src ? src.outerHTML : `<span class="ficon ficon-${it.icon}" aria-hidden="true">◎</span>`;
   };
@@ -217,7 +225,9 @@ function init(ide: HTMLElement) {
     }
     const parts = it.id.startsWith('browser-')
       ? ['Simple Browser', it.path]
-      : ['adamnajmi.com', ...it.path.split('/')];
+      : it.id === 'postam'
+        ? ['PostAm', 'adamnajmi.com', 'api']
+        : ['adamnajmi.com', ...it.path.split('/')];
     crumbs.innerHTML = '';
     parts.forEach((p, i) => {
       if (i) {
@@ -238,6 +248,7 @@ function init(ide: HTMLElement) {
     url.hash = '';
     const it = id ? items.get(id) : null;
     if (!it || id === 'readme') url.searchParams.delete('file');
+    else if (id === 'postam') url.searchParams.set('file', 'postam');
     else
       url.searchParams.set(
         'file',
@@ -290,6 +301,10 @@ function init(ide: HTMLElement) {
     fillGutter(pane);
     updatePos();
     if (id?.startsWith('browser-')) ensureBrowser(id);
+    $$('[data-pressed-for-tab]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.pressedForTab === id)),
+    );
+    if (id === 'postam') window.dispatchEvent(new CustomEvent('postam:show'));
     if (url) setUrl(id);
     if (focus) pane?.focus({ preventScroll: true });
   };
@@ -585,6 +600,18 @@ function init(ide: HTMLElement) {
       group: 'commands',
       run: () => openFile('browser-educeria'),
     },
+    { label: 'PostAm: Open API Client', group: 'commands', run: () => openFile('postam') },
+    ...['/api/about', '/api/projects', '/api/experience', '/api/stack', '/api/contact'].map(
+      (p) => ({
+        label: `PostAm: GET ${p}`,
+        group: 'commands',
+        run: () => {
+          openFile('postam');
+          (window as any).postam?.send(p);
+        },
+      }),
+    ),
+    { label: 'View: Switch to Simple View', group: 'commands', run: () => goSimple() },
     { label: 'Daily Cipher: Play', group: 'commands', run: () => showPanel('cipher') },
     { label: 'Ask Adam: Open Chat', group: 'commands', run: () => toggleChat(true) },
     {
@@ -783,6 +810,9 @@ function init(ide: HTMLElement) {
         'whoami               who is this guy',
         'cipher               play the daily cipher',
         'browser hss          open HSS in the Simple Browser',
+        'curl <path>          call the API, e.g. curl /api/stack',
+        'postam [path]        open the PostAm API client',
+        'simple               switch to the simple view',
         'theme [light|dark]   switch theme',
         'contact | resume     how to reach Adam',
         'clear                clear the terminal',
@@ -830,6 +860,33 @@ function init(ide: HTMLElement) {
       window.open('/file/resume.pdf', '_blank', 'noopener');
       print('opening /file/resume.pdf', 't-dim');
     },
+    postam: (a) => {
+      openFile('postam');
+      if (a[0]) (window as any).postam?.send(a[0]);
+    },
+    curl: async (a) => {
+      const raw = a.filter((x) => !x.startsWith('-'))[0] || '/api';
+      let path: string;
+      try {
+        const u = new URL(raw, location.origin);
+        if (u.origin !== location.origin || !/^\/api(\/|$)/.test(u.pathname)) throw new Error();
+        path = u.pathname;
+      } catch {
+        return print('curl: only this site’s /api routes, e.g. curl /api/about', 't-err');
+      }
+      try {
+        const res = await fetch(path, { headers: { Accept: 'application/json' } });
+        const text = await res.text();
+        print(`HTTP ${res.status}`, res.ok ? 't-dim' : 't-err');
+        print(text.length > 4000 ? `${text.slice(0, 4000)}\n…` : text);
+      } catch {
+        print('curl: network error', 't-err');
+      }
+      const pane = termForm?.closest('.panel-pane');
+      if (pane) pane.scrollTop = pane.scrollHeight;
+    },
+    simple: () => goSimple(),
+    classic: () => goSimple(),
     clear: () => (termOut.innerHTML = ''),
     date: () => print(new Date().toString()),
     echo: (a) => print(a.join(' ')),
@@ -893,6 +950,21 @@ function init(ide: HTMLElement) {
   });
 
   // ------------------------------------------------------------------
+  // Simple view (the v1 layout at /classic), remembered per browser
+  // ------------------------------------------------------------------
+  function goSimple() {
+    store.set('adam-view', 'classic');
+    track('view_switch', { to: 'classic' });
+    location.href = '/classic';
+  }
+  $$('[data-simple-view]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      goSimple();
+    }),
+  );
+
+  // ------------------------------------------------------------------
   // Delegated clicks
   // ------------------------------------------------------------------
   document.addEventListener('click', (e) => {
@@ -939,6 +1011,8 @@ function init(ide: HTMLElement) {
         return showPanel('cipher');
       case 'close-drawers':
         return closeDrawers();
+      case 'postam':
+        return openFile('postam');
     }
   });
 

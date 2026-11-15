@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import AppIcon from '../brand/AppIcon.astro';
 ---
 
 <div class="ide-titlebar" data-no-cipher>
@@ -14,6 +15,9 @@ import Icon from './Icon.astro';
       <Icon name="menu" />
     </button>
     <div class="tb-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <span class="tb-app" title="AmCode"
+      ><AppIcon name="amcode" size={16} /><span class="hide-sm">AmCode</span></span
+    >
     <div class="tb-menu hide-sm" aria-hidden="true">
       <span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>Go</span><span
         >Run</span
@@ -28,7 +32,7 @@ import Icon from './Icon.astro';
     aria-keyshortcuts="Control+Shift+P Meta+Shift+P Control+K Meta+K"
   >
     <Icon name="search" size={13} />
-    <span class="tb-title">adamnajmi.com — portfolio</span>
+    <span class="tb-title">adamnajmi.com — AmCode</span>
     <kbd data-kbd>Ctrl Shift P</kbd>
   </button>
   <div class="tb-right">

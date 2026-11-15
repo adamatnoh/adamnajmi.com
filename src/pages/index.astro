@@ -10,6 +10,8 @@ import SimpleBrowser from '../components/ide/SimpleBrowser.astro';
 import Welcome from '../components/ide/Welcome.astro';
 import FileIcon from '../components/ide/FileIcon.astro';
 import AskAdam from '../components/ide/AskAdam';
+import PostAm from '../components/ide/PostAm.astro';
+import AppIcon from '../components/brand/AppIcon.astro';
 import Readme from '../components/ide/files/Readme.astro';
 import About from '../components/ide/files/About.astro';
 import Experience from '../components/ide/files/Experience.astro';
@@ -22,6 +24,7 @@ import Education from '../components/ide/files/Education.astro';
 import Contact from '../components/ide/files/Contact.astro';
 import Cipher from '../components/ide/files/Cipher.astro';
 import { FILES, BROWSERS } from '../data/ide';
+import '../styles/postam.css';
 
 const PANES: Record<string, any> = {
   readme: Readme,
@@ -52,6 +55,16 @@ const meta = JSON.stringify({
     icon: 'browser',
     lang: 'Simple Browser',
   })),
+  tools: [
+    {
+      id: 'postam',
+      name: 'PostAm',
+      path: 'PostAm',
+      icon: 'postam',
+      lang: 'PostAm · API client',
+      aliases: ['api', 'postam'],
+    },
+  ],
 });
 ---
 
@@ -118,6 +131,16 @@ const meta = JSON.stringify({
               ))
             }
             <section
+              class="pane pane-tool"
+              id="pane-postam"
+              data-pane="postam"
+              role="tabpanel"
+              aria-label="PostAm API client"
+              tabindex="-1"
+            >
+              <PostAm />
+            </section>
+            <section
               class="pane"
               id="pane-welcome"
               data-pane="welcome"
@@ -138,9 +161,11 @@ const meta = JSON.stringify({
     <StatusBar />
     <div class="ide-scrim" data-action="close-drawers" aria-hidden="true"></div>
     <Palette />
+    <template id="ficon-postam"><AppIcon name="postam" size={14} /></template>
   </div>
 </Ide>
 
 <script>
   import '../scripts/ide';
+  import '../scripts/postam';
 </script>

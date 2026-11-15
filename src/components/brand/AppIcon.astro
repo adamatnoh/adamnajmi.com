@@ -1,0 +1,98 @@
+---
+/**
+ * Original app icons for the desktop intro and the editor chrome.
+ * AmCode (the editor), PostAm (the API client), Simple view and a PDF.
+ * Drawn from scratch: no third-party logos or trademarks.
+ */
+interface Props {
+  name: 'amcode' | 'postam' | 'simple' | 'pdf';
+  size?: number;
+  class?: string;
+  title?: string;
+}
+const { name, size = 48, class: className, title } = Astro.props;
+// Gradient ids must be unique per instance.
+const uid = `${name}-${Math.random().toString(36).slice(2, 8)}`;
+const GRAD: Record<Props['name'], [string, string]> = {
+  amcode: ['#2dd4bf', '#7c3aed'],
+  postam: ['#f59e0b', '#e11d48'],
+  simple: ['#60a5fa', '#1e40af'],
+  pdf: ['#f1f5f9', '#cbd5e1'],
+};
+const [c1, c2] = GRAD[name];
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={`g-${uid}`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color={c1}></stop>
+      <stop offset="1" stop-color={c2}></stop>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#g-${uid})`}></rect>
+  <rect
+    x="3.5"
+    y="3.5"
+    width="57"
+    height="57"
+    rx="14.5"
+    fill="none"
+    stroke="#fff"
+    stroke-opacity=".22"></rect>
+  {
+    name === 'amcode' && (
+      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 46 32 17l12 29" stroke-width="5.5" />
+        <path d="M26.5 37h11" stroke-width="5.5" stroke-opacity=".55" />
+        <path d="M47 41h7" stroke-width="4" />
+      </g>
+    )
+  }
+  {
+    name === 'postam' && (
+      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+        <path d="M24 17c-4 0-5.5 2-5.5 5.5v4c0 2.6-1.4 4.4-4.5 5.5 3.1 1.1 4.5 2.9 4.5 5.5v4c0 3.5 1.5 5.5 5.5 5.5" />
+        <path d="M40 17c4 0 5.5 2 5.5 5.5v4c0 2.6 1.4 4.4 4.5 5.5-3.1 1.1-4.5 2.9-4.5 5.5v4c0 3.5-1.5 5.5-5.5 5.5" />
+        <path d="M26 32h11M33 27l5 5-5 5" />
+      </g>
+    )
+  }
+  {
+    name === 'simple' && (
+      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-width="3.5">
+        <rect x="15" y="15" width="34" height="34" rx="5" stroke-opacity=".9" />
+        <path d="M15 24h34" />
+        <path d="M22 32h20M22 39h13" stroke-opacity=".8" />
+      </g>
+    )
+  }
+  {
+    name === 'pdf' && (
+      <g>
+        <path d="M20 13h17l9 9v29H20z" fill="#fff" stroke="#94a3b8" stroke-width="2" />
+        <path d="M37 13v9h9" fill="none" stroke="#94a3b8" stroke-width="2" />
+        <rect x="16" y="35" width="24" height="11" rx="3" fill="#dc2626" />
+        <text
+          x="28"
+          y="43.5"
+          text-anchor="middle"
+          font-family="ui-sans-serif,system-ui,sans-serif"
+          font-size="8"
+          font-weight="700"
+          fill="#fff"
+        >
+          PDF
+        </text>
+      </g>
+    )
+  }
+</svg>

@@ -1,5 +1,5 @@
 /* ==================================================================
-   adamnajmi.com — VS Code-style workbench.
+   adamnajmi.com — AmCode, the editor-style workbench.
    Custom "Najmi Night" / "Najmi Day" palettes; layout is CSS grid with
    each editor pane as its own scroll container.
    ================================================================== */
@@ -173,6 +173,15 @@ html.ide-page body {
 .tb-dots {
   display: flex;
   gap: 8px;
+}
+.tb-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+  color: var(--ide-fg);
+  font-weight: 600;
+  font-size: 12.5px;
 }
 .tb-dots span {
   width: 12px;
@@ -1246,10 +1255,16 @@ html.light .ide [data-word]:hover {
   color: var(--ide-muted);
 }
 .welcome-logo {
-  font: 800 64px/1 var(--ide-mono);
-  letter-spacing: -0.06em;
-  color: color-mix(in srgb, var(--ide-fg) 12%, transparent);
-  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+.welcome-name {
+  margin: 0 0 22px;
+  font: 700 22px/1 var(--ide-ui);
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--ide-fg) 55%, transparent);
 }
 .welcome dl {
   display: grid;
@@ -1675,6 +1690,11 @@ html.light .ide [data-word]:hover {
 button.status-item:hover,
 a.status-item:hover {
   background: rgb(255 255 255 / 0.14) !important;
+}
+.status-simple {
+  background: rgb(255 255 255 / 0.12);
+  font-weight: 600;
+  text-decoration: none;
 }
 .status-remote {
   background: color-mix(in srgb, var(--ide-accent) 85%, #000) !important;

@@ -1,15 +1,22 @@
 ---
-
+import AppIcon from '../brand/AppIcon.astro';
 ---
 
 <div class="welcome">
   <div>
-    <div class="welcome-logo" aria-hidden="true">{'{ an }'}</div>
+    <div class="welcome-logo" aria-hidden="true"><AppIcon name="amcode" size={72} /></div>
+    <p class="welcome-name">AmCode</p>
     <dl>
       <dt>Show all commands</dt><dd><kbd data-kbd>Ctrl Shift P</kbd></dd>
       <dt>Open README</dt><dd>
         <button type="button" class="btn" data-no-cipher style="height:24px" data-open="readme"
-          >README.md</button>
+          >README.md</button
+        >
+      </dd>
+      <dt>Call the API</dt><dd>
+        <button type="button" class="btn" data-no-cipher style="height:24px" data-open="postam"
+          >PostAm</button
+        >
       </dd>
       <dt>Toggle terminal</dt><dd><kbd>Ctrl `</kbd></dd>
       <dt>Ask Adam</dt><dd>
@@ -18,7 +25,8 @@
           class="btn"
           data-no-cipher
           style="height:24px"
-          data-action="toggle-chat">open chat</button>
+          data-action="toggle-chat">open chat</button
+        >
       </dd>
     </dl>
   </div>
