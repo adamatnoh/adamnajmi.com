@@ -84,15 +84,19 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 </div>
 
 <script>
+  /**
+   * The desktop stays in the DOM (hidden) so AmCode can return to it:
+   * window.amDesk.show(from) shrinks the editor back into the AmCode icon.
+   * Tabs and layout are untouched, so reopening restores them.
+   */
   const html = document.documentElement;
   const desk = document.getElementById('desk');
 
-  if (desk && !html.classList.contains('desk-on')) {
-    desk.remove();
-  } else if (desk) {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (desk) {
+    const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     const ide = document.getElementById('ide');
+    const amIcon = () => desk.querySelector<HTMLElement>('[data-desk-first]');
 
     // Clock + date in the visitor's own time.
     const timeEl = desk.querySelector<HTMLElement>('[data-desk-time]');
@@ -110,23 +114,56 @@ import { PROFILE, RESUME_URL } from '../data/profile';
           month: 'short',
         });
     };
-    tick();
-    const clock = window.setInterval(tick, 15_000);
+    let clock = 0;
+    let open = false; // desktop currently showing
+    let busy = false; // an animation is running
+    let returnFocus: HTMLElement | null = null;
 
-    let done = false;
-    const finish = (focusSel?: string) => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open) {
+        e.preventDefault();
+        e.stopPropagation();
+        skip();
+      }
+    };
+    const clearSelection = () =>
+      desk
+        .querySelectorAll('.desk-icon.is-selected')
+        .forEach((i) => i.classList.remove('is-selected'));
+
+    const activate = () => {
+      open = true;
+      tick();
+      window.clearInterval(clock);
+      clock = window.setInterval(tick, 15_000);
+      document.addEventListener('keydown', onKey, true);
+      ide?.setAttribute('inert', '');
+    };
+    const deactivate = (focusSel?: string) => {
+      open = false;
+      busy = false;
       window.clearInterval(clock);
       document.removeEventListener('keydown', onKey, true);
-      desk.remove();
       html.classList.remove('desk-on', 'desk-opening');
-      ide?.classList.remove('ide-zoom');
+      ide?.classList.remove('ide-zoom', 'ide-shrink');
+      ide?.removeAttribute('inert');
       if (ide) ide.style.transformOrigin = '';
-      const target = document.querySelector<HTMLElement>(focusSel || '#main');
+      clearSelection();
+      const target =
+        (focusSel && document.querySelector<HTMLElement>(focusSel)) ||
+        (returnFocus?.isConnected ? returnFocus : null) ||
+        document.querySelector<HTMLElement>('#main');
       target?.focus({ preventScroll: true });
+      returnFocus = null;
     };
 
-    const open = (app: string, from?: Element | null) => {
-      if (done) return;
+    const originAt = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+    };
+
+    const openApp = (app: string, from?: Element | null) => {
+      if (!open || busy) return;
       if (app === 'simple') {
         try {
           localStorage.setItem('adam-view', 'classic');
@@ -136,54 +173,66 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         location.href = '/classic';
         return;
       }
-      done = true;
       const w = window as any;
       if (app === 'postam') w.ide?.open?.('postam');
-      const focusSel = app === 'postam' ? '[data-pm-url]' : '#main';
-      if (reduce || !ide || !from) return finish(focusSel);
-      const r = from.getBoundingClientRect();
-      ide.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+      const focusSel = app === 'postam' ? '[data-pm-url]' : undefined;
+      if (reduceMq.matches || !ide || !from) return deactivate(focusSel);
+      busy = true;
+      ide.removeAttribute('inert');
+      ide.style.transformOrigin = originAt(from);
       html.classList.add('desk-opening');
       ide.classList.add('ide-zoom');
-      window.setTimeout(() => finish(focusSel), 560);
+      window.setTimeout(() => deactivate(focusSel), 560);
     };
 
     const skip = () => {
-      if (done) return;
-      done = true;
-      finish();
+      if (!open || busy) return;
+      deactivate();
     };
+
+    /** Back to the desktop from AmCode (red / yellow light, palette, terminal). */
+    const show = () => {
+      if (open || busy) return;
+      returnFocus = document.activeElement as HTMLElement | null;
+      // Coming back on purpose: the skip button now reads as a way back.
+      const skipLabel = desk.querySelector('[data-desk-skip]')?.firstChild;
+      if (skipLabel?.nodeType === Node.TEXT_NODE) skipLabel.textContent = 'Back to AmCode ';
+      window.dispatchEvent(new CustomEvent('ide:before-desktop'));
+      html.classList.add('desk-on');
+      activate();
+      const icon = amIcon();
+      const done = () => {
+        busy = false;
+        ide?.classList.remove('ide-shrink');
+        if (ide) ide.style.transformOrigin = '';
+        icon?.focus({ preventScroll: true });
+      };
+      if (reduceMq.matches || !ide || !icon) return done();
+      busy = true;
+      ide.style.transformOrigin = originAt(icon.querySelector('svg') || icon);
+      ide.classList.add('ide-shrink');
+      window.setTimeout(done, 480);
+    };
+    (window as any).amDesk = { show, isOpen: () => open };
 
     desk.addEventListener('click', (e) => {
       const t = e.target as HTMLElement;
       if (t.closest('[data-desk-skip]')) return skip();
       const btn = t.closest<HTMLElement>('[data-desk-open]');
-      if (!btn) {
-        desk
-          .querySelectorAll('.desk-icon.is-selected')
-          .forEach((i) => i.classList.remove('is-selected'));
-        return;
-      }
+      if (!btn) return clearSelection();
       // Desktop icons: click selects, double-click opens (keyboard and touch open at once).
       const isIcon = btn.classList.contains('desk-icon');
       if (isIcon && !coarse && e.detail > 0) {
-        desk
-          .querySelectorAll('.desk-icon.is-selected')
-          .forEach((i) => i.classList.remove('is-selected'));
+        clearSelection();
         btn.classList.add('is-selected');
         if (e.detail < 2) return;
       }
-      open(btn.dataset.deskOpen!, btn.querySelector('svg') || btn);
+      openApp(btn.dataset.deskOpen!, btn.querySelector('svg') || btn);
     });
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        skip();
-      }
-    };
-    document.addEventListener('keydown', onKey, true);
-    desk.querySelector<HTMLElement>('[data-desk-first]')?.focus({ preventScroll: true });
+    if (html.classList.contains('desk-on')) {
+      activate();
+      amIcon()?.focus({ preventScroll: true });
+    }
   }
 </script>

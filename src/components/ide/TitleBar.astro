@@ -14,7 +14,36 @@ import AppIcon from '../brand/AppIcon.astro';
     >
       <Icon name="menu" />
     </button>
-    <div class="tb-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="tb-dots" role="group" aria-label="Window">
+      <button
+        type="button"
+        class="tb-dot close"
+        data-action="desktop"
+        aria-label="Close AmCode and go back to the desktop"
+        title="Back to desktop"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"
+          ><path d="M3.5 3.5l5 5M8.5 3.5l-5 5"></path></svg
+        ></button
+      >
+      <button
+        type="button"
+        class="tb-dot min"
+        data-action="desktop"
+        aria-label="Minimize AmCode to the desktop"
+        title="Minimize to desktop"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"></path></svg></button
+      >
+      <button
+        type="button"
+        class="tb-dot max"
+        data-action="fullscreen"
+        aria-label="Toggle full screen"
+        title="Full screen"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"
+          ><path d="M4 8V4h4M8 4 4 8" transform="translate(-.4 .4)"></path></svg
+        ></button
+      >
+    </div>
     <span class="tb-app" title="AmCode"
       ><AppIcon name="amcode" size={16} /><span class="hide-sm">AmCode</span></span
     >
@@ -68,6 +97,15 @@ import AppIcon from '../brand/AppIcon.astro';
         <Icon name="chat-panel" />
       </button>
     </span>
+    <button
+      type="button"
+      class="icon-btn tb-desk-mobile"
+      data-action="desktop"
+      aria-label="Back to desktop"
+      title="Back to desktop"
+    >
+      <Icon name="desktop" />
+    </button>
     <button
       type="button"
       class="icon-btn tb-chat-mobile"

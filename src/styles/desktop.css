@@ -253,6 +253,29 @@ html.desk-opening .desk {
     border-radius: 0;
   }
 }
+/* ---------- back to the desktop: the workbench shrinks into the icon ---------- */
+.ide.ide-shrink {
+  z-index: 90;
+  pointer-events: none;
+  animation: ide-shrink 0.46s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.6);
+  overflow: hidden;
+}
+@keyframes ide-shrink {
+  from {
+    transform: none;
+    opacity: 1;
+    border-radius: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.04);
+    opacity: 0;
+    border-radius: 40px;
+  }
+}
 @keyframes desk-fade {
   0%,
   45% {
@@ -308,7 +331,8 @@ html.desk-opening .desk {
 @media (prefers-reduced-motion: reduce) {
   .desk-icon svg,
   html.desk-opening .desk,
-  .ide.ide-zoom {
+  .ide.ide-zoom,
+  .ide.ide-shrink {
     animation: none !important;
     transition: none !important;
   }

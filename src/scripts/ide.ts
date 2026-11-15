@@ -612,6 +612,7 @@ function init(ide: HTMLElement) {
       }),
     ),
     { label: 'View: Switch to Simple View', group: 'commands', run: () => goSimple() },
+    { label: 'View: Show Desktop', group: 'commands', run: () => showDesktop() },
     { label: 'Daily Cipher: Play', group: 'commands', run: () => showPanel('cipher') },
     { label: 'Ask Adam: Open Chat', group: 'commands', run: () => toggleChat(true) },
     {
@@ -813,6 +814,7 @@ function init(ide: HTMLElement) {
         'curl <path>          call the API, e.g. curl /api/stack',
         'postam [path]        open the PostAm API client',
         'simple               switch to the simple view',
+        'desktop              back to the desktop (tabs stay open)',
         'theme [light|dark]   switch theme',
         'contact | resume     how to reach Adam',
         'clear                clear the terminal',
@@ -886,6 +888,10 @@ function init(ide: HTMLElement) {
       if (pane) pane.scrollTop = pane.scrollHeight;
     },
     simple: () => goSimple(),
+    desktop: () => {
+      print('minimizing AmCode…', 't-dim');
+      setTimeout(showDesktop, 120);
+    },
     classic: () => goSimple(),
     clear: () => (termOut.innerHTML = ''),
     date: () => print(new Date().toString()),
@@ -952,6 +958,30 @@ function init(ide: HTMLElement) {
   // ------------------------------------------------------------------
   // Simple view (the v1 layout at /classic), remembered per browser
   // ------------------------------------------------------------------
+  // Back to the desktop intro. The desktop keeps the editor's state, so
+  // reopening AmCode lands on the same tabs.
+  function showDesktop() {
+    const desk = (window as any).amDesk;
+    if (!desk) return;
+    closePalette(false);
+    closeDrawers();
+    track('desktop_show');
+    desk.show();
+  }
+  function toggleFullscreen() {
+    const doc = document as Document & { webkitExitFullscreen?: () => void };
+    const el = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => void;
+    };
+    try {
+      if (document.fullscreenElement) doc.exitFullscreen?.();
+      else if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      else el.webkitRequestFullscreen?.();
+    } catch {
+      /* not allowed here: harmless no-op */
+    }
+  }
+
   function goSimple() {
     store.set('adam-view', 'classic');
     track('view_switch', { to: 'classic' });
@@ -1013,6 +1043,10 @@ function init(ide: HTMLElement) {
         return closeDrawers();
       case 'postam':
         return openFile('postam');
+      case 'desktop':
+        return showDesktop();
+      case 'fullscreen':
+        return toggleFullscreen();
     }
   });
 
