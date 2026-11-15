@@ -674,7 +674,7 @@ html:not(.js) .pane {
   min-height: 100%;
 }
 .gutter {
-  padding: 18px 18px 60px 0;
+  padding: 18px 18px 0 0;
   font: 13px/22px var(--ide-mono);
   color: var(--ide-faint);
   text-align: right;
@@ -685,6 +685,7 @@ html:not(.js) .pane {
 
 /* ---------- markdown preview ---------- */
 .md {
+  align-self: start; /* don't stretch to the gutter's height, or the line count feeds back on itself */
   max-width: 900px;
   padding: 18px 32px 80px 8px;
   font-size: 14.5px;
