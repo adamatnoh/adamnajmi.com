@@ -1,6 +1,6 @@
 # [adamnajmi.com](https://adamnajmi.com/) — Personal Portfolio
 
-This is my personal portfolio website, built as a VS Code-style digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background. It also features a daily word-hunt minigame with streak-based rewards to keep things interactive.
+This is my personal portfolio website, built as **AmCode**, an original code-editor-style digital resume. It showcases my experience, technical skills, and includes an AI-powered chatbot that answers questions about my background. It also features a daily word-hunt minigame with streak-based rewards to keep things interactive.
 
 🔗 **Live Site:** [adamnajmi.com](https://adamnajmi.com)
 
@@ -19,7 +19,15 @@ This is my personal portfolio website, built as a VS Code-style digital resume. 
 
 ## ✨ Features
 
-- **VS Code-Style Workbench** – The home page is an editor: an Explorer whose files (`README.md`, `about.ts`, `experience.log`, `projects/*`, `stack.json`, `education.md`, `contact.env`, `daily_cipher.sh`) open as closable tabs, Search / Source Control / Run / Extensions views, a bottom panel (TERMINAL with a few commands, PROBLEMS, CIPHER), a collapsible **Ask Adam** chat panel, a status bar and a command palette (`Ctrl/Cmd+Shift+P` or `Ctrl/Cmd+K`). Custom dark and light themes (remembered per browser), deep links such as `/?file=projects/hss.php`, and a drawer layout on phones. Content is plain HTML, so it still reads without JavaScript.
+- **Desktop Intro** – The first visit in a session lands on a small desktop with icons for AmCode, PostAm, Simple view and the resume. Double-click (or tap on a phone) AmCode and the editor zooms out of the icon. There's a Skip button (or `Esc`), it respects `prefers-reduced-motion`, and deep links such as `/?file=...` skip it.
+
+- **AmCode Workbench** – The home page is an editor: an Explorer whose files (`README.md`, `about.ts`, `experience.log`, `projects/*`, `stack.json`, `education.md`, `contact.env`, `daily_cipher.sh`) open as closable tabs, Search / Source Control / Run / Extensions views, a bottom panel (TERMINAL with a few commands, PROBLEMS, CIPHER), a collapsible **Ask Adam** chat panel, a status bar and a command palette (`Ctrl/Cmd+Shift+P` or `Ctrl/Cmd+K`). Custom dark and light themes (remembered per browser), deep links such as `/?file=projects/hss.php`, and a drawer layout on phones. Content is plain HTML, so it still reads without JavaScript.
+
+- **PostAm API Client** – An API client tab inside AmCode (activity bar, desktop icon, `?file=postam`, the command palette, or `postam` / `curl /api/about` in the terminal). It sends real `GET` requests and shows the status, time, size, headers and highlighted JSON.
+
+- **Public JSON API** – Read-only endpoints: `/api` (index), `/api/about`, `/api/projects`, `/api/experience`, `/api/stack` and `/api/contact`. They, the editor files and the simple view all read from one file, `src/data/profile.ts`.
+
+- **Simple View (v1.0.0)** – `/classic` keeps the original one-page layout for non-technical visitors, with the same Daily Cipher and chat. It's one click away from the desktop and the status bar, the choice is remembered in `localStorage`, and an "Open AmCode" button switches back.
 
 - **Simple Browser Tab** – `projects/hss.php` can open [hss.adamnajmi.com](https://hss.adamnajmi.com) inside the editor. Kemas EduCeria sends `X-Frame-Options: SAMEORIGIN`, so its tab shows a fallback with an "open in external browser" button.
 
@@ -92,7 +100,9 @@ src/
 │   ├── hss/
 │   │   ├── BrowserFrame.astro
 │   │   └── Carousel.astro
-│   └── ide/                  # VS Code-style workbench
+│   ├── DesktopIntro.astro    # first-visit desktop + zoom-open
+│   ├── brand/AppIcon.astro   # original AmCode / PostAm icons
+│   └── ide/                  # AmCode workbench (PostAm.astro = API client)
 │       ├── ActivityBar.astro, Sidebar.astro, TitleBar.astro
 │       ├── Panel.astro, StatusBar.astro, Palette.astro
 │       ├── SimpleBrowser.astro, Welcome.astro
@@ -101,25 +111,34 @@ src/
 ├── data/
 │   ├── cipher.ts
 │   ├── hss.ts
-│   ├── ide.ts                # file tree + content for the workbench
+│   ├── ide.ts                # file tree + generated file sources for AmCode
+│   ├── profile.ts            # single source of truth (editor, API, simple view)
 │   ├── personal.ts
 │   ├── resume.ts
 │   └── website.ts
 ├── layouts/
-│   ├── Base.astro            # /hss pages
+│   ├── Base.astro            # /classic and /hss pages
 │   └── Ide.astro             # home page
-├── lib/highlight.ts          # tiny build-time syntax highlighter
+├── lib/
+│   ├── api.ts                # JSON response helper + route list
+│   └── highlight.ts          # tiny build-time syntax highlighter
 ├── pages/
-│   ├── index.astro
+│   ├── index.astro           # AmCode
+│   ├── classic.astro         # simple view (v1.0.0 layout)
 │   ├── hss/
 │   │   ├── index.astro
 │   │   └── live.astro
 │   └── api/
-│       └── chat.ts
-├── scripts/ide.ts            # tabs, panel, terminal, palette, deep links
+│       ├── chat.ts
+│       └── index, about, projects, experience, stack, contact .ts
+├── scripts/
+│   ├── ide.ts                # tabs, panel, terminal, palette, deep links
+│   └── postam.ts             # PostAm request/response
 └── styles/
     ├── global.css
-    └── ide.css
+    ├── ide.css
+    ├── desktop.css
+    └── postam.css
 ```
 
 ## 🔧 Deployment
@@ -170,3 +189,6 @@ MIT © [Adam Najmi](https://adamnajmi.com)
 
 islamic-tv-launcher card sample image: **Masjid Putra (Putra Mosque), Putrajaya, Malaysia** — photograph by [CEphoto, Uwe Aranas](https://commons.wikimedia.org/wiki/File:Putrajaya-Malaysia_Putra-Mosque-02a.jpg), licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 
+## 🙏 Credits
+
+AmCode and PostAm are original interfaces made for this site. They aren't affiliated with, or endorsed by, any editor or API tool vendor. All icons are drawn for this project.
