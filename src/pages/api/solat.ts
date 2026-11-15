@@ -27,6 +27,20 @@ const HIJRI_MONTHS = [
   'Zulkaedah',
   'Zulhijjah',
 ];
+const HIJRI_MONTHS_EN = [
+  'Muharram',
+  'Safar',
+  'Rabi al-Awwal',
+  'Rabi al-Akhir',
+  'Jumada al-Ula',
+  'Jumada al-Akhirah',
+  'Rajab',
+  "Sha'ban",
+  'Ramadan',
+  'Shawwal',
+  "Dhu al-Qa'dah",
+  'Dhu al-Hijjah',
+];
 // Generous box around Peninsular Malaysia, Sabah and Sarawak.
 const inMalaysia = (lat: number, lng: number) =>
   lat >= 0.6 && lat <= 7.6 && lng >= 99.4 && lng <= 119.6;
@@ -53,11 +67,12 @@ function secondsToMidnightMYT() {
   return Math.max(60, 86400 - s);
 }
 
-function hijriLabel(raw?: string) {
+function hijriLabel(raw?: string, en = false) {
   const m = raw?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return null;
-  const month = HIJRI_MONTHS[Number(m[2]) - 1];
-  return month ? `${Number(m[3])} ${month} ${m[1]}H` : null;
+  const month = (en ? HIJRI_MONTHS_EN : HIJRI_MONTHS)[Number(m[2]) - 1];
+  if (!month) return null;
+  return en ? `${Number(m[3])} ${month} ${m[1]} AH` : `${Number(m[3])} ${month} ${m[1]}H`;
 }
 
 async function getJson(url: string, ms = 7000): Promise<any> {
@@ -185,8 +200,19 @@ export const GET: APIRoute = async ({ url }) => {
       date: day.date,
       hijri: day.hijri || null,
       hijriLabel: hijriLabel(day.hijri),
+      hijriLabelEn: hijriLabel(day.hijri, true),
       timezone: 'Asia/Kuala_Lumpur',
       times: day.times,
+      // Same times with English names (the Malay keys above stay for compatibility).
+      timesEn: {
+        imsak: day.times.imsak,
+        fajr: day.times.subuh,
+        sunrise: day.times.syuruk,
+        dhuhr: day.times.zohor,
+        asr: day.times.asar,
+        maghrib: day.times.maghrib,
+        isha: day.times.isyak,
+      },
       source: day.provider,
     },
     {

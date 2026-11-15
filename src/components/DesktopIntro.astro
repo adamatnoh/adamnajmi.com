@@ -24,7 +24,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     <span class="desk-mark">{'{ an }'}</span>
   </div>
 
-  <header class="desk-bar">
+  <header class="desk-bar glass">
     <span class="desk-brand">
       <AppIcon name="amcode" size={16} />
       <span>adamnajmi.com</span>
@@ -83,7 +83,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     </li>
   </ul>
 
-  <section class="desk-win" data-desk-window aria-labelledby="desk-hello">
+  <section class="desk-win glass" data-desk-window aria-labelledby="desk-hello">
     <div class="desk-win-bar" data-desk-drag>
       <div class="desk-win-dots">
         <button
@@ -126,25 +126,30 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         <b>Simple view</b> for a plain page.
       </p>
       <div class="desk-actions">
-        <button type="button" class="desk-btn primary" data-desk-open="amcode">
+        <button type="button" class="desk-btn glass primary" data-desk-open="amcode">
           <AppIcon name="amcode" size={18} /> Open AmCode
         </button>
-        <button type="button" class="desk-btn" data-desk-open="simple">
+        <button type="button" class="desk-btn glass" data-desk-open="simple">
           <AppIcon name="simple" size={18} /> Simple view
         </button>
       </div>
     </div>
   </section>
 
-  <nav class="desk-dock" aria-label="Dock">
+  <nav class="desk-dock glass" aria-label="Dock">
     <button type="button" class="dock-item" data-desk-open="amcode" aria-label="AmCode">
-      <AppIcon name="amcode" size={46} /><span class="dock-tip" aria-hidden="true">AmCode</span>
+      <AppIcon name="amcode" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >AmCode</span
+      >
     </button>
     <button type="button" class="dock-item" data-desk-open="postam" aria-label="PostAm">
-      <AppIcon name="postam" size={46} /><span class="dock-tip" aria-hidden="true">PostAm</span>
+      <AppIcon name="postam" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >PostAm</span
+      >
     </button>
     <button type="button" class="dock-item" data-desk-open="simple" aria-label="Simple view">
-      <AppIcon name="simple" size={46} /><span class="dock-tip" aria-hidden="true">Simple view</span
+      <AppIcon name="simple" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >Simple view</span
       >
     </button>
     <span class="dock-sep" aria-hidden="true"></span>
@@ -155,15 +160,18 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       data-dock-welcome
       aria-label="Welcome window"
     >
-      <AppIcon name="welcome" size={46} /><span class="dock-tip" aria-hidden="true">Welcome</span
+      <AppIcon name="welcome" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >Welcome</span
       ><span class="dock-dot" aria-hidden="true"></span>
     </button>
     <a class="dock-item" href={RESUME_URL} target="_blank" rel="noopener" aria-label="resume.pdf">
-      <AppIcon name="pdf" size={46} /><span class="dock-tip" aria-hidden="true">resume.pdf</span>
+      <AppIcon name="pdf" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >resume.pdf</span
+      >
     </a>
   </nav>
 
-  <button type="button" class="desk-skip" data-desk-skip aria-keyshortcuts="Escape">
+  <button type="button" class="desk-skip glass" data-desk-skip aria-keyshortcuts="Escape">
     Skip intro <kbd aria-hidden="true">esc</kbd>
   </button>
 </div>

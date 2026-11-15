@@ -1,6 +1,6 @@
 ---
 /**
- * Prayer-times widget on the desktop intro: today's official JAKIM times
+ * Prayer-times widget on the desktop intro (English labels): today's official JAKIM times
  * (via /api/solat), the next prayer highlighted and a live countdown.
  * Starts on the saved zone, or JHR02 (Johor Bahru). Location is only used
  * when the visitor already granted it or taps "Use my location".
@@ -8,18 +8,18 @@
 import { DEFAULT_SOLAT_ZONE, SOLAT_ZONES } from '../data/solat-zones';
 
 const PRAYERS = [
-  ['subuh', 'Subuh'],
-  ['syuruk', 'Syuruk'],
-  ['zohor', 'Zohor'],
-  ['asar', 'Asar'],
+  ['subuh', 'Fajr'],
+  ['syuruk', 'Sunrise'],
+  ['zohor', 'Dhuhr'],
+  ['asar', 'Asr'],
   ['maghrib', 'Maghrib'],
-  ['isyak', 'Isyak'],
+  ['isyak', 'Isha'],
 ] as const;
 const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
 ---
 
 <section
-  class="solat"
+  class="solat glass"
   data-solat
   data-state="loading"
   data-default-zone={DEFAULT_SOLAT_ZONE}
@@ -31,7 +31,7 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
       <path class="star" d="m17.5 3.5.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z"></path>
     </svg>
     <div class="solat-where">
-      <h2 class="solat-title" id="solat-title">Waktu Solat</h2>
+      <h2 class="solat-title" id="solat-title">Prayer Times</h2>
       <p class="solat-place" data-solat-place title={def.area}>
         {def.area.split(',')[0]} · {DEFAULT_SOLAT_ZONE}
       </p>
@@ -80,6 +80,7 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
     area: string;
     resolvedBy: string;
     date: string;
+    hijri: string | null;
     hijriLabel: string | null;
     times: Record<string, string>;
   };
@@ -90,12 +91,32 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
   const KEY_CACHE = 'adam-solat-cache';
   const ORDER = ['subuh', 'syuruk', 'zohor', 'asar', 'maghrib', 'isyak'] as const;
   const NAMES: Record<string, string> = {
-    subuh: 'Subuh',
-    syuruk: 'Syuruk',
-    zohor: 'Zohor',
-    asar: 'Asar',
+    subuh: 'Fajr',
+    syuruk: 'Sunrise',
+    zohor: 'Dhuhr',
+    asar: 'Asr',
     maghrib: 'Maghrib',
-    isyak: 'Isyak',
+    isyak: 'Isha',
+  };
+  const HIJRI_EN = [
+    'Muharram',
+    'Safar',
+    'Rabi al-Awwal',
+    'Rabi al-Akhir',
+    'Jumada al-Ula',
+    'Jumada al-Akhirah',
+    'Rajab',
+    "Sha'ban",
+    'Ramadan',
+    'Shawwal',
+    "Dhu al-Qa'dah",
+    'Dhu al-Hijjah',
+  ];
+  /** "1448-06-05" -> "5 Jumada al-Akhirah 1448 AH" */
+  const hijriEn = (raw?: string | null) => {
+    const m = raw?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const month = m && HIJRI_EN[Number(m[2]) - 1];
+    return m && month ? `${Number(m[3])} ${month} ${m[1]} AH` : '';
   };
   const MYT = 8 * 3600 * 1000;
 
@@ -166,7 +187,7 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
       root!.dataset.state = 'ready';
       placeEl.textContent = `${d.place} · ${d.zone}`;
       placeEl.title = d.area;
-      hijriEl.textContent = d.hijriLabel || '';
+      hijriEl.textContent = hijriEn(d.hijri);
       for (const k of ORDER) {
         const el = root!.querySelector<HTMLElement>(`[data-t="${k}"]`);
         if (el) el.textContent = d.times[k] || '--:--';
@@ -237,14 +258,14 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
           root!.dataset.day = cache!.key;
           render(stale);
           setStatus(
-            cache!.key === mytKey() ? 'Offline · saved' : 'Offline · old times',
+            cache!.key === mytKey() ? 'Offline · saved times' : 'Offline · outdated times',
             'Could not reach JAKIM e-solat, showing the last saved times',
           );
         } else {
           root!.dataset.state = 'error';
           nextEl.textContent = 'Unavailable';
-          countEl.textContent = 'tap ↻ to retry';
-          setStatus('JAKIM offline', String((err as Error)?.message || err));
+          countEl.textContent = 'tap to retry';
+          setStatus('JAKIM unreachable', String((err as Error)?.message || err));
         }
       } finally {
         loading = false;
@@ -264,7 +285,7 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
         () => {
           locBtn.classList.remove('is-busy');
           setStatus(
-            `Location off · ${day?.zone || defaultZone}`,
+            `Location off · using ${day?.zone || defaultZone}`,
             'Location was blocked or unavailable',
           );
         },
