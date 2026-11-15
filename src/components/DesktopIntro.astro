@@ -1,0 +1,189 @@
+---
+/**
+ * First-visit desktop. Hidden unless the head gate in SeoHead adds
+ * `desk-on` to <html> (once per session, never for deep links). The editor
+ * is already rendered underneath; opening AmCode zooms it out of the icon.
+ */
+import AppIcon from './brand/AppIcon.astro';
+import { PROFILE, RESUME_URL } from '../data/profile';
+---
+
+<div
+  id="desk"
+  class="desk"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="desk-hello"
+  aria-describedby="desk-hint"
+  data-cipher-ui
+>
+  <div class="desk-wall" aria-hidden="true">
+    <span class="desk-mark">{'{ an }'}</span>
+  </div>
+
+  <header class="desk-bar">
+    <span class="desk-brand">
+      <AppIcon name="amcode" size={16} />
+      <span>adamnajmi.com</span>
+    </span>
+    <span class="desk-clock">
+      <span data-desk-date></span>
+      <time data-desk-time>--:--</time>
+    </span>
+  </header>
+
+  <ul class="desk-icons" aria-label="Apps">
+    <li>
+      <button type="button" class="desk-icon" data-desk-open="amcode" data-desk-first>
+        <AppIcon name="amcode" size={58} />
+        <span>AmCode</span>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="desk-icon" data-desk-open="postam">
+        <AppIcon name="postam" size={58} />
+        <span>PostAm</span>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="desk-icon" data-desk-open="simple">
+        <AppIcon name="simple" size={58} />
+        <span>Simple view</span>
+      </button>
+    </li>
+    <li>
+      <a class="desk-icon" href={RESUME_URL} target="_blank" rel="noopener">
+        <AppIcon name="pdf" size={58} />
+        <span>resume.pdf</span>
+      </a>
+    </li>
+  </ul>
+
+  <section class="desk-card">
+    <p class="desk-kicker">Hi, I'm</p>
+    <h2 id="desk-hello">Adam Najmi</h2>
+    <p class="desk-role">{PROFILE.role} · Johor Bahru, MY</p>
+    <p class="desk-hint" id="desk-hint">
+      <span class="only-fine">Double-click</span><span class="only-coarse">Tap</span>
+      <b>AmCode</b> to open my portfolio as a code editor, <b>PostAm</b> to call its live API, or pick
+      <b>Simple view</b> for a plain page.
+    </p>
+    <div class="desk-actions">
+      <button type="button" class="desk-btn primary" data-desk-open="amcode">
+        <AppIcon name="amcode" size={18} /> Open AmCode
+      </button>
+      <button type="button" class="desk-btn" data-desk-open="simple">
+        <AppIcon name="simple" size={18} /> Simple view
+      </button>
+    </div>
+  </section>
+
+  <button type="button" class="desk-skip" data-desk-skip aria-keyshortcuts="Escape">
+    Skip intro <kbd aria-hidden="true">esc</kbd>
+  </button>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const desk = document.getElementById('desk');
+
+  if (desk && !html.classList.contains('desk-on')) {
+    desk.remove();
+  } else if (desk) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    const ide = document.getElementById('ide');
+
+    // Clock + date in the visitor's own time.
+    const timeEl = desk.querySelector<HTMLElement>('[data-desk-time]');
+    const dateEl = desk.querySelector<HTMLElement>('[data-desk-date]');
+    const tick = () => {
+      const now = new Date();
+      if (timeEl) {
+        timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        timeEl.dateTime = now.toISOString();
+      }
+      if (dateEl)
+        dateEl.textContent = now.toLocaleDateString([], {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+        });
+    };
+    tick();
+    const clock = window.setInterval(tick, 15_000);
+
+    let done = false;
+    const finish = (focusSel?: string) => {
+      window.clearInterval(clock);
+      document.removeEventListener('keydown', onKey, true);
+      desk.remove();
+      html.classList.remove('desk-on', 'desk-opening');
+      ide?.classList.remove('ide-zoom');
+      if (ide) ide.style.transformOrigin = '';
+      const target = document.querySelector<HTMLElement>(focusSel || '#main');
+      target?.focus({ preventScroll: true });
+    };
+
+    const open = (app: string, from?: Element | null) => {
+      if (done) return;
+      if (app === 'simple') {
+        try {
+          localStorage.setItem('adam-view', 'classic');
+        } catch {
+          /* private mode */
+        }
+        location.href = '/classic';
+        return;
+      }
+      done = true;
+      const w = window as any;
+      if (app === 'postam') w.ide?.open?.('postam');
+      const focusSel = app === 'postam' ? '[data-pm-url]' : '#main';
+      if (reduce || !ide || !from) return finish(focusSel);
+      const r = from.getBoundingClientRect();
+      ide.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+      html.classList.add('desk-opening');
+      ide.classList.add('ide-zoom');
+      window.setTimeout(() => finish(focusSel), 560);
+    };
+
+    const skip = () => {
+      if (done) return;
+      done = true;
+      finish();
+    };
+
+    desk.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-desk-skip]')) return skip();
+      const btn = t.closest<HTMLElement>('[data-desk-open]');
+      if (!btn) {
+        desk
+          .querySelectorAll('.desk-icon.is-selected')
+          .forEach((i) => i.classList.remove('is-selected'));
+        return;
+      }
+      // Desktop icons: click selects, double-click opens (keyboard and touch open at once).
+      const isIcon = btn.classList.contains('desk-icon');
+      if (isIcon && !coarse && e.detail > 0) {
+        desk
+          .querySelectorAll('.desk-icon.is-selected')
+          .forEach((i) => i.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+        if (e.detail < 2) return;
+      }
+      open(btn.dataset.deskOpen!, btn.querySelector('svg') || btn);
+    });
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        skip();
+      }
+    };
+    document.addEventListener('keydown', onKey, true);
+    desk.querySelector<HTMLElement>('[data-desk-first]')?.focus({ preventScroll: true });
+  }
+</script>

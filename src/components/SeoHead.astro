@@ -7,6 +7,8 @@ interface Props {
   path?: string;
   image?: string;
   themeColor?: string;
+  /** 'boot' = terminal identity intro, 'desktop' = AmCode desktop + view switch. */
+  intro?: 'boot' | 'desktop';
 }
 const SITE = 'https://adamnajmi.com';
 const {
@@ -15,6 +17,7 @@ const {
   path = Astro.url.pathname,
   image = '/og.png',
   themeColor = '#0a0a0a',
+  intro = 'boot',
 } = Astro.props;
 const canonical = new URL(path, SITE).toString();
 const ogImage = new URL(image, SITE).toString();
@@ -140,16 +143,78 @@ const person = {
     }
   }
 </style>
+{
+  intro === 'boot' && (
+    <script is:inline>
+      (() => {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (sessionStorage.getItem('adam-intro-seen') === '1') return;
+          sessionStorage.setItem('adam-intro-seen', '1');
+          document.documentElement.classList.add('boot-intro-on');
+        } catch {
+          /* Can't remember a session: skip, so later navigations stay clear. */
+        }
+      })();
+    </script>
+  )
+}
+{intro === 'desktop' && (
+  <Fragment>
+<style is:inline>
+  #desk {
+    display: none;
+  }
+  html.desk-on #desk {
+    display: grid;
+  }
+  html.view-redirect body {
+    visibility: hidden;
+  }
+  @media print {
+    #desk {
+      display: none !important;
+    }
+  }
+</style>
 <script is:inline>
+  // View gate for the home page, before first paint:
+  //  - ?view=amcode|classic saves the visitor's choice;
+  //  - a saved "classic" choice goes straight to /classic (deep links stay);
+  //  - otherwise show the desktop intro once per session, never for deep links.
   (() => {
+    const html = document.documentElement;
+    const params = new URLSearchParams(location.search);
+    const deep = params.has('file') || params.has('panel');
+    const want = params.get('view');
+    let view = null;
     try {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (sessionStorage.getItem('adam-intro-seen') === '1') return;
-      sessionStorage.setItem('adam-intro-seen', '1');
-      document.documentElement.classList.add('boot-intro-on');
+      if (want === 'amcode' || want === 'classic') localStorage.setItem('adam-view', want);
+      view = localStorage.getItem('adam-view');
     } catch {
-      /* Can't remember a session: skip, so later navigations stay clear. */
+      view = want;
+    }
+    if (view === 'classic' && !deep) {
+      html.classList.add('view-redirect');
+      location.replace('/classic' + location.hash);
+      return;
+    }
+    if (want) {
+      params.delete('view');
+      const q = params.toString();
+      history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
+      return;
+    }
+    if (deep || (location.hash && location.hash !== '#main')) return;
+    try {
+      if (sessionStorage.getItem('adam-desktop-seen') === '1') return;
+      sessionStorage.setItem('adam-desktop-seen', '1');
+      html.classList.add('desk-on');
+    } catch {
+      /* no session storage: go straight to the editor */
     }
   })();
 </script>
+  </Fragment>
+)}
 <Analytics />

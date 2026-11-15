@@ -1,0 +1,315 @@
+/* ==================================================================
+   Desktop intro (first visit per session) + AmCode zoom-open.
+   Visibility is gated in SeoHead (html.desk-on) before first paint.
+   ================================================================== */
+
+.desk {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: grid;
+  grid-template-rows: 30px auto 1fr;
+  color: #eef2ff;
+  font-family: var(--ide-ui);
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.desk-wall {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 70% at 18% 20%, rgb(45 212 191 / 0.32), transparent 60%),
+    radial-gradient(55% 65% at 85% 25%, rgb(124 58 237 / 0.38), transparent 62%),
+    radial-gradient(70% 60% at 60% 100%, rgb(225 29 72 / 0.22), transparent 60%),
+    linear-gradient(160deg, #0b1020 0%, #0a0c16 55%, #120a1f 100%);
+}
+.desk-wall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: linear-gradient(to bottom, #000, transparent 85%);
+}
+.desk-mark {
+  position: absolute;
+  right: 4vw;
+  bottom: 2vh;
+  font: 700 clamp(80px, 16vw, 220px) / 1 var(--ide-mono);
+  color: rgb(255 255 255 / 0.045);
+  letter-spacing: -0.04em;
+}
+
+.desk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  background: rgb(8 10 20 / 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.desk-brand,
+.desk-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.desk-clock {
+  gap: 10px;
+  font-variant-numeric: tabular-nums;
+  color: rgb(238 242 255 / 0.85);
+}
+
+.desk-icons {
+  list-style: none;
+  margin: 0;
+  padding: 22px 18px;
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 96px;
+  gap: 10px;
+  align-content: start;
+}
+.desk-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 96px;
+  padding: 8px 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: none;
+  color: #fff;
+  font: 500 12.5px/1.25 var(--ide-ui);
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
+  cursor: default;
+}
+.desk-icon svg {
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.45));
+  transition: transform 0.15s ease;
+}
+.desk-icon:hover svg {
+  transform: translateY(-2px);
+}
+.desk-icon span {
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.desk-icon.is-selected {
+  background: rgb(255 255 255 / 0.12);
+  border-color: rgb(255 255 255 / 0.18);
+}
+.desk-icon.is-selected span {
+  background: #2853c7;
+}
+.desk-icon:focus-visible,
+.desk-btn:focus-visible,
+.desk-skip:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 2px;
+}
+
+.desk-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -46%);
+  width: min(460px, calc(100vw - 40px));
+  padding: 26px 26px 22px;
+  border-radius: 16px;
+  background: rgb(12 15 28 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  user-select: text;
+}
+.desk-kicker {
+  margin: 0;
+  font: 12px var(--ide-mono);
+  color: #5eead4;
+}
+.desk-card h2 {
+  margin: 4px 0 2px;
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.desk-role {
+  margin: 0 0 14px;
+  color: rgb(238 242 255 / 0.75);
+  font-size: 14px;
+}
+.desk-hint {
+  margin: 0 0 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgb(238 242 255 / 0.85);
+}
+.desk-hint b {
+  color: #fff;
+}
+.only-coarse {
+  display: none;
+}
+@media (pointer: coarse) {
+  .only-fine {
+    display: none;
+  }
+  .only-coarse {
+    display: inline;
+  }
+}
+.desk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.desk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px 0 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(255 255 255 / 0.08);
+  color: #fff;
+  font: 600 13.5px var(--ide-ui);
+  cursor: pointer;
+}
+.desk-btn:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+.desk-btn.primary {
+  background: #5eead4;
+  border-color: #5eead4;
+  color: #042621;
+}
+.desk-btn.primary:hover {
+  background: #99f6e4;
+}
+
+.desk-skip {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  background: rgb(8 10 20 / 0.5);
+  color: rgb(238 242 255 / 0.9);
+  font: 12px var(--ide-mono);
+  cursor: pointer;
+}
+.desk-skip:hover {
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.45);
+}
+.desk-skip kbd {
+  font: 10px var(--ide-mono);
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+}
+
+/* ---------- open: the workbench zooms out of the clicked icon ---------- */
+html.desk-opening .desk {
+  animation: desk-fade 0.5s ease forwards;
+  pointer-events: none;
+}
+.ide.ide-zoom {
+  z-index: 90;
+  animation: ide-zoom 0.52s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.6);
+  overflow: hidden;
+}
+@keyframes ide-zoom {
+  from {
+    transform: scale(0.04);
+    opacity: 0.2;
+    border-radius: 40px;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+    border-radius: 0;
+  }
+}
+@keyframes desk-fade {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------- phones: home-screen grid ---------- */
+@media (max-width: 767px) {
+  .desk {
+    grid-template-rows: 28px auto 1fr;
+  }
+  .desk-bar {
+    font-size: 12px;
+  }
+  .desk-brand span {
+    display: none;
+  }
+  .desk-icons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    justify-items: center;
+    padding: 22px 12px 8px;
+    gap: 8px;
+  }
+  .desk-icon {
+    width: 100%;
+    max-width: 84px;
+    font-size: 11.5px;
+  }
+  .desk-card {
+    top: auto;
+    bottom: max(70px, calc(env(safe-area-inset-bottom) + 64px));
+    transform: translateX(-50%);
+    padding: 20px 18px 18px;
+  }
+  .desk-card h2 {
+    font-size: 26px;
+  }
+  .desk-actions .desk-btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+  .desk-skip {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 10px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk-icon svg,
+  html.desk-opening .desk,
+  .ide.ide-zoom {
+    animation: none !important;
+    transition: none !important;
+  }
+}
