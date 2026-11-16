@@ -1,0 +1,131 @@
+---
+/**
+ * AmReader: the resume inside the desktop, in a draggable glass window.
+ * pdf.js is lazy-loaded on first open (src/scripts/amreader.ts); if it fails
+ * the same chrome falls back to the browser's own PDF viewer in an <object>.
+ */
+import AppIcon from '../brand/AppIcon.astro';
+import { RESUME_URL } from '../../data/profile';
+
+const fileName = 'resume.pdf';
+const downloadName = 'Adam-Najmi-Resume.pdf';
+---
+
+<section
+  class="desk-win reader-win glass"
+  data-win="reader"
+  data-src={RESUME_URL}
+  aria-labelledby="rd-title"
+  hidden
+  data-no-cipher
+>
+  <div class="desk-win-bar" data-desk-drag>
+    <div class="desk-win-dots">
+      <button
+        type="button"
+        class="dw-dot close"
+        data-desk-win="close"
+        aria-label="Close AmReader"
+        title="Close"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"
+          ><path d="M3.5 3.5l5 5M8.5 3.5l-5 5"></path></svg
+        ></button
+      >
+      <button
+        type="button"
+        class="dw-dot min"
+        data-desk-win="min"
+        aria-label="Minimise AmReader to the dock"
+        title="Minimise"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"></path></svg></button
+      >
+      <button
+        type="button"
+        class="dw-dot max"
+        data-desk-win="zoom"
+        aria-label="Zoom AmReader"
+        title="Zoom"
+        ><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 8V4h4M8 4 4 8"></path></svg
+        ></button
+      >
+    </div>
+    <span class="desk-win-title" id="rd-title"
+      ><AppIcon name="reader" size={14} />
+      {fileName}
+      <span class="rd-app">— AmReader</span></span
+    >
+  </div>
+
+  <div class="rd-tools" role="toolbar" aria-label="Document">
+    <button
+      type="button"
+      class="rd-btn rd-wide-only"
+      data-rd="thumbs"
+      aria-pressed="true"
+      title="Page thumbnails"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><rect x="3.5" y="4.5" width="17" height="15" rx="2"></rect><path d="M9 4.5v15"></path></svg
+      >
+      <span class="sr-only">Page thumbnails</span>
+    </button>
+    <span class="rd-sep rd-wide-only" aria-hidden="true"></span>
+    <button type="button" class="rd-btn" data-rd="prev" title="Previous page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span class="sr-only">Previous page</span>
+    </button>
+    <label class="rd-page">
+      <span class="sr-only">Page</span>
+      <input
+        data-rd-page
+        type="text"
+        inputmode="numeric"
+        value="1"
+        size="2"
+        autocomplete="off"
+        aria-describedby="rd-count"
+      />
+      <span id="rd-count">/ <span data-rd-count>–</span></span>
+    </label>
+    <button type="button" class="rd-btn" data-rd="next" title="Next page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+      <span class="sr-only">Next page</span>
+    </button>
+    <span class="rd-sep" aria-hidden="true"></span>
+    <button type="button" class="rd-btn" data-rd="out" title="Zoom out (−)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"></path></svg>
+      <span class="sr-only">Zoom out</span>
+    </button>
+    <output class="rd-zoom" data-rd-zoom aria-live="polite">100%</output>
+    <button type="button" class="rd-btn" data-rd="in" title="Zoom in (+)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"></path></svg>
+      <span class="sr-only">Zoom in</span>
+    </button>
+    <button type="button" class="rd-btn rd-fit" data-rd="fit" aria-pressed="true" title="Fit width"
+      >Fit</button
+    >
+    <span class="rd-flex"></span>
+    <a class="rd-btn" href={RESUME_URL} download={downloadName} title="Download">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg
+      >
+      <span class="sr-only">Download the resume</span>
+    </a>
+    <a class="rd-btn" href={RESUME_URL} target="_blank" rel="noopener" title="Open in a new tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M14 4h6v6"></path><path d="M20 4 11 13"></path><path
+          d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg
+      >
+      <span class="sr-only">Open the resume in a new tab</span>
+    </a>
+  </div>
+
+  <div class="rd-body">
+    <nav class="rd-thumbs" data-rd-thumbs aria-label="Pages"></nav>
+    <div class="rd-view" data-rd-view tabindex="0" aria-label={`${fileName}, scrollable`}>
+      <div class="rd-pages" data-rd-pages>
+        <p class="rd-status" data-rd-status role="status">Opening {fileName}…</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,454 @@
+/* Desktop intro apps: Doodle (scribble layer) and AmReader (PDF window). */
+
+/* ---------- stacking: wallpaper < doodle < icons < widget/windows < dock < bars ---------- */
+.doodle-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  touch-action: none;
+}
+.desk-icons {
+  position: relative;
+  z-index: 1;
+}
+.desk-dock {
+  z-index: 20;
+}
+.desk-skip {
+  z-index: 19;
+}
+.desk-bar.glass {
+  z-index: 21;
+}
+.desk.is-drawing .doodle-canvas {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+.desk.is-drawing .doodle-canvas[data-tool='eraser'] {
+  cursor: cell;
+}
+/* Draw straight over the icons while drawing. */
+.desk.is-drawing .desk-icons {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.dock-item.is-running .dock-dot {
+  opacity: 1;
+}
+
+/* ---------- Doodle toolbar ---------- */
+.doodle-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 18px;
+  color: #fff;
+  white-space: nowrap;
+}
+.doodle-bar[hidden] {
+  display: none;
+}
+.doodle-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 0 2px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.doodle-sep {
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 2px;
+  background: rgb(255 255 255 / 0.18);
+}
+.doodle-group,
+.doodle-swatches {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.doodle-swatches {
+  gap: 5px;
+  padding: 0 4px;
+}
+.doodle-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.doodle-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.doodle-btn:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+.doodle-btn[aria-pressed='true'] {
+  background: rgb(94 234 212 / 0.28);
+  box-shadow: inset 0 0 0 1px rgb(153 246 228 / 0.5);
+}
+.doodle-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: transparent;
+}
+.doodle-swatch {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-radius: 50%;
+  background: var(--c);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.doodle-swatch:hover {
+  transform: scale(1.12);
+}
+.doodle-swatch[aria-pressed='true'] {
+  border-color: #fff;
+  box-shadow:
+    0 0 0 2px rgb(15 18 34 / 0.8),
+    0 0 0 4px var(--c);
+}
+.doodle-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+.doodle-size input {
+  width: 84px;
+  accent-color: #5eead4;
+  cursor: pointer;
+}
+.doodle-dot {
+  --d: 6px;
+  display: block;
+  width: var(--d);
+  height: var(--d);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3);
+  flex: none;
+}
+.doodle-done {
+  height: 32px;
+  margin-left: 4px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.05) 60%),
+    rgb(94 234 212 / 0.88);
+  color: #042621;
+  font: 650 13px var(--ide-ui);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
+  cursor: pointer;
+}
+.doodle-btn:focus-visible,
+.doodle-swatch:focus-visible,
+.doodle-done:focus-visible,
+.doodle-size input:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 2px;
+}
+
+/* ---------- AmReader window ---------- */
+.desk-win.reader-win {
+  display: flex;
+  flex-direction: column;
+  width: min(880px, calc(100vw - 80px));
+  height: min(820px, calc(100vh - 120px));
+  --lg-tint: rgb(14 16 30 / 0.62);
+}
+.desk-win.reader-win[hidden] {
+  display: none;
+}
+.desk-win.reader-win.is-zoomed {
+  width: calc(100vw - 40px);
+  height: calc(100vh - 110px);
+}
+.reader-win .desk-win-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.rd-app {
+  color: rgb(238 242 255 / 0.55);
+  font-weight: 500;
+}
+.rd-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.08);
+  color: #fff;
+  font-size: 12.5px;
+  flex: none;
+}
+.rd-btn {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.rd-btn svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rd-btn:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+.rd-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: transparent;
+}
+.rd-btn[aria-pressed='true'] {
+  background: rgb(94 234 212 / 0.22);
+  box-shadow: inset 0 0 0 1px rgb(153 246 228 / 0.4);
+}
+.rd-fit {
+  padding: 0 10px;
+  font: 600 12.5px var(--ide-ui);
+}
+.rd-btn:focus-visible,
+.rd-page input:focus-visible,
+.rd-view:focus-visible,
+.rd-thumb:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 1px;
+}
+.rd-sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: rgb(255 255 255 / 0.16);
+}
+.rd-flex {
+  flex: 1;
+}
+.rd-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+  color: rgb(238 242 255 / 0.8);
+}
+.rd-page input {
+  width: 34px;
+  height: 26px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 6px;
+  background: rgb(0 0 0 / 0.25);
+  color: #fff;
+  font: 600 12.5px var(--ide-ui);
+  text-align: center;
+}
+.rd-zoom {
+  min-width: 46px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: rgb(238 242 255 / 0.85);
+}
+.rd-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.rd-thumbs {
+  flex: none;
+  width: 128px;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: rgb(0 0 0 / 0.14);
+  box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.08);
+}
+.reader-win.no-thumbs .rd-thumbs {
+  display: none;
+}
+.rd-thumb {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgb(238 242 255 / 0.75);
+  font: 600 11px var(--ide-ui);
+  cursor: pointer;
+}
+.rd-thumb canvas {
+  display: block;
+  width: 96px;
+  height: auto;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.35);
+}
+.rd-thumb.is-current canvas {
+  box-shadow:
+    0 0 0 2px rgb(15 18 34),
+    0 0 0 4px #5eead4;
+}
+.rd-thumb.is-current {
+  color: #fff;
+}
+.rd-view {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: rgb(30 33 48 / 0.55);
+  user-select: text;
+}
+.rd-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  min-width: fit-content;
+  min-height: 100%;
+}
+.rd-sheet {
+  position: relative;
+  flex: none;
+  background: #fff;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.45);
+}
+.rd-sheet canvas {
+  display: block;
+}
+.rd-links a {
+  position: absolute;
+  border-radius: 2px;
+}
+.rd-links a:hover,
+.rd-links a:focus-visible {
+  background: rgb(94 234 212 / 0.18);
+  outline: 1px solid rgb(13 148 136 / 0.6);
+}
+.rd-status {
+  margin: auto;
+  color: rgb(238 242 255 / 0.7);
+  font-size: 13px;
+}
+.reader-win[data-fallback] .rd-pages {
+  padding: 0;
+  height: 100%;
+}
+.rd-object {
+  width: 100%;
+  height: 100%;
+  min-height: 60vh;
+  border: 0;
+  background: #fff;
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 767px) {
+  .doodle-bar {
+    left: 8px;
+    right: 8px;
+    top: 36px;
+    bottom: auto;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 6px;
+    gap: 4px;
+    white-space: normal;
+  }
+  .doodle-bar .doodle-sep {
+    display: none;
+  }
+  .doodle-name {
+    display: none;
+  }
+  .doodle-size input {
+    width: 64px;
+  }
+  .doodle-btn {
+    width: 32px;
+    height: 32px;
+    flex: none;
+  }
+  .doodle-swatch {
+    flex: none;
+  }
+
+  /* AmReader: a full-screen sheet under the menu bar. */
+  .desk-win.reader-win {
+    inset: 30px 0 0;
+    margin: 0;
+    width: auto;
+    height: auto;
+    border-radius: 16px 16px 0 0;
+  }
+  .rd-wide-only,
+  .reader-win .rd-thumbs,
+  .rd-app {
+    display: none;
+  }
+  .rd-tools {
+    gap: 2px;
+    padding: 6px;
+  }
+  .rd-pages {
+    padding: 10px;
+    gap: 10px;
+  }
+  /* The sheet covers the desktop: hide the floating skip pill behind it. */
+  .desk:has(.reader-win:not([hidden])) .desk-skip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle-swatch {
+    transition: none;
+  }
+}

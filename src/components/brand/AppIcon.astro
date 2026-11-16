@@ -1,11 +1,12 @@
 ---
 /**
  * Original app icons for the desktop intro and the editor chrome.
- * AmCode (the editor), PostAm (the API client), Simple view and a PDF.
+ * AmCode (the editor), PostAm (the API client), Simple view, a PDF, Doodle
+ * (the scribble canvas) and AmReader (the PDF viewer).
  * Drawn from scratch: no third-party logos or trademarks.
  */
 interface Props {
-  name: 'amcode' | 'postam' | 'simple' | 'pdf' | 'welcome';
+  name: 'amcode' | 'postam' | 'simple' | 'pdf' | 'welcome' | 'doodle' | 'reader';
   size?: number;
   class?: string;
   title?: string;
@@ -19,6 +20,8 @@ const GRAD: Record<Props['name'], [string, string]> = {
   simple: ['#60a5fa', '#1e40af'],
   pdf: ['#f1f5f9', '#cbd5e1'],
   welcome: ['#34d399', '#0284c7'],
+  doodle: ['#f472b6', '#f97316'],
+  reader: ['#6366f1', '#0f172a'],
 };
 const [c1, c2] = GRAD[name];
 ---
@@ -94,6 +97,36 @@ const [c1, c2] = GRAD[name];
         >
           hi!
         </text>
+      </g>
+    )
+  }
+  {
+    name === 'doodle' && (
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M14 42c5-9 9-13 12-11s-4 10 0 11 9-15 13-13-3 12 1 13 6-4 9-7"
+          stroke="#fff"
+          stroke-width="4.5"
+        />
+        <path d="M40 15l9 9-15 15-11 3 3-11z" fill="#fff" stroke="#fff" stroke-width="2" />
+        <path d="M40 15l9 9" stroke="#fb7185" stroke-width="5" />
+        <circle cx="25.5" cy="38.5" r="1.8" fill="#9f1239" stroke="none" />
+      </g>
+    )
+  }
+  {
+    name === 'reader' && (
+      <g>
+        <path d="M18 12h20l9 9v31H18z" fill="#fff" />
+        <path d="M38 12v9h9" fill="#c7d2fe" />
+        <path
+          d="M23 25h12M23 30h18M23 35h18M23 40h11"
+          stroke="#94a3b8"
+          stroke-width="2.4"
+          stroke-linecap="round"
+        />
+        <circle cx="40" cy="44" r="7.5" fill="#6366f1" stroke="#fff" stroke-width="2.5" />
+        <path d="M37 44h6M40 41v6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" />
       </g>
     )
   }

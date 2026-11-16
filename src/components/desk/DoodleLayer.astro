@@ -1,0 +1,100 @@
+---
+/**
+ * Doodle: full-screen scribble canvas (above the wallpaper, below windows,
+ * the widget and the dock) plus its glass toolbar. Logic: src/scripts/doodle.ts.
+ */
+import AppIcon from '../brand/AppIcon.astro';
+
+const COLORS = [
+  ['#ffffff', 'White'],
+  ['#5eead4', 'Teal'],
+  ['#fde047', 'Yellow'],
+  ['#f472b6', 'Pink'],
+  ['#fb923c', 'Orange'],
+  ['#60a5fa', 'Blue'],
+] as const;
+---
+
+<canvas class="doodle-canvas" data-doodle-canvas aria-hidden="true"></canvas>
+
+<div
+  class="doodle-bar glass"
+  data-doodle-bar
+  role="toolbar"
+  aria-label="Doodle tools"
+  hidden
+  data-no-cipher
+>
+  <span class="doodle-name"><AppIcon name="doodle" size={20} /> Doodle</span>
+  <span class="doodle-sep" aria-hidden="true"></span>
+  <div class="doodle-group">
+    <button type="button" class="doodle-btn" data-tool="pen" aria-pressed="true" title="Pen (P)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M15.5 4.5l4 4L8 20H4v-4z"></path><path d="M13 7l4 4"></path></svg
+      >
+      <span class="sr-only">Pen</span>
+    </button>
+    <button
+      type="button"
+      class="doodle-btn"
+      data-tool="eraser"
+      aria-pressed="false"
+      title="Eraser (E)"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M7 20h13"></path><path d="M4.5 14.5l9-9 6 6-8.5 8.5H8.5z"></path><path
+          d="M9 10l6 6"></path></svg
+      >
+      <span class="sr-only">Eraser</span>
+    </button>
+  </div>
+  <div class="doodle-swatches" role="group" aria-label="Colour">
+    {
+      COLORS.map(([c, name]) => (
+        <button
+          type="button"
+          class="doodle-swatch"
+          data-color={c}
+          aria-pressed={c === '#ffffff' ? 'true' : 'false'}
+          aria-label={name}
+          title={name}
+          style={`--c:${c}`}
+        />
+      ))
+    }
+  </div>
+  <label class="doodle-size" title="Brush size ([ and ])">
+    <span class="sr-only">Brush size</span>
+    <input type="range" min="2" max="28" step="1" value="6" data-doodle-size />
+    <span class="doodle-dot" data-doodle-dot aria-hidden="true"></span>
+  </label>
+  <span class="doodle-sep" aria-hidden="true"></span>
+  <div class="doodle-group">
+    <button type="button" class="doodle-btn" data-doodle="undo" title="Undo (Ctrl/⌘ Z)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M9 14 4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-3"></path></svg
+      >
+      <span class="sr-only">Undo</span>
+    </button>
+    <button type="button" class="doodle-btn" data-doodle="redo" title="Redo (Shift Ctrl/⌘ Z)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="m15 14 5-5-5-5"></path><path d="M20 9H10a6 6 0 0 0 0 12h3"></path></svg
+      >
+      <span class="sr-only">Redo</span>
+    </button>
+    <button type="button" class="doodle-btn" data-doodle="clear" title="Clear">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M4 7h16"></path><path d="M10 11v6M14 11v6"></path><path
+          d="M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg
+      >
+      <span class="sr-only">Clear</span>
+    </button>
+    <button type="button" class="doodle-btn" data-doodle="save" title="Save as PNG">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg
+      >
+      <span class="sr-only">Save as PNG</span>
+    </button>
+  </div>
+  <button type="button" class="doodle-done" data-doodle="close" title="Done (Esc)">Done</button>
+</div>

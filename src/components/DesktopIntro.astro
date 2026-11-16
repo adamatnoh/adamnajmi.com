@@ -5,9 +5,13 @@
  * is already rendered underneath; opening AmCode zooms it out of the icon.
  * The hello card is a small "Welcome" window: drag it by its title bar,
  * close or minimise it, and reopen it from its icon or the dock.
+ * AmReader shows the resume in a second window; Doodle turns the wallpaper
+ * into a scribble canvas.
  */
 import AppIcon from './brand/AppIcon.astro';
 import SolatWidget from './SolatWidget.astro';
+import DoodleLayer from './desk/DoodleLayer.astro';
+import AmReader from './desk/AmReader.astro';
 import { PROFILE, RESUME_URL } from '../data/profile';
 ---
 
@@ -23,6 +27,8 @@ import { PROFILE, RESUME_URL } from '../data/profile';
   <div class="desk-wall" aria-hidden="true">
     <span class="desk-mark">{'{ an }'}</span>
   </div>
+
+  <DoodleLayer />
 
   <header class="desk-bar glass">
     <span class="desk-brand">
@@ -70,7 +76,14 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       </button>
     </li>
     <li>
-      <a class="desk-icon" href={RESUME_URL} target="_blank" rel="noopener">
+      <a
+        class="desk-icon"
+        href={RESUME_URL}
+        target="_blank"
+        rel="noopener"
+        data-desk-open="reader"
+        title="Open in AmReader"
+      >
         <AppIcon name="pdf" size={58} />
         <span>resume.pdf</span>
       </a>
@@ -81,9 +94,15 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         <span>Welcome</span>
       </button>
     </li>
+    <li>
+      <button type="button" class="desk-icon" data-desk-open="doodle">
+        <AppIcon name="doodle" size={58} />
+        <span>Doodle</span>
+      </button>
+    </li>
   </ul>
 
-  <section class="desk-win glass" data-desk-window aria-labelledby="desk-hello">
+  <section class="desk-win glass" data-desk-window data-win="welcome" aria-labelledby="desk-hello">
     <div class="desk-win-bar" data-desk-drag>
       <div class="desk-win-dots">
         <button
@@ -136,6 +155,8 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     </div>
   </section>
 
+  <AmReader />
+
   <nav class="desk-dock glass" aria-label="Dock">
     <button type="button" class="dock-item" data-desk-open="amcode" aria-label="AmCode">
       <AppIcon name="amcode" size={46} /><span class="dock-tip glass" aria-hidden="true"
@@ -152,23 +173,35 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         >Simple view</span
       >
     </button>
+    <button type="button" class="dock-item" data-desk-open="doodle" aria-label="Doodle">
+      <AppIcon name="doodle" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >Doodle</span
+      ><span class="dock-dot" aria-hidden="true"></span>
+    </button>
     <span class="dock-sep" aria-hidden="true"></span>
     <button
       type="button"
       class="dock-item"
       data-desk-open="welcome"
       data-dock-welcome
+      data-dock="welcome"
       aria-label="Welcome window"
     >
       <AppIcon name="welcome" size={46} /><span class="dock-tip glass" aria-hidden="true"
         >Welcome</span
       ><span class="dock-dot" aria-hidden="true"></span>
     </button>
-    <a class="dock-item" href={RESUME_URL} target="_blank" rel="noopener" aria-label="resume.pdf">
-      <AppIcon name="pdf" size={46} /><span class="dock-tip glass" aria-hidden="true"
-        >resume.pdf</span
-      >
-    </a>
+    <button
+      type="button"
+      class="dock-item"
+      data-desk-open="reader"
+      data-dock="reader"
+      aria-label="AmReader: resume.pdf"
+    >
+      <AppIcon name="reader" size={46} /><span class="dock-tip glass" aria-hidden="true"
+        >AmReader</span
+      ><span class="dock-dot" aria-hidden="true"></span>
+    </button>
   </nav>
 
   <button type="button" class="desk-skip glass" data-desk-skip aria-keyshortcuts="Escape">
@@ -177,6 +210,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 </div>
 
 <script>
+  import { initDoodle } from '../scripts/doodle';
   /**
    * The desktop stays in the DOM (hidden) so AmCode can return to it:
    * window.amDesk.show() shrinks the editor back into the AmCode icon.
@@ -196,7 +230,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     // Clock: HH:MM:SS in the visitor's own time, re-armed on each second
     // boundary (a fixed interval drifts and gets throttled in the background).
     // ------------------------------------------------------------------
-    const timeEl = desk.querySelector<HTMLElement>('[data-desk-time]');
+    const timeEl = desk.querySelector<HTMLTimeElement>('[data-desk-time]');
     const dateEl = desk.querySelector<HTMLElement>('[data-desk-date]');
     const tick = () => {
       const now = new Date();
@@ -234,107 +268,245 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     let returnFocus: HTMLElement | null = null;
 
     // ------------------------------------------------------------------
-    // Welcome window: drag, close, minimise to the dock, zoom, reopen
+    // Windows (Welcome, AmReader): drag by the title bar, close, minimise
+    // to the dock, zoom, reopen. The last one touched sits in front.
     // ------------------------------------------------------------------
-    const win = desk.querySelector<HTMLElement>('[data-desk-window]');
-    const bar = desk.querySelector<HTMLElement>('[data-desk-drag]');
-    const dockWelcome = desk.querySelector<HTMLElement>('[data-dock-welcome]');
-    let winState: 'open' | 'closed' | 'min' = 'open';
+    type WinState = 'open' | 'closed' | 'min';
+    interface Win {
+      el: HTMLElement;
+      dock: HTMLElement | null;
+      state: WinState;
+      onShow?: () => void;
+      focusSel?: string;
+    }
     const TOP = 34; // keep the title bar below the menu bar
-
-    const clampWin = () => {
-      if (!win || !win.style.left) return;
-      const r = win.getBoundingClientRect();
+    const wins = new Map<string, Win>();
+    const front = (w: Win) => {
+      wins.forEach((o) => (o.el.style.zIndex = o === w ? '4' : '3'));
+    };
+    const clampWin = (w: Win) => {
+      if (!w.el.style.left || w.el.hidden) return;
+      const r = w.el.getBoundingClientRect();
       const x = Math.min(Math.max(0, r.left), window.innerWidth - r.width);
       const y = Math.min(Math.max(TOP, r.top), window.innerHeight - 44);
-      win.style.left = `${Math.round(x)}px`;
-      win.style.top = `${Math.round(y)}px`;
+      w.el.style.left = `${Math.round(x)}px`;
+      w.el.style.top = `${Math.round(y)}px`;
     };
-    const resetPos = () => {
-      if (!win) return;
-      win.style.left = win.style.top = win.style.inset = win.style.margin = '';
+    const resetPos = (w: Win) => {
+      w.el.style.left = w.el.style.top = w.el.style.inset = w.el.style.margin = '';
     };
-    const playAnim = (cls: string, ms: number, then?: () => void) => {
-      if (!win) return;
+    const playAnim = (w: Win, cls: string, ms: number, then?: () => void) => {
       if (reduceMq.matches) return then?.();
-      win.classList.add(cls);
+      w.el.classList.add(cls);
       window.setTimeout(() => {
-        win.classList.remove(cls);
+        w.el.classList.remove(cls);
         then?.();
       }, ms);
     };
-    const hideWin = (how: 'closed' | 'min') => {
-      if (!win || winState !== 'open') return;
-      winState = how;
-      desk.classList.toggle('win-running', how === 'min');
-      if (how === 'min' && dockWelcome && dockWelcome.offsetParent) {
-        const w = win.getBoundingClientRect();
-        const d = dockWelcome.getBoundingClientRect();
-        const dx = d.left + d.width / 2 - (w.left + w.width / 2);
-        const dy = d.top + d.height / 2 - (w.top + w.height / 2);
-        win.style.setProperty('--dw-to', `translate(${dx}px, ${dy}px) scale(0.08)`);
-        playAnim('is-minimising', 320, () => (win.hidden = true));
+    const markRunning = (w: Win, on: boolean) => {
+      w.dock?.classList.toggle('is-running', on);
+      if (w === wins.get('welcome')) desk.classList.toggle('win-running', on);
+    };
+    const hideWin = (w: Win, how: 'closed' | 'min') => {
+      if (w.state !== 'open') return;
+      if (how === 'min' && !w.dock?.offsetParent) how = 'closed'; // no dock on phones
+      w.state = how;
+      markRunning(w, how === 'min');
+      if (how === 'min' && w.dock) {
+        const r = w.el.getBoundingClientRect();
+        const d = w.dock.getBoundingClientRect();
+        const dx = d.left + d.width / 2 - (r.left + r.width / 2);
+        const dy = d.top + d.height / 2 - (r.top + r.height / 2);
+        w.el.style.setProperty('--dw-to', `translate(${dx}px, ${dy}px) scale(0.08)`);
+        playAnim(w, 'is-minimising', 320, () => (w.el.hidden = true));
       } else {
-        playAnim('is-closing', 180, () => (win.hidden = true));
+        playAnim(w, 'is-closing', 180, () => (w.el.hidden = true));
       }
     };
-    const showWin = () => {
-      if (!win) return;
-      const wasMin = winState === 'min';
-      winState = 'open';
-      desk.classList.add('win-running');
-      win.hidden = false;
-      clampWin();
-      playAnim(wasMin ? 'is-restoring' : 'is-opening', wasMin ? 320 : 200);
-      win.querySelector<HTMLElement>('.desk-btn.primary')?.focus({ preventScroll: true });
+    const showWin = (w: Win) => {
+      if (w.state === 'open') {
+        front(w);
+        return playAnim(w, 'is-nudged', 300);
+      }
+      const wasMin = w.state === 'min';
+      w.state = 'open';
+      markRunning(w, true);
+      w.el.hidden = false;
+      front(w);
+      clampWin(w);
+      playAnim(w, wasMin ? 'is-restoring' : 'is-opening', wasMin ? 320 : 200);
+      w.onShow?.();
+      if (w.focusSel) w.el.querySelector<HTMLElement>(w.focusSel)?.focus({ preventScroll: true });
     };
-    const zoomWin = () => {
-      if (!win || small.matches) return;
-      win.classList.toggle('is-zoomed');
-      resetPos();
+    const zoomWin = (w: Win) => {
+      if (small.matches) return;
+      w.el.classList.toggle('is-zoomed');
+      resetPos(w);
+      w.onShow?.();
     };
-
-    bar?.addEventListener('pointerdown', (e) => {
-      if (!win || small.matches || e.button > 0) return;
-      if ((e.target as HTMLElement).closest('button')) return;
-      e.preventDefault();
-      const r = win.getBoundingClientRect();
-      const ox = e.clientX - r.left;
-      const oy = e.clientY - r.top;
-      win.style.inset = 'auto';
-      win.style.margin = '0';
-      win.style.left = `${Math.round(r.left)}px`;
-      win.style.top = `${Math.round(r.top)}px`;
-      bar.setPointerCapture?.(e.pointerId);
-      win.classList.add('is-dragging');
-      const move = (ev: PointerEvent) => {
-        const x = Math.min(Math.max(0, ev.clientX - ox), window.innerWidth - r.width);
-        const y = Math.min(Math.max(TOP, ev.clientY - oy), window.innerHeight - 44);
-        win.style.left = `${Math.round(x)}px`;
-        win.style.top = `${Math.round(y)}px`;
+    const addWin = (name: string, el: HTMLElement | null, opts: Partial<Win> = {}) => {
+      if (!el) return;
+      const w: Win = {
+        el,
+        dock: desk.querySelector<HTMLElement>(`[data-dock="${name}"]`),
+        state: el.hidden ? 'closed' : 'open',
+        ...opts,
       };
-      const up = () => {
-        win.classList.remove('is-dragging');
-        bar.removeEventListener('pointermove', move);
-        bar.removeEventListener('pointerup', up);
-        bar.removeEventListener('pointercancel', up);
-      };
-      bar.addEventListener('pointermove', move);
-      bar.addEventListener('pointerup', up);
-      bar.addEventListener('pointercancel', up);
-    });
-    bar?.addEventListener('dblclick', (e) => {
-      if (!(e.target as HTMLElement).closest('button')) zoomWin();
-    });
-    window.addEventListener('resize', clampWin);
-    small.addEventListener('change', resetPos);
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && open) {
+      wins.set(name, w);
+      if (w.state === 'open') markRunning(w, true);
+      el.addEventListener('pointerdown', () => front(w));
+      const bar = el.querySelector<HTMLElement>('[data-desk-drag]');
+      bar?.addEventListener('pointerdown', (e) => {
+        if (small.matches || e.button > 0) return;
+        if ((e.target as HTMLElement).closest('button')) return;
         e.preventDefault();
-        e.stopPropagation();
-        skip();
+        const r = el.getBoundingClientRect();
+        const ox = e.clientX - r.left;
+        const oy = e.clientY - r.top;
+        el.style.inset = 'auto';
+        el.style.margin = '0';
+        el.style.left = `${Math.round(r.left)}px`;
+        el.style.top = `${Math.round(r.top)}px`;
+        bar.setPointerCapture?.(e.pointerId);
+        el.classList.add('is-dragging');
+        const move = (ev: PointerEvent) => {
+          const x = Math.min(Math.max(0, ev.clientX - ox), window.innerWidth - r.width);
+          const y = Math.min(Math.max(TOP, ev.clientY - oy), window.innerHeight - 44);
+          el.style.left = `${Math.round(x)}px`;
+          el.style.top = `${Math.round(y)}px`;
+        };
+        const up = () => {
+          el.classList.remove('is-dragging');
+          bar.removeEventListener('pointermove', move);
+          bar.removeEventListener('pointerup', up);
+          bar.removeEventListener('pointercancel', up);
+        };
+        bar.addEventListener('pointermove', move);
+        bar.addEventListener('pointerup', up);
+        bar.addEventListener('pointercancel', up);
+      });
+      bar?.addEventListener('dblclick', (e) => {
+        if (!(e.target as HTMLElement).closest('button')) zoomWin(w);
+      });
+    };
+    addWin('welcome', desk.querySelector<HTMLElement>('[data-win="welcome"]'), {
+      focusSel: '.desk-btn.primary',
+    });
+
+    // ------------------------------------------------------------------
+    // AmReader: pdf.js (lazy) inside the window; <object> if that fails.
+    // ------------------------------------------------------------------
+    const readerEl = desk.querySelector<HTMLElement>('[data-win="reader"]');
+    let reader: import('../scripts/amreader').Reader | null = null;
+    let readerLoading: Promise<void> | null = null;
+    const loadReader = () => {
+      if (!readerEl || readerLoading) return readerLoading;
+      const status = readerEl.querySelector<HTMLElement>('[data-rd-status]');
+      const src = readerEl.dataset.src || '/file/resume.pdf';
+      readerLoading = import('../scripts/amreader')
+        .then((m) => m.mountReader(readerEl, src))
+        .then((r) => {
+          reader = r;
+        })
+        .catch(() => {
+          readerEl.dataset.fallback = 'true';
+          const pages = readerEl.querySelector<HTMLElement>('[data-rd-pages]');
+          if (pages) {
+            pages.innerHTML = '';
+            const obj = document.createElement('object');
+            obj.className = 'rd-object';
+            obj.type = 'application/pdf';
+            obj.data = src;
+            obj.setAttribute('aria-label', 'resume.pdf');
+            const a = document.createElement('a');
+            a.href = src;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = 'Open resume.pdf';
+            obj.append(a);
+            pages.append(obj);
+          }
+          if (status) status.textContent = '';
+        });
+      return readerLoading;
+    };
+    addWin('reader', readerEl, {
+      focusSel: '[data-rd-view]',
+      onShow: () => {
+        void loadReader();
+        reader?.refit();
+      },
+    });
+    readerEl?.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-rd]');
+      if (!b) return;
+      const a = b.dataset.rd;
+      if (a === 'thumbs') {
+        const on = readerEl.classList.toggle('no-thumbs');
+        b.setAttribute('aria-pressed', String(!on));
+        return reader?.refit();
       }
+      if (!reader) return;
+      if (a === 'prev') reader.step(-1);
+      else if (a === 'next') reader.step(1);
+      else if (a === 'in') reader.zoomIn();
+      else if (a === 'out') reader.zoomOut();
+      else if (a === 'fit') reader.fit();
+    });
+    const pageInput = readerEl?.querySelector<HTMLInputElement>('[data-rd-page]');
+    pageInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        reader?.go(Number(pageInput.value));
+        pageInput.select();
+      }
+    });
+    pageInput?.addEventListener('change', () => reader?.go(Number(pageInput.value)));
+    readerEl?.addEventListener('keydown', (e) => {
+      if (!reader || (e.target as HTMLElement).closest('input')) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        reader.zoomIn();
+      } else if (e.key === '-') {
+        e.preventDefault();
+        reader.zoomOut();
+      } else if (mod && e.key === '0') {
+        e.preventDefault();
+        reader.fit();
+      }
+    });
+
+    // ------------------------------------------------------------------
+    // Doodle: draw mode over the wallpaper.
+    // ------------------------------------------------------------------
+    const doodle = initDoodle(desk, {
+      onOpen: () => {
+        desk.querySelector('[data-desk-open="doodle"].dock-item')?.classList.add('is-running');
+        // Phones: the Welcome sheet covers half the screen, so tuck it away.
+        const w = wins.get('welcome');
+        if (small.matches && w) hideWin(w, 'closed');
+      },
+      onClose: () => {
+        desk.querySelector('[data-desk-open="doodle"].dock-item')?.classList.remove('is-running');
+        desk.querySelector<HTMLElement>('.desk-icon[data-desk-open="doodle"]')?.focus({
+          preventScroll: true,
+        });
+      },
+    });
+
+    window.addEventListener('resize', () => wins.forEach(clampWin));
+    small.addEventListener('change', () => wins.forEach(resetPos));
+
+    // Escape peels one layer at a time: draw mode, then AmReader, then the desktop.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || !open) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (doodle?.isOn()) return doodle.close();
+      const rd = wins.get('reader');
+      if (rd && rd.state === 'open') return hideWin(rd, 'closed');
+      skip();
     };
     const clearSelection = () =>
       desk
@@ -349,6 +521,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     };
     const deactivate = (focusSel?: string) => {
       open = false;
+      doodle?.close();
       busy = false;
       stopClock();
       document.removeEventListener('keydown', onKey, true);
@@ -372,7 +545,8 @@ import { PROFILE, RESUME_URL } from '../data/profile';
 
     const openApp = (app: string, from?: Element | null) => {
       if (!open || busy) return;
-      if (app === 'welcome') return winState === 'open' ? playAnim('is-nudged', 300) : showWin();
+      if (wins.has(app)) return showWin(wins.get(app)!);
+      if (app === 'doodle') return doodle?.isOn() ? doodle.close() : doodle?.open();
       if (app === 'simple') {
         try {
           localStorage.setItem('adam-view', 'classic');
@@ -429,13 +603,23 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       if (t.closest('[data-desk-skip]')) return skip();
       const winBtn = t.closest<HTMLElement>('[data-desk-win]');
       if (winBtn) {
+        const w = wins.get(winBtn.closest<HTMLElement>('[data-win]')?.dataset.win || '');
+        if (!w) return;
         const a = winBtn.dataset.deskWin;
-        if (a === 'close') return hideWin('closed');
-        if (a === 'min') return hideWin(dockWelcome?.offsetParent ? 'min' : 'closed');
-        return zoomWin();
+        if (a === 'close') return hideWin(w, 'closed');
+        if (a === 'min') return hideWin(w, 'min');
+        return zoomWin(w);
       }
+      if (t.closest('[data-win],[data-doodle-bar]') && !t.closest('[data-desk-open]')) return;
       const btn = t.closest<HTMLElement>('[data-desk-open]');
       if (!btn) return clearSelection();
+      // The resume link stays a real link (new tab, middle-click), but a plain
+      // click opens it in AmReader instead.
+      if (btn.tagName === 'A') {
+        const me = e as MouseEvent;
+        if (me.metaKey || me.ctrlKey || me.shiftKey || me.altKey) return;
+        e.preventDefault();
+      }
       // Desktop icons: click selects, double-click opens (keyboard and touch open at once).
       // Dock items open on a single click, like a real dock.
       const isIcon = btn.classList.contains('desk-icon');
