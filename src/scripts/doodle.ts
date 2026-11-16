@@ -220,6 +220,9 @@ export function initDoodle(
     syncButtons();
     save();
   };
+  // The wallpaper's contour lines, preloaded so the export can include them.
+  const topo = new Image();
+  topo.src = '/desktop/topo.svg';
   const savePng = () => {
     const out = document.createElement('canvas');
     out.width = canvas.width;
@@ -228,22 +231,27 @@ export function initDoodle(
     // Paint a copy of the wallpaper so light strokes stay visible in the file.
     const w = out.width;
     const h = out.height;
-    const base = o.createLinearGradient(0, 0, w * 0.35, h);
-    base.addColorStop(0, '#0b1020');
-    base.addColorStop(0.55, '#0a0c16');
-    base.addColorStop(1, '#120a1f');
-    o.fillStyle = base;
+    o.fillStyle = '#1c1a18';
     o.fillRect(0, 0, w, h);
-    const glow = (x: number, y: number, r: number, c: string) => {
-      const g = o.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, c);
-      g.addColorStop(1, 'transparent');
-      o.fillStyle = g;
-      o.fillRect(0, 0, w, h);
-    };
-    glow(w * 0.18, h * 0.2, Math.max(w, h) * 0.45, 'rgba(45,212,191,0.28)');
-    glow(w * 0.85, h * 0.25, Math.max(w, h) * 0.42, 'rgba(124,58,237,0.32)');
-    glow(w * 0.6, h, Math.max(w, h) * 0.45, 'rgba(225,29,72,0.18)');
+    const v = o.createRadialGradient(
+      w / 2,
+      h * 0.4,
+      Math.max(w, h) * 0.36,
+      w / 2,
+      h * 0.4,
+      Math.max(w, h) * 0.75,
+    );
+    v.addColorStop(0, 'rgba(0,0,0,0)');
+    v.addColorStop(1, 'rgba(0,0,0,0.25)');
+    o.fillStyle = v;
+    o.fillRect(0, 0, w, h);
+    if (topo.complete && topo.naturalWidth) {
+      // background-size: cover, centred
+      const s = Math.max(w / topo.naturalWidth, h / topo.naturalHeight);
+      const tw = topo.naturalWidth * s;
+      const th = topo.naturalHeight * s;
+      o.drawImage(topo, (w - tw) / 2, (h - th) / 2, tw, th);
+    }
     o.drawImage(canvas, 0, 0);
     o.font = `${Math.round(13 * dpr)}px ui-sans-serif, system-ui, sans-serif`;
     o.fillStyle = 'rgba(255,255,255,0.45)';

@@ -15,31 +15,16 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+/* Wallpaper: warm graphite with faint topographic contour lines (a nod to maps
+   of Johor) and a light vignette. No colour glow, so the glass stays neutral. */
 .desk-wall {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 70% at 18% 20%, rgb(45 212 191 / 0.32), transparent 60%),
-    radial-gradient(55% 65% at 85% 25%, rgb(124 58 237 / 0.38), transparent 62%),
-    radial-gradient(70% 60% at 60% 100%, rgb(225 29 72 / 0.22), transparent 60%),
-    linear-gradient(160deg, #0b1020 0%, #0a0c16 55%, #120a1f 100%);
-}
-.desk-wall::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
-  background-size: 26px 26px;
-  mask-image: linear-gradient(to bottom, #000, transparent 85%);
-}
-.desk-mark {
-  position: absolute;
-  right: 4vw;
-  bottom: 2vh;
-  font: 700 clamp(80px, 16vw, 220px) / 1 var(--ide-mono);
-  color: rgb(255 255 255 / 0.045);
-  letter-spacing: -0.04em;
+    url('/desktop/topo.svg') center / cover no-repeat,
+    radial-gradient(120% 100% at 50% 40%, transparent 60%, rgb(0 0 0 / 0.25) 100%),
+    #1c1a18;
 }
 
 .desk-bar {
