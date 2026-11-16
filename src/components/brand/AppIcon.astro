@@ -81,9 +81,13 @@ const round = name === 'postam';
   {
     name === 'postam' && (
       <g stroke-linejoin="round">
-        {/* Paper plane: "send a request". */}
-        <path d="M14.5 31.5 48 17 36.5 48l-6-11.5z" fill="#fff" stroke="#fff" stroke-width="1.5" />
-        <path d="M30.5 36.5 48 17 34 41.5z" fill="#FFD6C4" />
+        {/* Paper plane ("send a request") with { } on its wing. */}
+        <path d="M12 30 50 15 36 50l-8-8z" fill="#fff" stroke="#fff" stroke-width="1.5" />
+        <path d="M28 42 50 15 36 50z" fill="#FFD6C4" />
+        <g fill="none" stroke="#E8541F" stroke-width="2.7" stroke-linecap="round">
+          <path d="M25.6 26.3q-2.2 0-2.2 2.2v.37q0 1.8-2 1.8 2 0 2 1.8v.37q0 2.2 2.2 2.2" />
+          <path d="M30.4 26.3q2.2 0 2.2 2.2v.37q0 1.8 2 1.8-2 0-2 1.8v.37q0 2.2-2.2 2.2" />
+        </g>
       </g>
     )
   }
