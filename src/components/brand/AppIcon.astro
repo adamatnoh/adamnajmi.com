@@ -15,8 +15,8 @@ const { name, size = 48, class: className, title } = Astro.props;
 // Gradient ids must be unique per instance.
 const uid = `${name}-${Math.random().toString(36).slice(2, 8)}`;
 const GRAD: Record<Props['name'], [string, string]> = {
-  amcode: ['#2dd4bf', '#7c3aed'],
-  postam: ['#f59e0b', '#e11d48'],
+  amcode: ['#3FA6F2', '#0065A9'],
+  postam: ['#FF8A5B', '#E8541F'],
   simple: ['#60a5fa', '#1e40af'],
   pdf: ['#f1f5f9', '#cbd5e1'],
   welcome: ['#34d399', '#0284c7'],
@@ -24,6 +24,8 @@ const GRAD: Record<Props['name'], [string, string]> = {
   reader: ['#6366f1', '#0f172a'],
 };
 const [c1, c2] = GRAD[name];
+// PostAm is a round badge; every other app is a squircle.
+const round = name === 'postam';
 ---
 
 <svg
@@ -42,31 +44,46 @@ const [c1, c2] = GRAD[name];
       <stop offset="1" stop-color={c2}></stop>
     </linearGradient>
   </defs>
-  <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#g-${uid})`}></rect>
-  <rect
-    x="3.5"
-    y="3.5"
-    width="57"
-    height="57"
-    rx="14.5"
-    fill="none"
-    stroke="#fff"
-    stroke-opacity=".22"></rect>
+  {
+    round ? (
+      <>
+        <circle cx="32" cy="32" r="29" fill={`url(#g-${uid})`} />
+        <circle cx="32" cy="32" r="28.5" fill="none" stroke="#fff" stroke-opacity=".22" />
+      </>
+    ) : (
+      <>
+        <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#g-${uid})`} />
+        <rect
+          x="3.5"
+          y="3.5"
+          width="57"
+          height="57"
+          rx="14.5"
+          fill="none"
+          stroke="#fff"
+          stroke-opacity=".22"
+        />
+      </>
+    )
+  }
   {
     name === 'amcode' && (
-      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 46 32 17l12 29" stroke-width="5.5" />
-        <path d="M26.5 37h11" stroke-width="5.5" stroke-opacity=".55" />
-        <path d="M47 41h7" stroke-width="4" />
+      <g fill="#fff">
+        {/* A folded ribbon drawn as </>: each chevron has a lit and a shaded facet. */}
+        <path d="M21 17.5 26.5 23l-9 9H8z" />
+        <path d="M8 32h9.5l9 9-5.5 5.5z" fill-opacity=".68" />
+        <path d="M43 17.5 37.5 23l9 9H56z" fill-opacity=".68" />
+        <path d="M56 32h-9.5l-9 9 5.5 5.5z" />
+        <path d="M35 15h4L29 49h-4z" fill-opacity=".9" />
       </g>
     )
   }
   {
     name === 'postam' && (
-      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
-        <path d="M24 17c-4 0-5.5 2-5.5 5.5v4c0 2.6-1.4 4.4-4.5 5.5 3.1 1.1 4.5 2.9 4.5 5.5v4c0 3.5 1.5 5.5 5.5 5.5" />
-        <path d="M40 17c4 0 5.5 2 5.5 5.5v4c0 2.6 1.4 4.4 4.5 5.5-3.1 1.1-4.5 2.9-4.5 5.5v4c0 3.5-1.5 5.5-5.5 5.5" />
-        <path d="M26 32h11M33 27l5 5-5 5" />
+      <g stroke-linejoin="round">
+        {/* Paper plane: "send a request". */}
+        <path d="M14.5 31.5 48 17 36.5 48l-6-11.5z" fill="#fff" stroke="#fff" stroke-width="1.5" />
+        <path d="M30.5 36.5 48 17 34 41.5z" fill="#FFD6C4" />
       </g>
     )
   }
