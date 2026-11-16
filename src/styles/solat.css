@@ -83,6 +83,51 @@
 .solat-loc.is-on .solat-loc-dot {
   fill: currentColor;
 }
+/* Until a location is chosen: a few soft rings round the button. */
+.solat-loc {
+  position: relative;
+}
+.solat-loc.is-hint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgb(94 234 212 / 0.6);
+  animation: solat-ring 1.6s ease-out 0.8s 3;
+  pointer-events: none;
+}
+@keyframes solat-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(94 234 212 / 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 9px rgb(94 234 212 / 0);
+  }
+}
+.solat-hint {
+  margin: 2px 0 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: rgb(94 234 212 / 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.solat-hint svg {
+  display: inline-block;
+  vertical-align: -1.5px;
+  margin: 0 1px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.solat-hint [data-hint-blocked] {
+  color: rgb(253 186 116 / 0.9);
+}
+.solat-hint-short {
+  display: none;
+}
 .solat-loc.is-busy svg {
   animation: solat-pulse 1s ease-in-out infinite;
 }
@@ -212,6 +257,15 @@
   .solat-place {
     font-size: 11px;
   }
+  .solat-hint {
+    font-size: 10.5px;
+  }
+  .solat-hint-long {
+    display: none;
+  }
+  .solat-hint-short {
+    display: inline;
+  }
   .solat-next {
     grid-area: next;
     flex-direction: column;
@@ -247,7 +301,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .solat-loc,
-  .solat-loc.is-busy svg {
+  .solat-loc.is-busy svg,
+  .solat-loc.is-hint::after {
     transition: none;
     animation: none;
   }

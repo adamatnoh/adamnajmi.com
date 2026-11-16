@@ -35,13 +35,31 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
       <p class="solat-place" data-solat-place title={def.area}>
         {def.area.split(',')[0]} · {DEFAULT_SOLAT_ZONE}
       </p>
+      <p class="solat-hint" data-solat-hint hidden aria-live="polite">
+        <span data-hint-ask>
+          Tap
+          <svg
+            viewBox="0 0 24 24"
+            width="11"
+            height="11"
+            role="img"
+            aria-label="the location button"
+          >
+            <circle cx="12" cy="12" r="6.5"></circle>
+            <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path>
+          </svg>
+          <span class="solat-hint-long">for prayer times in your area</span>
+          <span class="solat-hint-short">for your area</span>
+        </span>
+        <span data-hint-blocked hidden>Location blocked</span>
+      </p>
     </div>
     <button
       type="button"
       class="solat-loc"
       data-solat-locate
-      aria-label="Use my location for prayer times"
-      title="Use my location"
+      aria-label="Use my location for local prayer times"
+      title="Use my location for local prayer times"
     >
       <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
         <circle cx="12" cy="12" r="6.5"></circle>
@@ -91,6 +109,8 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
   const html = document.documentElement;
   const KEY_ZONE = 'adam-solat-zone';
   const KEY_CACHE = 'adam-solat-cache';
+  /** 'located' or 'denied': stop showing the "tap for your area" hint. */
+  const KEY_HINT = 'adam-solat-hint';
   const ORDER = ['subuh', 'syuruk', 'zohor', 'asar', 'maghrib', 'isyak'] as const;
   const NAMES: Record<string, string> = {
     subuh: 'Fajr',
@@ -131,6 +151,9 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
     const hijriEl = $('[data-solat-hijri]');
     const statusEl = $('[data-solat-status]');
     const locBtn = $<HTMLButtonElement>('[data-solat-locate]');
+    const hintEl = $('[data-solat-hint]');
+    const hintAsk = $('[data-hint-ask]');
+    const hintBlocked = $('[data-hint-blocked]');
     const defaultZone = root.dataset.defaultZone || 'JHR02';
 
     const store = {
@@ -155,6 +178,36 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
     let timer = 0;
     let loading = false;
     let lastTry = 0;
+    let blockedTimer = 0;
+
+    /** The "Tap ⌖ for your area" hint, until a location is set or refused. */
+    const hintDone = () => store.get<string>(KEY_HINT) !== null;
+    function hideHint(why: 'located' | 'denied') {
+      store.set(KEY_HINT, why);
+      locBtn.classList.remove('is-hint');
+      if (hintBlocked.hidden) hintEl.hidden = true;
+    }
+    function showHint() {
+      if (hintDone() || locBtn.hidden || locBtn.classList.contains('is-on')) return;
+      hintAsk.hidden = false;
+      hintBlocked.hidden = true;
+      hintEl.hidden = false;
+      // A few gentle rings round the button, then it stops (CSS runs it 3 times).
+      locBtn.classList.add('is-hint');
+    }
+    locBtn.addEventListener('animationend', (e) => {
+      if (e.animationName === 'solat-ring') locBtn.classList.remove('is-hint');
+    });
+    function showBlocked() {
+      clearTimeout(blockedTimer);
+      hintAsk.hidden = true;
+      hintBlocked.hidden = false;
+      hintEl.hidden = false;
+      blockedTimer = window.setTimeout(() => {
+        hintBlocked.hidden = true;
+        hintEl.hidden = true;
+      }, 5000);
+    }
 
     /** Today's date in Malaysia, whatever the visitor's own time zone is. */
     const mytDate = () => {
@@ -195,6 +248,7 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
         if (el) el.textContent = d.times[k] || '--:--';
       }
       locBtn.classList.toggle('is-on', d.resolvedBy === 'location');
+      if (d.resolvedBy === 'location') hideHint('located');
       tick();
     }
 
@@ -284,8 +338,12 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
           locBtn.classList.remove('is-busy');
           void load(null, { lat: pos.coords.latitude, lng: pos.coords.longitude });
         },
-        () => {
+        (err) => {
           locBtn.classList.remove('is-busy');
+          if (err.code === err.PERMISSION_DENIED) {
+            hideHint('denied');
+            showBlocked();
+          }
           setStatus(
             `Location off · using ${day?.zone || defaultZone}`,
             'Location was blocked or unavailable',
@@ -303,16 +361,21 @@ const def = SOLAT_ZONES[DEFAULT_SOLAT_ZONE];
       started = true;
       if (!('geolocation' in navigator)) locBtn.hidden = true;
       const saved = store.get<{ zone: string; by?: string }>(KEY_ZONE);
+      if (saved?.by === 'location') store.set(KEY_HINT, 'located');
       await load(saved?.zone || null);
       // Only reuse location silently when it was granted before; never prompt on load.
-      if (!saved && 'permissions' in navigator) {
+      let perm = '';
+      if ('permissions' in navigator) {
         try {
-          const p = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
-          if (p.state === 'granted') locate();
+          perm = (await navigator.permissions.query({ name: 'geolocation' as PermissionName }))
+            .state;
         } catch {
           /* Safari < 16 */
         }
       }
+      if (perm === 'denied') store.set(KEY_HINT, 'denied');
+      if (!saved && perm === 'granted') locate();
+      else showHint();
     }
 
     locBtn.addEventListener('click', (e) => {
