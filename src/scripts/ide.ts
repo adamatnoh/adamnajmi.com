@@ -4,7 +4,7 @@
  * Plain DOM so the editor content stays static HTML (SEO, no-JS fallback,
  * and the Daily Cipher auto-linker can see every word).
  */
-import { track } from '@vercel/analytics';
+import { track } from '../lib/track';
 
 interface Item {
   id: string;

@@ -2,7 +2,7 @@
  * PostAm controller: sends GET requests to this site's /api routes and
  * renders the response (status, time, size, headers, highlighted JSON).
  */
-import { track } from '@vercel/analytics';
+import { track } from '../lib/track';
 
 const root = document.querySelector<HTMLElement>('[data-postam]');
 if (root) init(root);

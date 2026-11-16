@@ -10,5 +10,10 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    // Pre-bundle deps that are only reached through lazy imports, so the dev
+    // server doesn't re-optimise (and invalidate open tabs) on first use.
+    optimizeDeps: {
+      include: ["pdfjs-dist", "@vercel/analytics"],
+    },
   },
 });
