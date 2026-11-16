@@ -152,17 +152,26 @@
   background: rgb(255 255 255 / 0.08);
 }
 
-/* Desktop icons: glassy selection and label pill. */
+/* Desktop icons: glassy selection tile and a label pill like the dock tooltip. */
 .desk-icon.is-selected {
-  background: var(--lg-sheen), rgb(255 255 255 / 0.1);
-  border-color: rgb(255 255 255 / 0.22);
-  box-shadow: var(--lg-inner);
+  background: var(--lg-sheen), rgb(255 255 255 / 0.08);
+  border-color: rgb(255 255 255 / 0.2);
+  box-shadow:
+    var(--lg-inner),
+    0 6px 18px rgb(0 0 0 / 0.25);
   -webkit-backdrop-filter: var(--lg-blur);
   backdrop-filter: var(--lg-blur);
   border-radius: 14px;
 }
 .desk-icon.is-selected span {
-  background: linear-gradient(rgb(255 255 255 / 0.2), rgb(255 255 255 / 0)), rgb(37 99 235 / 0.82);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
-  border-radius: 6px;
+  background: var(--lg-sheen), rgb(14 16 30 / 0.66);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.16),
+    var(--lg-inner),
+    0 4px 12px rgb(0 0 0 / 0.3);
+  border-radius: 8px;
+  color: #fff;
+  text-shadow: none;
 }

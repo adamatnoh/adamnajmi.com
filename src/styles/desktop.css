@@ -100,7 +100,12 @@
   padding: 1px 6px;
   border-radius: 4px;
 }
-.desk-icon:focus-visible,
+/* Desktop icons: a soft ring that sits on the glass selection tile. */
+.desk-icon:focus-visible {
+  outline: 1.5px solid rgb(94 234 212 / 0.75);
+  outline-offset: 2px;
+  border-radius: 14px;
+}
 .desk-btn:focus-visible,
 .desk-skip:focus-visible {
   outline: 2px solid #5eead4;
