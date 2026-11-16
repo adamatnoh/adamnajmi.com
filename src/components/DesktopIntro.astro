@@ -278,8 +278,23 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       state: WinState;
       onShow?: () => void;
       focusSel?: string;
+      /** Can it be dragged right now? (AmReader is a fixed sheet on phones.) */
+      canDrag?: () => boolean;
     }
     const TOP = 34; // keep the title bar below the menu bar
+    /**
+     * Where a window may sit. Desktop: anywhere below the menu bar, as long as
+     * the title bar stays above the dock. Phones: fully on screen, above
+     * the Skip / Back to AmCode pill.
+     */
+    const bounds = (width: number, height: number) => {
+      const top = small.matches ? 30 : TOP;
+      const maxY = small.matches
+        ? Math.max(top, window.innerHeight - height - 64) // clear of the Skip pill
+        : window.innerHeight - 44;
+      return { minX: 0, maxX: Math.max(0, window.innerWidth - width), minY: top, maxY };
+    };
+    const clampTo = (v: number, lo: number, hi: number) => Math.min(Math.max(lo, v), hi);
     const wins = new Map<string, Win>();
     const front = (w: Win) => {
       wins.forEach((o) => (o.el.style.zIndex = o === w ? '4' : '3'));
@@ -287,8 +302,9 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     const clampWin = (w: Win) => {
       if (!w.el.style.left || w.el.hidden) return;
       const r = w.el.getBoundingClientRect();
-      const x = Math.min(Math.max(0, r.left), window.innerWidth - r.width);
-      const y = Math.min(Math.max(TOP, r.top), window.innerHeight - 44);
+      const b = bounds(r.width, r.height);
+      const x = clampTo(r.left, b.minX, b.maxX);
+      const y = clampTo(r.top, b.minY, b.maxY);
       w.el.style.left = `${Math.round(x)}px`;
       w.el.style.top = `${Math.round(y)}px`;
     };
@@ -357,8 +373,10 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       el.addEventListener('pointerdown', () => front(w));
       const bar = el.querySelector<HTMLElement>('[data-desk-drag]');
       bar?.addEventListener('pointerdown', (e) => {
-        if (small.matches || e.button > 0) return;
-        if ((e.target as HTMLElement).closest('button')) return;
+        // Mouse, pen and touch alike; the title bar is the only handle and
+        // its buttons (traffic lights) never start a drag.
+        if (!e.isPrimary || e.button > 0 || (w.canDrag && !w.canDrag())) return;
+        if ((e.target as HTMLElement).closest('button, a, input')) return;
         e.preventDefault();
         const r = el.getBoundingClientRect();
         const ox = e.clientX - r.left;
@@ -369,9 +387,12 @@ import { PROFILE, RESUME_URL } from '../data/profile';
         el.style.top = `${Math.round(r.top)}px`;
         bar.setPointerCapture?.(e.pointerId);
         el.classList.add('is-dragging');
+        const b = bounds(r.width, r.height);
         const move = (ev: PointerEvent) => {
-          const x = Math.min(Math.max(0, ev.clientX - ox), window.innerWidth - r.width);
-          const y = Math.min(Math.max(TOP, ev.clientY - oy), window.innerHeight - 44);
+          if (ev.pointerId !== e.pointerId) return;
+          ev.preventDefault();
+          const x = clampTo(ev.clientX - ox, b.minX, b.maxX);
+          const y = clampTo(ev.clientY - oy, b.minY, b.maxY);
           el.style.left = `${Math.round(x)}px`;
           el.style.top = `${Math.round(y)}px`;
         };
@@ -432,6 +453,7 @@ import { PROFILE, RESUME_URL } from '../data/profile';
     };
     addWin('reader', readerEl, {
       focusSel: '[data-rd-view]',
+      canDrag: () => !small.matches,
       onShow: () => {
         void loadReader();
         reader?.refit();
@@ -495,7 +517,11 @@ import { PROFILE, RESUME_URL } from '../data/profile';
       },
     });
 
-    window.addEventListener('resize', () => wins.forEach(clampWin));
+    // Re-clamp after resizes and phone rotation (the new size lands a frame later).
+    const reclamp = () => requestAnimationFrame(() => wins.forEach(clampWin));
+    window.addEventListener('resize', reclamp);
+    window.addEventListener('orientationchange', reclamp);
+    window.visualViewport?.addEventListener('resize', reclamp);
     small.addEventListener('change', () => wins.forEach(resetPos));
 
     // Escape peels one layer at a time: draw mode, then AmReader, then the desktop.

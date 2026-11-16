@@ -508,9 +508,9 @@ html.desk-opening .desk {
     inset: auto 0 max(70px, calc(env(safe-area-inset-bottom) + 64px));
     margin: 0 auto;
   }
+  /* Phones: still draggable by the title bar (touch-action only on the handle). */
   .desk-win-bar {
-    cursor: default;
-    touch-action: auto;
+    min-height: 40px;
   }
   .desk-win-dots {
     gap: 10px;
