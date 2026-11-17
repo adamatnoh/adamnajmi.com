@@ -1003,6 +1003,10 @@ function init(ide: HTMLElement) {
     if (opener && !opener.closest('[data-tabs]')) {
       e.preventDefault();
       openFile(opener.dataset.open!);
+      // daily_cipher.sh in the Explorer ("▶ play"): also bring up the game,
+      // opening the bottom panel on the CIPHER tab if it was closed.
+      if (opener.dataset.open === 'cipher' && opener.classList.contains('tree-item'))
+        showPanel('cipher');
       return;
     }
     const b = t.closest<HTMLElement>('[data-browser-open]');
