@@ -7,8 +7,13 @@ import { RESUME_INFO } from '../../data/resume';
 import { PERSONAL_INFO } from '../../data/personal';
 import { WEBSITE_INFO } from '../../data/website';
 import { getDailySecret } from '../../data/cipher';
-
-const DAILY_WORD = getDailySecret();
+import {
+  cipherMode,
+  cipherPrompt,
+  cleanHistory,
+  leaksWord,
+  serverHint,
+} from '../../lib/cipher-chat';
 
 // ==============================================
 // 2. THE API HANDLER
@@ -18,6 +23,11 @@ export const POST: APIRoute = async ({ request }) => {
     // Get the user's question from the request body
     const body = await request.json();
     const userMessage = body.message;
+    // Earlier user messages in this chat, used only to decide what the model may
+    // know about the Daily Cipher (see src/lib/cipher-chat.ts).
+    const history = cleanHistory(body.history);
+    const dailyWord = getDailySecret(); // per request, so it rolls over at midnight UTC
+    const mode = cipherMode(String(userMessage || ''), history);
 
     if (!userMessage) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
@@ -42,10 +52,7 @@ Your job is to answer questions about Adam based *only* on the context provided 
 If the user asks something outside of this context, politely say you don't have that information and suggest they email adamnajminoh@gmail.com or dm him in linkedin.
 
 **Important: Wordle Game**
-There is a Wordle-style game on the portfolio called "Daily Cipher". The secret word for today is "${DAILY_WORD}".
-- If a user asks for the word of the day, you can give them a **hint** (e.g., "It's a name of the developer of this portfolio", if the word is NAJMI or "It's where we put our money", if the word is BANKS).
-- Only if they insist after several attempts, you may reveal the word to them.
-- Encourage them to explore the portfolio and click on technical words to find it!
+${cipherPrompt(mode, dailyWord)}
 
 Context about Adam:
 ${PERSONAL_INFO}
@@ -58,7 +65,10 @@ User's question: ${userMessage}
     // Generate response
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const reply = response.text();
+    let reply = response.text();
+    // A hint turn must never give the word away, whatever the model writes.
+    if ((mode === 'hint' || mode === 'hint2') && leaksWord(reply, dailyWord))
+      reply = `${serverHint(dailyWord, mode === 'hint2')} Ask me again if you want the answer.`;
 
     return new Response(JSON.stringify({ reply }), {
       status: 200,
