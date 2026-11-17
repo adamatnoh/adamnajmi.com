@@ -351,6 +351,12 @@ export const EDUCATION = [
     period: '2018 – 2019',
     grade: 'CGPA 3.75',
   },
+  {
+    // No years given for this one, so none are shown.
+    school: 'Maktab Rendah Sains MARA Bentong',
+    award: 'Sijil Pelajaran Malaysia (SPM)',
+    grade: '7A 2B',
+  },
 ];
 
 export const CERTIFICATIONS = [

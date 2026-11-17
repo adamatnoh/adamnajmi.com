@@ -24,9 +24,7 @@ const issued = (ym: string) =>
             {e.school}
           </h2>
           <p>{e.award}</p>
-          <p class="mono muted small">
-            {e.period} · {e.grade}
-          </p>
+          <p class="mono muted small">{[e.period, e.grade].filter(Boolean).join(' · ')}</p>
         </>
       ))
     }

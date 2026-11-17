@@ -111,6 +111,8 @@ Education:
 2019 - 2023 | CGPA: 3.88
 - Kolej Matrikulasi Johor — KPM Matriculation Certificate
 2018 - 2019 | CGPA: 3.75
+- Maktab Rendah Sains MARA (MRSM) Bentong — Sijil Pelajaran Malaysia (SPM)
+Result: 7A 2B (years not stated)
 
 Certificate:
 - AWS Certified Solutions Architect Associate (SAA-C03)
